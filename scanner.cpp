@@ -16,45 +16,101 @@ class Scanner
                               {sDone, sDone, sInt, sDone, sDone}, // CS = sInt
                               {sSym, sSym, sDone, sDone, sDone}}; // CS = sSym
         state CS, NS; // Current State, Next State
+        map<string,string> ReservedWords;
+        void SearchMap(string temp)
+        {
+            auto itr = ReservedWords.find(temp);
+            if (itr == ReservedWords.end())
+            {
+                cout << "END\n";
+            }
+            else
+            {
+                cout << itr->first << " " << itr->second << "\n";
+            }
+        }
+
+
 
     public:
         Scanner()
         {
             this->CS = sNew;
+
+            ReservedWords.insert(pair<string,string>("IF","if"));
+            ReservedWords.insert(pair<string,string>("ELSE","else"));
+            ReservedWords.insert(pair<string,string>("(","LPAREN"));
         }
 
         token nexttoken(string inputstream)
         {
             char ch;
             int i = 0;
+            string temp = "";
             while(true)
             {
                 ch = inputstream[i];
-                if (isupper(ch))
+                if(ch == '\0')
+                {
+                    return tErr;
+                }
+                if (isupper(ch) || ch == '(')
+                {
                     this->NS = NSTable[this->CS][iUprAlpha];
+                    temp+=ch;
+                }
                 else if (islower(ch))
+                {
                     this->NS = NSTable[this->CS][iLowAlpha];
+                    temp+=ch;
+                }
                 else if (isdigit(ch))
+                {
                     this->NS = NSTable[this->CS][iNum];
+                    temp+=ch;
+                }
                 else if (ch == '+' || ch == '-' || ch == '*' || ch == '/')
+                {
                     this->NS = NSTable[this->CS][iOp];
+                    temp+=ch;
+                }
                 else if (ch == ' ')
+                {
                     this->NS = NSTable[this->CS][iSpace];
+                }
                 else
+                {
                     this->NS = sDone;
+                }
                 
                 if (this->NS == sDone)
                 {
                     if (this->CS == sNew)
-                        return tErr;
+                    {
+                        SearchMap(temp);
+                        temp="";
+                    }
                     else if (this->CS == sOp)
-                        return tOp;
+                    {
+                        SearchMap(temp);
+                        temp="";
+                    }
                     else if (this->CS == sInt)
-                        return tInt;
+                    {
+                        SearchMap(temp);
+                        temp="";
+                    }
                     else if (this->CS == sSym)
-                        return tSym;
-                    else
-                        return tErr;
+                    {
+                        SearchMap(temp);
+                        this->NS = sNew;
+                        temp="";
+                        
+                    }
+                    else //error
+                    {
+                        temp="";
+                    }
                 }
 
                 this->CS = this->NS;
@@ -67,7 +123,7 @@ int main()
 {
     Scanner myScanner;
     token temp;
-    temp = myScanner.nexttoken("IF*");
-    cout << temp;
+    myScanner.nexttoken("IF ( ELSE ");
+  
     return 0;
 }
