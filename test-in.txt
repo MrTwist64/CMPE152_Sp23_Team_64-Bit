@@ -1,0 +1,4 @@
+Apple + 25 / Banana iMpLeMeNtAtIoN
+Pear ; += for 
+(* orange := 55 *)
+: MORESTUFF(){}
