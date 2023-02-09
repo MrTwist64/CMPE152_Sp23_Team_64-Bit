@@ -51,7 +51,7 @@ class Scanner
         int nsTable[NS_TABLE_HEIGHT][NS_TABLE_WIDTH] = {
             { 0,-1, 3, 1, 4, 5, 6, 7,30, 9,13,14,19,20,-2,21,22,23,24,25,26,27, 0, 0, 0,31}, // 0
             { 1, 1,-1, 1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 2,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, // 1
-            { 1, 2,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, // 2
+            { 1, 2,-1, 2,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, // 2
             { 1, 3, 3, 3,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, // 3
             { 1, 4,-1,-1,-1,-1,-1,-1,-1,15,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, // 4
             { 1, 5,-1,-1,-1,-1,-1,-1,-1,16,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, // 5
@@ -172,7 +172,7 @@ class Scanner
                 else if (symbolIterator != symbolMap.end())
                     NS = nsTable[CS][symbolIterator->second]; // Char was recognized as valid operator
                 else
-                    NS = -2; // Error! Char not recognized
+                    NS == -2;
                 
                 // Returns or continues based on next state
                 if (CS == 31)
@@ -213,7 +213,6 @@ int main()
     string input, token, temp;
     int currCharIndex = 0;
 
-    //while(getline(cin, temp)) 
     while(getline(cin, temp)) 
     {
         if (temp.empty())
@@ -221,10 +220,6 @@ int main()
         input += temp;
         input += '\n';
     }
-
-    // This line is in here because "∩╗┐" keeps getting added onto our STDIN input
-    // We don't understand how to prevent this, so we manually are skipping it
-    //input = input.substr(3);
     
     // Scan and populate output file with tokens
     while(true)

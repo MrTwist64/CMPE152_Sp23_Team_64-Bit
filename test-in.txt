@@ -2,3 +2,6 @@ Apple + 25 / Banana iMpLeMeNtAtIoN
 Pear ; += for 
 (* orange := 55 *)
 : MORESTUFF(){}
+I:+=1
+CMPE152:= HELLO
+1 : 4.0
