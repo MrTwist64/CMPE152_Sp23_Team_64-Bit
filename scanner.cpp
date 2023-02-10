@@ -172,8 +172,8 @@ class Scanner
                 else if (symbolIterator != symbolMap.end())
                     NS = nsTable[CS][symbolIterator->second]; // Char was recognized as valid operator
                 else
-                    NS == -2;
-                
+                    NS = -1;
+                    
                 // Returns or continues based on next state
                 if (CS == 31)
                     return "EOF";
@@ -187,7 +187,10 @@ class Scanner
                 else if (NS == -1)
                 {
                     if (!nsTable[CS][0])
+                    {
+                        i++;
                         return "ERROR";
+                    }
                     if (CS == 3)
                     {
                         reservedWordsIterator = reservedWords.find(currToken);
@@ -220,7 +223,7 @@ int main()
         input += temp;
         input += '\n';
     }
-    
+
     // Scan and populate output file with tokens
     while(true)
     {
