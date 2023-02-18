@@ -8,12 +8,13 @@ using namespace std;
 const int NS_TABLE_HEIGHT = 32;
 const int NS_TABLE_WIDTH = 26;
 
-enum token {tOp, tInt, tSym, tErr};
-
 class Scanner
 {
     private:
-        map <char, int> symbolMap; 
+        map <char, int> symbolMap;
+        string input;
+        string currentToken, nextToken;
+        int currCharIndex = 0; 
 
         void mapPopulator() 
         {
@@ -149,9 +150,42 @@ class Scanner
         {
             mapPopulator(); 
             reservePopulator();
+            string temp="";
+            this->input="";
+            this->currCharIndex = 0;
+
+            while(getline(cin, temp)) 
+            {
+                if (temp.empty())
+                    break;
+                this->input += temp;
+                this->input += '\n';
+            }
+
+            this->currentToken = readNextToken();
+            this->nextToken = readNextToken();
+        }
+        
+        string getCurrentToken()
+        {
+            return this->currentToken;
         }
 
-        string nexttoken(string& input, int& i)
+        string getNextToken()
+        {
+            return this->nextToken;
+        }
+
+        void nextToken()
+        {
+            this->currentToken = this->nextToken;
+            if (this->currentToken == "EOF")
+                this->nextToken = "";
+            else
+                this->nextToken = readNextToken();
+        }
+
+        string readNextToken()
         {
             int CS = 0;
             int NS = 0;
@@ -163,7 +197,7 @@ class Scanner
             while(true)
             {
                 // Determines current character and next state
-                ch = tolower(input[i]);
+                ch = tolower(this->input[this->currCharIndex]);
                 symbolIterator = symbolMap.find(ch);
                 if (isalpha(ch))
                     NS = nsTable[CS][2];
@@ -179,7 +213,7 @@ class Scanner
                     return "EOF";
                 else if (NS == 0)
                 {
-                    i++;
+                    this->currCharIndex++;
                     CS = NS;
                 }
                 else if (NS == -2)
@@ -188,7 +222,7 @@ class Scanner
                 {
                     if (!nsTable[CS][0])
                     {
-                        i++;
+                        this->currCharIndex++;
                         return "ERROR";
                     }
                     if (CS == 3)
@@ -202,7 +236,7 @@ class Scanner
                 else
                 {
                     currToken += ch;
-                    i++;
+                    this->currCharIndex++;
                     CS = NS;
                 }
             }
@@ -210,6 +244,7 @@ class Scanner
         
 };
 
+/*
 int main()
 {
     Scanner scanner;
@@ -234,3 +269,4 @@ int main()
     }
     return 0;
 }
+*/
