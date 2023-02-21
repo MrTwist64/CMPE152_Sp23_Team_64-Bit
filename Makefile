@@ -1,6 +1,10 @@
 CC=g++
 CFLAGS=-I
 
-scanner: scanner.cpp
-	$(CC) scanner.cpp -o scanner
-	./scanner < test-in.txt > test-out.txt
+testScanner: scanner.h testScanner.cpp
+	$(CC) -o testScanner scanner.h testScanner.cpp
+	./testScanner < test-in.txt > test-out.txt
+
+testSymbolTable: symTab.h testSymbolTable.cpp
+	$(CC) -o testSymbolTable symTab.h testSymbolTable.cpp
+	./testSymbolTable

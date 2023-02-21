@@ -3,42 +3,50 @@
 
 #include <string>
 #include <map>
-//#include "symTabType.h"
+#include <iostream>
+
+#include "symTabEntry.h"
+
 using namespace std;
 
-class symTabType
-{
-private:
-    enum kind {program, constant, variable;} 
-    string name;
-    kind Kind;
-public:
-    symTabType(string name, kind Kind) 
-    {
-        this->name = name;
-        this->Kind = Kind;
-    }
-};
+class SymTabEntry;
 
-class symTab 
+class SymTab
 {
 private:
-    map<string, symTabType> symbolTable;
+    static map<string, SymTabEntry> SymbolTable;
+
 public:
-    symTabType newSym(kind Kind, string name) 
+    SymTab() // Empty Constructor
     {
-        symTabType temp = symTabType(name, Kind)
-        symbolTable[name] = temp;
+
     }
-    symbolTable lookup(string name) 
+
+    SymTabEntry newEntry(Kind kind, string name) 
     {
-        return symbolTable[name];
+        SymTabEntry temp = SymTabEntry(name, kind, this);
+        SymbolTable[name] = temp;
     }
-    symTabType update(kind kindNew, string nameOld, string nameNew) 
+
+    SymTabEntry lookup(string name) 
     {
-        symTabType temp = symTabType(nameNew, kindNew);
-        symbolTable[nameOld] = temp;
+        return SymbolTable[name];
     }
+
+    void print()
+    {
+        for (map<string, SymTabEntry>::iterator it=SymbolTable.begin(); it!=SymbolTable.end(); ++it){
+            cout << it->first << endl;
+        }
+    }
+
+    /* Not needed?
+    SymTabEntry update(Kind kindNew, string nameOld, string nameNew)
+    {
+        SymTabEntry temp = SymTabEntry(nameNew, kindNew, this);
+        SymbolTable[nameOld] = temp;
+    }
+    */
 };
 
 #endif

@@ -1,3 +1,6 @@
+#ifndef SCANNER_H_
+#define SCANNER_H_
+
 #include <iostream>
 #include <string>
 #include <map>
@@ -13,7 +16,7 @@ class Scanner
     private:
         map <char, int> symbolMap;
         string input;
-        string currentToken, nextToken;
+        string curr, next;
         int currCharIndex = 0; 
 
         void mapPopulator() 
@@ -154,35 +157,40 @@ class Scanner
             this->input="";
             this->currCharIndex = 0;
 
-            while(getline(cin, temp)) 
+            while(getline(cin, temp))
             {
-                if (temp.empty())
+                if (temp.empty()) // This may end the read if given a blank line.
                     break;
                 this->input += temp;
                 this->input += '\n';
             }
 
-            this->currentToken = readNextToken();
-            this->nextToken = readNextToken();
+            this->curr = readNextToken();
+            this->next = readNextToken();
         }
         
         string getCurrentToken()
         {
-            return this->currentToken;
+            return this->curr;
         }
 
         string getNextToken()
         {
-            return this->nextToken;
+            return this->next;
+        }
+
+        string getInput()
+        {
+            return this->input;
         }
 
         void nextToken()
         {
-            this->currentToken = this->nextToken;
-            if (this->currentToken == "EOF")
-                this->nextToken = "";
+            this->curr = this->next;
+            if (this->curr == "EOF")
+                this->next = "";
             else
-                this->nextToken = readNextToken();
+                this->next = readNextToken();
         }
 
         string readNextToken()
@@ -270,3 +278,5 @@ int main()
     return 0;
 }
 */
+
+#endif
