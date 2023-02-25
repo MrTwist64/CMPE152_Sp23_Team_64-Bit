@@ -12,6 +12,6 @@ int main()
     myTable.newEntry(Kind::variable, "beta").setValue(24);
     myTable.newEntry(Kind::variable, "i").setValue(0);
     myTable.newEntry(Kind::variable, "foo").setValue(19);
-    myTable.print();
+    cout << myTable.toString() << endl;
     return 0;
 }

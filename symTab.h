@@ -9,12 +9,10 @@
 
 using namespace std;
 
-class SymTabEntry;
-
 class SymTab
 {
 private:
-    static map<string, SymTabEntry> SymbolTable;
+    map<string, SymTabEntry> SymbolTable;
 
 public:
     SymTab() // Empty Constructor
@@ -26,6 +24,7 @@ public:
     {
         SymTabEntry temp = SymTabEntry(name, kind, this);
         SymbolTable[name] = temp;
+        return SymbolTable[name];
     }
 
     SymTabEntry lookup(string name) 
@@ -33,11 +32,13 @@ public:
         return SymbolTable[name];
     }
 
-    void print()
+    string toString()
     {
+        string temp = "";
         for (map<string, SymTabEntry>::iterator it=SymbolTable.begin(); it!=SymbolTable.end(); ++it){
-            cout << it->first << endl;
+            temp += it->first + "\n";
         }
+        return temp;
     }
 
     /* Not needed?
@@ -49,4 +50,4 @@ public:
     */
 };
 
-#endif
+#endif // SYMTAB_H_

@@ -16,7 +16,8 @@ class Scanner
     private:
         map <char, int> symbolMap;
         string input;
-        string curr, next;
+        string currTkn, nextTkn; // The recognized token
+        string currTxt, nextTxt; // The text from the input for the current token
         int currCharIndex = 0; 
 
         void mapPopulator() 
@@ -165,40 +166,34 @@ class Scanner
                 this->input += '\n';
             }
 
-            this->curr = readNextToken();
-            this->next = readNextToken();
+            nextToken();
+            nextToken();
         }
         
-        string getCurrentToken()
-        {
-            return this->curr;
-        }
-
-        string getNextToken()
-        {
-            return this->next;
-        }
-
-        string getInput()
-        {
-            return this->input;
-        }
+        string getCurrentToken() {return this->currTkn;}
+        string getNextToken() {return this->nextTkn;}
+        string getCurrText() {return this->currTxt;}
+        string getNextText() {return this->nextTxt;}
+        string getInput() {return this->input;}
 
         void nextToken()
         {
-            this->curr = this->next;
-            if (this->curr == "EOF")
-                this->next = "";
-            else
-                this->next = readNextToken();
+            this->currTkn = this->nextTkn;
+            this->currTxt = this->nextTxt;
+                
+            if (this->currTkn != "EOF")
+                readNextToken();
         }
 
-        string readNextToken()
+        void readNextToken()
         {
+            this->nextTkn = "";
+            this->nextTxt = "";
+            char ch;
+
             int CS = 0;
             int NS = 0;
-            char ch;
-            string currToken = "";
+
             auto symbolIterator = symbolMap.begin();
             auto reservedWordsIterator = reservedWords.begin();
 
@@ -215,68 +210,55 @@ class Scanner
                     NS = nsTable[CS][symbolIterator->second]; // Char was recognized as valid operator
                 else
                     NS = -1;
-                    
-                // Returns or continues based on next state
-                if (CS == 31)
-                    return "EOF";
-                else if (NS == 0)
+                
+                // If whitespace, skip it and continue
+                if (NS == 0)
                 {
                     this->currCharIndex++;
                     CS = NS;
+                    continue;
                 }
-                else if (NS == -2)
-                    return "ERROR";
-                else if (NS == -1)
+
+                // Possible Returns
+                if (CS == 31) // If end of file
                 {
-                    if (!nsTable[CS][0])
+                    this->nextTkn = "EOF";
+                    return;
+                }
+                if (NS == -2) // if return with error found
+                {
+                    this->nextTkn = "ERROR";
+                    return;
+                }
+                if (NS == -1) // if return found
+                {
+                    if (!nsTable[CS][0]) // If invalid return state
                     {
                         this->currCharIndex++;
-                        return "ERROR";
+                        this->nextTkn = "ERROR";
                     }
-                    if (CS == 3)
+                    else if (CS == 3) // If current state is identifier
                     {
-                        reservedWordsIterator = reservedWords.find(currToken);
-                        if (reservedWordsIterator != reservedWords.end())
-                            return reservedWordsIterator->second;
+                        reservedWordsIterator = reservedWords.find(this->nextTxt);
+                        if (reservedWordsIterator != reservedWords.end()) // If token is reserved word
+                            this->nextTkn = reservedWordsIterator->second;
+                        else
+                            this->nextTkn = labelTable[CS];
                     }
-                    return labelTable[CS];
+                    else
+                        this->nextTkn = labelTable[CS];
+                    
+                    return;
                 }
-                else
-                {
-                    currToken += ch;
-                    this->currCharIndex++;
-                    CS = NS;
-                }
+
+                // No returns found
+                // Continue to next character
+                this->nextTxt += ch;
+                this->currCharIndex++;
+                CS = NS;
             }
         }
         
 };
-
-/*
-int main()
-{
-    Scanner scanner;
-    string input, token, temp;
-    int currCharIndex = 0;
-
-    while(getline(cin, temp)) 
-    {
-        if (temp.empty())
-            break;
-        input += temp;
-        input += '\n';
-    }
-
-    // Scan and populate output file with tokens
-    while(true)
-    {
-        token = scanner.nexttoken(input, currCharIndex);
-        cout << token << endl;
-        if (token == "EOF")
-            break;
-    }
-    return 0;
-}
-*/
 
 #endif

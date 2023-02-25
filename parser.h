@@ -1,12 +1,16 @@
 #include "scanner.h"
+#include "symTabEntry.h"
+#include "parseTreeNode.h"
+#include "parseTree.h"
 
 using namespace std;
 
 class Parser
 {
 private:
-    NodeType *root;
+    parseTree parseTree;
     Scanner scn;
+    string curr;
 
 public:
     Parser()
@@ -14,77 +18,104 @@ public:
         
     }
 
-    NodeType parseProgram()
+    parseTreeNode* parseProgram()
     {
-        if (scn.getCurrentToken() == "PROGRAM")
-        {
-            
-        }
-        else
-        {
-            return NodeType::EMPTY;
-        }
+        if (scn.getCurrentToken() != "PROGRAM")
+            return NULL;
+        scn.nextToken();
+
+        parseTreeNode* identifier = parseIdentifier();
+        if(!identifier)
+            return NULL;
+
+        if (scn.getCurrentToken() != ";")
+            return NULL;
+        scn.nextToken();
+
+        parseTreeNode* block = parseBlock();
+        if(!block)
+            return NULL;
+
+        if (scn.getCurrentToken() != ".")
+            return NULL;
+        scn.nextToken();
+        
+        parseTreeNode* programNode = parseTree.createNode(NodeType::PROGRAM);
+        programNode->adopt(identifier);
+        programNode->adopt(block);
+        return programNode;
     }
 
-    // NodeType parseStatement(){
+    parseTreeNode * parseIdentifier()
+    {
+        if (scn.getCurrentToken() != "IDENTIFIER")
+            return NULL;
+        string IDName = scn.getCurrText();
+        scn.nextToken();
+
+        parseTreeNode * identifier = parseTree.createNode(NodeType::IDENTIFIER);
+        parseTree.setName(identifier, IDName);
+        return identifier;
+    }
+
+    parseTreeNode * parseBlock()
+    {
+        
+    }
+    // parseTreeNode parseStatement(){
 
     // }
 
-    // NodeType parseAssignmentStatement(){
+    // parseTreeNode parseAssignmentStatement(){
 
     // }
 
-    // NodeType parseCompoundStatement(){
+    // parseTreeNode parseCompoundStatement(){
 
     // }
 
-    // NodeType parseRepeatStatement(){
+    // parseTreeNode parseRepeatStatement(){
 
     // }
 
-    // NodeType parseWriteStatement(){
+    // parseTreeNode parseWriteStatement(){
 
     // }
 
-    // NodeType parseWritelnStatement(){
+    // parseTreeNode parseWritelnStatement(){
 
     // }
 
-    // NodeType parseExpression(){
+    // parseTreeNode parseExpression(){
 
     // }
 
-    // NodeType parseSimpleExpression(){
+    // parseTreeNode parseSimpleExpression(){
 
     // }
 
-    // NodeType parseTerm(){
+    // parseTreeNode parseTerm(){
 
     // }
 
-    // NodeType parseFactor(){
+    // parseTreeNode parseFactor(){
 
     // }
 
-    // NodeType parseVariable(){
+    // parseTreeNode parseVariable(){
 
     // }
 
-    // NodeType parseIntegerConstant(){
+    // parseTreeNode parseIntegerConstant(){
 
     // }
 
-    // NodeType parseRealConstant(){
+    // parseTreeNode parseRealConstant(){
 
     // }
 
-    // NodeType parseStringConstant(){
+    // parseTreeNode parseStringConstant(){
 
     // }
  
-};
-
-enum class NodeType
-{
-    EMPTY, PROGRAM, COMPOUND, ASSIGN, LOOP, TEST, WRITE, WRITELN, ADD, SUBTRACT, MULTIPLY, DIVIDE, EQ, LT, VARIABLE, INTEGER_CONSTANT, REAL_CONSTANT, STRING_CONSTANT
 };

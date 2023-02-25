@@ -6,10 +6,11 @@
 #include <iostream>
 
 #include "symTab.h"
+#include "typeSpec.h"
 
 using namespace std;
 
-enum class Kind {program, constant, variable};
+enum class Kind {PROGRAM, CONSTANT, VARIABLE,};
 
 class SymTab;
 
@@ -18,15 +19,31 @@ class SymTabEntry // each entry of symbol table created here
 private:
     string name;              // identifier name
     Kind kind;                // what kind of identifier
-    int value;                // Assuming all identifiers are integers
+    int *value;               // Assuming all identifiers are integers
     SymTab *symtab;           // parent symbol table
+    TypeSpec *typeSpec;       // type spec
 
 public:
+    SymTabEntry()
+    {
+
+    }
+    
     SymTabEntry(string name, Kind kind, SymTab *parentTab) : name(name), kind(kind), symtab(parentTab)
     {
-        //this->name = name;
-        //this->kind = kind;
-        //this->symtab = parentTab;
+        switch(kind) {
+            case Kind::PROGRAM:
+                value = nullptr;
+            break;
+            case Kind::CONSTANT:
+                value = nullptr;
+            break;
+            case Kind::VARIABLE:
+                value = nullptr;
+            break;
+            
+        }
+
     }
 
     void setName(string name)
@@ -49,15 +66,14 @@ public:
         return this->kind;
     }
 
-    void setValue(int value)
+    void setValue(int *value)
     {
         this->value = value;
     }
     
-    int getValue(){
+    int *getValue(){
         return this->value;
     }
-
 };
 
-#endif
+#endif // SYMTABENTRY_H_
