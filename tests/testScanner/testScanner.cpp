@@ -1,8 +1,8 @@
 #include <iostream>
 #include <string>
-#include "scanner.h"
-using namespace std;
+#include "../../scanner.h"
 
+using namespace std;
 
 int main()
 {
@@ -13,9 +13,10 @@ int main()
     while(true)
     {
         token = scanner.getCurrentToken();
-        cout << token << endl;
+        cout << token;
         if (token == "EOF")
             break;
+        cout << " : " << scanner.getCurrText() << endl;
         scanner.nextToken();
     }
     return 0;
