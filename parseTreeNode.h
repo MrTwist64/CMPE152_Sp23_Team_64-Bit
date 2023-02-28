@@ -34,14 +34,11 @@ public:
     void setType(NodeType type){this->type = type;}
     void setParent(parseTreeNode* parent){this->parent = parent;}
     void adopt(parseTreeNode *newChild) {this->children.push_back(newChild);}
-
-
-
-
-
 };
 
 enum class NodeType
 {
-    PROGRAM, IDENTIFIER, BLOCK
+    PROGRAM, IDENTIFIER, BLOCK, STATEMENT_PART, COMPOUND_STATEMENT, STATEMENT,
+    UNLABELED_STATEMENT, SIMPLE_STATEMENT, ASSIGNMENT_STATEMENT, VARIABLE, ENTIRE_VARIABLE,
+    VARIABLE_IDENTIFIER, COMPONENT_VARIABLE, INDEXED_VARIABLE
 };

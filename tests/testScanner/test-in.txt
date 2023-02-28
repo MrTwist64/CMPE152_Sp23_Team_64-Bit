@@ -1,7 +1,9 @@
-Apple + 25 / Banana iMpLeMeNtAtIoN
+Apple + 25 / Banana 
+iMpLeMeNtAtIoN
 Pear ; += for 
 (* orange := 55 *)
 : MORESTUFF(){}
 I:+=1
+test.
 CMPE152:= "HELLO"
-1 : 4.0 blah
+1 : 4.0 blah.

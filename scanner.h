@@ -170,7 +170,7 @@ class Scanner
             nextToken();
         }
         
-        string getCurrentToken() {return this->currTkn;}
+        string getCurrToken() {return this->currTkn;}
         string getNextToken() {return this->nextTkn;}
         string getCurrText() {return this->currTxt;}
         string getNextText() {return this->nextTxt;}

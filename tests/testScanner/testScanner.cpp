@@ -12,7 +12,7 @@ int main()
     // Scan and populate output file with tokens
     while(true)
     {
-        token = scanner.getCurrentToken();
+        token = scanner.getCurrToken();
         cout << token;
         if (token == "EOF")
             break;
