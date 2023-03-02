@@ -1556,7 +1556,18 @@ public:
         return pointerTypeNode;
     }
 
+    parseTreeNode * parseResultType()
+    {
+        parseTreeNode* typeIdentifier = parseTypeIdentifier();
+        if(!typeIdentifier)
+        {
+            return NULL;
+        }
 
+        parseTreeNode* resultTypeNode = parseTree->createNode(NodeType::RESULT_TYPE);
+        resultTypeNode->adopt(typeIdentifier);
+        return resultTypeNode;
+    }
 
     parseTreeNode * parseRepetitiveStatement()
     {
