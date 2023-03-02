@@ -1,3 +1,6 @@
+#ifndef PARSETREE_H_
+#define PARSETREE_H_
+
 #include "parseTreeNode.h"
 
 using namespace std;
@@ -75,3 +78,5 @@ public:
     void setParent(parseTreeNode *node, parseTreeNode* newParent){node->setParent(newParent);}
     void adopt(parseTreeNode *node, parseTreeNode *newChild) {node->adopt(newChild);}
 };
+
+#endif // PARSETREE_H_

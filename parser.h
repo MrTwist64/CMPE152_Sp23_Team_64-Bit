@@ -1,5 +1,8 @@
+#ifndef PARSER_H_
+#define PARSER_H_
+
 #include "scanner.h"
-#include "symTabEntry.h"
+//#include "symTabEntry.h"
 #include "parseTreeNode.h"
 #include "parseTree.h"
 
@@ -189,7 +192,7 @@ public:
         parseTreeNode* unlabelledStatement = parseUnlabelledStatement();
         if(unlabelledStatement)
         {
-            parseTreeNode* statementNode = parseTree.createNode(NodeType::STATEMENT);
+            parseTreeNode* statementNode = parseTree->createNode(NodeType::STATEMENT);
             statementNode->adopt(unlabelledStatement);
             return statementNode;
         }
@@ -206,7 +209,7 @@ public:
         if(!unlabelledStatement)
             return NULL;
 
-        parseTreeNode* statementNode = parseTree.createNode(NodeType::STATEMENT);
+        parseTreeNode* statementNode = parseTree->createNode(NodeType::STATEMENT);
         statementNode->adopt(label);
         statementNode->adopt(unlabelledStatement);
         return statementNode;
@@ -217,7 +220,7 @@ public:
         parseTreeNode* simpleStatement = parseSimpleStatement();
         if(simpleStatement)
         {
-            parseTreeNode* unlabelledStatementNode = parseTree.createNode(NodeType::UNLABELED_STATEMENT);
+            parseTreeNode* unlabelledStatementNode = parseTree->createNode(NodeType::UNLABELED_STATEMENT);
             unlabelledStatementNode->adopt(simpleStatement);
             return unlabelledStatementNode;
         }
@@ -225,7 +228,7 @@ public:
         parseTreeNode* structuredStatement = parseStructuredStatement();
         if(structuredStatement)
         {
-            parseTreeNode* unlabelledStatementNode = parseTree.createNode(NodeType::UNLABELED_STATEMENT);
+            parseTreeNode* unlabelledStatementNode = parseTree->createNode(NodeType::UNLABELED_STATEMENT);
             unlabelledStatementNode->adopt(structuredStatement);
             return unlabelledStatementNode;
         }
@@ -238,7 +241,7 @@ public:
         parseTreeNode* assignmentStatement = parseAssignmentStatement();
         if(assignmentStatement)
         {
-            parseTreeNode* simpleStatementNode = parseTree.createNode(NodeType::SIMPLE_STATEMENT);
+            parseTreeNode* simpleStatementNode = parseTree->createNode(NodeType::SIMPLE_STATEMENT);
             simpleStatementNode->adopt(assignmentStatement);
             return simpleStatementNode;
         }
@@ -246,7 +249,7 @@ public:
         // parseTreeNode* procedureStatement = parseProcedureStatement();
         // if(procedureStatement)
         // {
-        //     parseTreeNode* procedureStatementNode = parseTree.createNode(NodeType::PROCEDURE_STATEMENT);
+        //     parseTreeNode* procedureStatementNode = parseTree->createNode(NodeType::PROCEDURE_STATEMENT);
         //     procedureStatementNode->adopt(procedureStatement);
         //     return procedureStatementNode;
         // }
@@ -254,7 +257,7 @@ public:
         parseTreeNode* gotoStatement = parseGotoStatement();
         if(gotoStatement)
         {
-            parseTreeNode* simpleStatementNode = parseTree.createNode(NodeType::SIMPLE_STATEMENT);
+            parseTreeNode* simpleStatementNode = parseTree->createNode(NodeType::SIMPLE_STATEMENT);
             simpleStatementNode->adopt(gotoStatement);
             return simpleStatementNode;
         }
@@ -262,7 +265,7 @@ public:
         parseTreeNode* emptyStatement = parseEmptyStatement();
         if(emptyStatement)
         {
-            parseTreeNode* simpleStatementNode = parseTree.createNode(NodeType::SIMPLE_STATEMENT);
+            parseTreeNode* simpleStatementNode = parseTree->createNode(NodeType::SIMPLE_STATEMENT);
             simpleStatementNode->adopt(emptyStatement);
             return simpleStatementNode;
         }
@@ -281,7 +284,7 @@ public:
             if(!expression)
                 return NULL;
             
-            parseTreeNode* assignmentStatementNode = parseTree.createNode(NodeType::ASSIGNMENT_STATEMENT);
+            parseTreeNode* assignmentStatementNode = parseTree->createNode(NodeType::ASSIGNMENT_STATEMENT);
             assignmentStatementNode->adopt(variable);
             assignmentStatementNode->adopt(expression);
             return assignmentStatementNode;
@@ -298,7 +301,7 @@ public:
         //     if(!expression)
         //         return NULL;
             
-        //     parseTreeNode* assignmentStatementNode = parseTree.createNode(NodeType::ASSIGNMENT_STATEMENT);
+        //     parseTreeNode* assignmentStatementNode = parseTree->createNode(NodeType::ASSIGNMENT_STATEMENT);
         //     assignmentStatementNode->adopt(functionIdentifier);
         //     assignmentStatementNode->adopt(expression);
         //     return assignmentStatementNode;
@@ -312,26 +315,26 @@ public:
         parseTreeNode* entireVariable = parseEntireVariable();
         if(entireVariable)
         {
-            parseTreeNode* variableNode = parseTree.createNode(NodeType::VARIABLE);
+            parseTreeNode* variableNode = parseTree->createNode(NodeType::VARIABLE);
             variableNode->adopt(entireVariable);
             return variableNode;
         }
 
-        parseTreeNode* componentVariable = parseComponentVariable();
-        if(componentVariable)
-        {
-            parseTreeNode* variableNode = parseTree.createNode(NodeType::VARIABLE);
-            variableNode->adopt(componentVariable);
-            return variableNode;
-        }
+        // parseTreeNode* componentVariable = parseComponentVariable();
+        // if(componentVariable)
+        // {
+        //     parseTreeNode* variableNode = parseTree->createNode(NodeType::VARIABLE);
+        //     variableNode->adopt(componentVariable);
+        //     return variableNode;
+        // }
 
-        parseTreeNode* referencedVariable = parseReferencedVariable();
-        if(referencedVariable)
-        {
-            parseTreeNode* variableNode = parseTree.createNode(NodeType::VARIABLE);
-            variableNode->adopt(referencedVariable);
-            return variableNode;
-        }
+        // parseTreeNode* referencedVariable = parseReferencedVariable();
+        // if(referencedVariable)
+        // {
+        //     parseTreeNode* variableNode = parseTree->createNode(NodeType::VARIABLE);
+        //     variableNode->adopt(referencedVariable);
+        //     return variableNode;
+        // }
 
         return NULL;
     }
@@ -342,7 +345,7 @@ public:
         if(!variableIdentifier)
             return NULL;
         
-        parseTreeNode* entireVariableNode = parseTree.createNode(NodeType::ENTIRE_VARIABLE);
+        parseTreeNode* entireVariableNode = parseTree->createNode(NodeType::ENTIRE_VARIABLE);
         entireVariableNode->adopt(variableIdentifier);
         return entireVariableNode;
     }
@@ -353,7 +356,7 @@ public:
         if(!identifier)
             return NULL;
         
-        parseTreeNode* variableIdentifierNode = parseTree.createNode(NodeType::VARIABLE_IDENTIFIER);
+        parseTreeNode* variableIdentifierNode = parseTree->createNode(NodeType::VARIABLE_IDENTIFIER);
         variableIdentifierNode->adopt(identifier);
         return variableIdentifierNode;
     }
@@ -363,7 +366,7 @@ public:
         parseTreeNode* indexedVariable = parseIndexedVariable();
         if(indexedVariable)
         {
-            parseTreeNode* componentVariableNode = parseTree.createNode(NodeType::COMPONENT_VARIABLE);
+            parseTreeNode* componentVariableNode = parseTree->createNode(NodeType::COMPONENT_VARIABLE);
             componentVariableNode->adopt(indexedVariable);
             return componentVariableNode;
         }
@@ -371,7 +374,7 @@ public:
         parseTreeNode* fieldDesignator = parseFieldDesignator();
         if(fieldDesignator)
         {
-            parseTreeNode* componentVariableNode = parseTree.createNode(NodeType::COMPONENT_VARIABLE);
+            parseTreeNode* componentVariableNode = parseTree->createNode(NodeType::COMPONENT_VARIABLE);
             componentVariableNode->adopt(fieldDesignator);
             return componentVariableNode;
         }
@@ -379,7 +382,7 @@ public:
         parseTreeNode* fileBuffer = parseFileBuffer();
         if(fileBuffer)
         {
-            parseTreeNode* componentVariableNode = parseTree.createNode(NodeType::COMPONENT_VARIABLE);
+            parseTreeNode* componentVariableNode = parseTree->createNode(NodeType::COMPONENT_VARIABLE);
             componentVariableNode->adopt(fileBuffer);
             return componentVariableNode;
         }
@@ -393,7 +396,7 @@ public:
         if(!arrayVariable)
             return NULL;
         
-        parseTreeNode* indexedVariableNode = parseTree.createNode(NodeType::INDEXED_VARIABLE);
+        parseTreeNode* indexedVariableNode = parseTree->createNode(NodeType::INDEXED_VARIABLE);
         indexedVariableNode->adopt(arrayVariable);
 
         parseTreeNode* expression = parseExpression();
@@ -422,7 +425,7 @@ public:
         if(!variable)
             return NULL;
         
-        parseTreeNode* arrayVariableNode = parseTree.createNode(NodeType::ARRAY_VARIABLE);
+        parseTreeNode* arrayVariableNode = parseTree->createNode(NodeType::ARRAY_VARIABLE);
         arrayVariableNode->adopt(variable);
         return arrayVariableNode;        
     }
@@ -441,7 +444,7 @@ public:
         if(!fieldIdentifier)
             return NULL;
         
-        parseTreeNode* fieldDesignatorNode = parseTree.createNode(NodeType::FIELD_DESIGNATOR);
+        parseTreeNode* fieldDesignatorNode = parseTree->createNode(NodeType::FIELD_DESIGNATOR);
         fieldDesignatorNode->adopt(recordVariable);
         fieldDesignatorNode->adopt(fieldIdentifier);
         return fieldDesignatorNode;
@@ -453,7 +456,7 @@ public:
         if(!variable)
             return NULL;
 
-        parseTreeNode* recordVariableNode = parseTree.createNode(NodeType::ARRAY_VARIABLE);
+        parseTreeNode* recordVariableNode = parseTree->createNode(NodeType::ARRAY_VARIABLE);
         recordVariableNode->adopt(variable);
         return recordVariableNode;
     }
@@ -464,7 +467,7 @@ public:
         if(!identifier)
             return NULL;
         
-        parseTreeNode* fieldIdentifierNode = parseTree.createNode(NodeType::FIELD_IDENTIFIER);
+        parseTreeNode* fieldIdentifierNode = parseTree->createNode(NodeType::FIELD_IDENTIFIER);
         fieldIdentifierNode->adopt(identifier);
         return fieldIdentifierNode;
     }
@@ -475,7 +478,7 @@ public:
         if(!variable)
             return NULL;
 
-        parseTreeNode* fileVariableNode = parseTree.createNode(NodeType::FILE_VARIABLE);
+        parseTreeNode* fileVariableNode = parseTree->createNode(NodeType::FILE_VARIABLE);
         fileVariableNode->adopt(variable);
         return fileVariableNode;
     }
@@ -486,7 +489,7 @@ public:
         if(!variable)
             return NULL;
 
-        parseTreeNode* pointerVariableNode = parseTree.createNode(NodeType::POINTER_VARIABLE);
+        parseTreeNode* pointerVariableNode = parseTree->createNode(NodeType::POINTER_VARIABLE);
         pointerVariableNode->adopt(variable);
         return pointerVariableNode;
     }
@@ -497,7 +500,7 @@ public:
         if(!fileVariable)
             return NULL;
         
-        parseTreeNode* fileBufferNode = parseTree.createNode(NodeType::FILE_BUFFER);
+        parseTreeNode* fileBufferNode = parseTree->createNode(NodeType::FILE_BUFFER);
         fileBufferNode->adopt(fileVariable);
         return fileBufferNode;
     }
@@ -508,7 +511,7 @@ public:
         if(!pointerVariable)
             return NULL;
         
-        parseTreeNode* ReferencedVariableNode = parseTree.createNode(NodeType::REFERENCED_VARIABLE);
+        parseTreeNode* ReferencedVariableNode = parseTree->createNode(NodeType::REFERENCED_VARIABLE);
         ReferencedVariableNode->adopt(pointerVariable);
         return ReferencedVariableNode;
     }
@@ -519,7 +522,7 @@ public:
         if(!simpleExpression)
             return NULL;
 
-        parseTreeNode* expressionNode = parseTree.createNode(NodeType::EXPRESSION);
+        parseTreeNode* expressionNode = parseTree->createNode(NodeType::EXPRESSION);
         expressionNode->adopt(simpleExpression);
         
         parseTreeNode* relationalOperator = parseRelationalOperator();
@@ -527,7 +530,7 @@ public:
             return expressionNode;
         expressionNode->adopt(relationalOperator);
 
-        parseTreeNode* simpleExpression = parseSimpleExpression();
+        simpleExpression = parseSimpleExpression();
         expressionNode->adopt(simpleExpression);
         return expressionNode;
     }
@@ -547,7 +550,7 @@ public:
         else
             return NULL;
 
-        parseTreeNode* relationalOperatorNode = parseTree.createNode(NodeType::RELATIONAL_OPERATOR);
+        parseTreeNode* relationalOperatorNode = parseTree->createNode(NodeType::RELATIONAL_OPERATOR);
         relationalOperatorNode->setName(relationalOperator);
         return relationalOperatorNode;
     }
@@ -557,7 +560,7 @@ public:
         parseTreeNode* term = parseTerm();
         if(term)
         {
-            parseTreeNode* simpleExpressionNode = parseTree.createNode(NodeType::SIMPLE_EXPRESSION);
+            parseTreeNode* simpleExpressionNode = parseTree->createNode(NodeType::SIMPLE_EXPRESSION);
             simpleExpressionNode->adopt(term);
             return simpleExpressionNode;
         }
@@ -565,7 +568,7 @@ public:
         parseTreeNode* sign = parseSign();
         if(sign)
         {
-            parseTreeNode* simpleExpressionNode = parseTree.createNode(NodeType::SIMPLE_EXPRESSION);
+            parseTreeNode* simpleExpressionNode = parseTree->createNode(NodeType::SIMPLE_EXPRESSION);
             simpleExpressionNode->adopt(sign);
             parseTreeNode* term = parseTerm();
             if(term)
@@ -578,7 +581,7 @@ public:
         parseTreeNode* simpleExpression = parseSimpleExpression();
         if(simpleExpression)
         {
-            parseTreeNode* simpleExpressionNode = parseTree.createNode(NodeType::SIMPLE_EXPRESSION);
+            parseTreeNode* simpleExpressionNode = parseTree->createNode(NodeType::SIMPLE_EXPRESSION);
             simpleExpressionNode->adopt(simpleExpression);
             parseTreeNode* addingOperator = parseAddingOperator();
             if(addingOperator)
@@ -603,7 +606,7 @@ public:
             scn.nextToken();
         else
             return NULL;
-        parseTreeNode* addingOperatorNode = parseTree.createNode(NodeType::ADDING_OPERATOR);
+        parseTreeNode* addingOperatorNode = parseTree->createNode(NodeType::ADDING_OPERATOR);
         addingOperatorNode->setName(AddingOperator);
         return addingOperatorNode;
     }
@@ -613,7 +616,7 @@ public:
         parseTreeNode* factor = parseFactor();
         if(factor)
         {
-            parseTreeNode* termNode = parseTree.createNode(NodeType::TERM);
+            parseTreeNode* termNode = parseTree->createNode(NodeType::TERM);
             termNode->adopt(factor);
             return termNode;
         }
@@ -621,7 +624,7 @@ public:
         parseTreeNode* term = parseTerm();
         if(term)
         {
-            parseTreeNode* termNode = parseTree.createNode(NodeType::TERM);
+            parseTreeNode* termNode = parseTree->createNode(NodeType::TERM);
             termNode->adopt(term);
             parseTreeNode* multiplyingOperator = parseMultiplyingOperator();
             if(multiplyingOperator)
@@ -646,7 +649,7 @@ public:
             scn.nextToken();
         else
             return NULL;
-        parseTreeNode* multiplyingOperatorNode = parseTree.createNode(NodeType::MULTIPLYING_OPERATOR);
+        parseTreeNode* multiplyingOperatorNode = parseTree->createNode(NodeType::MULTIPLYING_OPERATOR);
         multiplyingOperatorNode->setName(multiplyingOperator);
         return multiplyingOperatorNode;
     }
@@ -656,7 +659,7 @@ public:
         parseTreeNode* variable = parseVariable();
         if(variable)
         {
-            parseTreeNode* termNode = parseTree.createNode(NodeType::FACTOR);
+            parseTreeNode* termNode = parseTree->createNode(NodeType::FACTOR);
             termNode->adopt(variable);
             return termNode;
         }
@@ -664,7 +667,7 @@ public:
         parseTreeNode* unsignedConstant = parseUnsignedConstant();
         if(unsignedConstant)
         {
-            parseTreeNode* termNode = parseTree.createNode(NodeType::FACTOR);
+            parseTreeNode* termNode = parseTree->createNode(NodeType::FACTOR);
             termNode->adopt(unsignedConstant);
             return termNode;
         }
@@ -678,7 +681,7 @@ public:
                 if(scn.getCurrToken() == "RPAREN")
                 {
                     scn.nextToken();
-                    parseTreeNode* termNode = parseTree.createNode(NodeType::FACTOR);
+                    parseTreeNode* termNode = parseTree->createNode(NodeType::FACTOR);
                     termNode->adopt(expression);
                     return termNode;
                 }
@@ -688,7 +691,7 @@ public:
         parseTreeNode* set = parseSet();
         if(set)
         {
-            parseTreeNode* termNode = parseTree.createNode(NodeType::FACTOR);
+            parseTreeNode* termNode = parseTree->createNode(NodeType::FACTOR);
             termNode->adopt(set);
             return termNode;
         }
@@ -699,7 +702,7 @@ public:
             parseTreeNode* factor = parseFactor();
             if(factor)
             {
-                parseTreeNode* termNode = parseTree.createNode(NodeType::FACTOR);
+                parseTreeNode* termNode = parseTree->createNode(NodeType::FACTOR);
                 termNode->adopt(factor);
                 return termNode;
             }
@@ -713,17 +716,17 @@ public:
         parseTreeNode* unsignedNumber = parseUnsignedNumber();
         if(unsignedNumber)
         {
-            parseTreeNode* unsignedConstantNode = parseTree.createNode(NodeType::UNSIGNED_CONSTANT);
+            parseTreeNode* unsignedConstantNode = parseTree->createNode(NodeType::UNSIGNED_CONSTANT);
             unsignedConstantNode->adopt(unsignedNumber);
             return unsignedConstantNode;
         }
         
-        parseTreeNode* string = parseString();
-        if(string){
-            parseTreeNode* unsignedConstantNode = parseTree.createNode(NodeType::UNSIGNED_CONSTANT);
-            unsignedConstantNode->adopt(string);
-            return unsignedConstantNode;
-        }
+        // parseTreeNode* string = parseString();
+        // if(string){
+        //     parseTreeNode* unsignedConstantNode = parseTree->createNode(NodeType::UNSIGNED_CONSTANT);
+        //     unsignedConstantNode->adopt(string);
+        //     return unsignedConstantNode;
+        // }
 
         parseTreeNode* constantIdentifier = parseConstantIdentifier();
         if(!constantIdentifier)
@@ -731,7 +734,7 @@ public:
 
         if(scn.getCurrToken() == "NIL")
         {
-            parseTreeNode* unsignedConstantNode = parseTree.createNode(NodeType::UNSIGNED_CONSTANT);
+            parseTreeNode* unsignedConstantNode = parseTree->createNode(NodeType::UNSIGNED_CONSTANT);
             unsignedConstantNode->adopt(constantIdentifier);
             scn.nextToken();
             return unsignedConstantNode;
@@ -747,7 +750,7 @@ public:
             parseTreeNode* elementList = parseElementList();
             if(elementList)
             {
-                parseTreeNode* setNode = parseTree.createNode(NodeType::SET);
+                parseTreeNode* setNode = parseTree->createNode(NodeType::SET);
                 setNode->adopt(elementList);
                 if(scn.getCurrToken() == "RBRACKET")
                 {
@@ -760,7 +763,7 @@ public:
 
     parseTreeNode * parseElementList()
     {
-        parseTreeNode* elementList = parseTree.createNode(NodeType::ELEMENT_LIST);
+        parseTreeNode* elementList = parseTree->createNode(NodeType::ELEMENT_LIST);
         parseTreeNode* element = parseElement();
         if(!element)
             return NULL;
@@ -796,7 +799,7 @@ public:
             if(scn.getCurrToken() == "..")
             {
                 scn.nextToken();
-                parseTreeNode* elementNode = parseTree.createNode(NodeType::ELEMENT);
+                parseTreeNode* elementNode = parseTree->createNode(NodeType::ELEMENT);
                 elementNode->adopt(expression);
                 expression = parseExpression();
                 if(expression)
@@ -807,7 +810,7 @@ public:
             }
             else
             {
-                parseTreeNode* elementNode = parseTree.createNode(NodeType::ELEMENT);
+                parseTreeNode* elementNode = parseTree->createNode(NodeType::ELEMENT);
                 elementNode->adopt(expression);
                 return elementNode;
             }
@@ -826,7 +829,7 @@ public:
         if(!label)
             return NULL;
         
-        parseTreeNode* gotoStatementNode = parseTree.createNode(NodeType::GOTO_STATEMENT);
+        parseTreeNode* gotoStatementNode = parseTree->createNode(NodeType::GOTO_STATEMENT);
         gotoStatementNode->adopt(label);
         return gotoStatementNode;
     }
@@ -837,14 +840,14 @@ public:
         if(!empty)
             return NULL;
         
-        parseTreeNode* emptyStatementNode = parseTree.createNode(NodeType::EMPTY_STATEMENT);
+        parseTreeNode* emptyStatementNode = parseTree->createNode(NodeType::EMPTY_STATEMENT);
         emptyStatementNode->adopt(empty);
         return emptyStatementNode;
     }
 
     parseTreeNode * parseEmpty()
     {
-        parseTreeNode* emptyNode = parseTree.createNode(NodeType::EMPTY);
+        parseTreeNode* emptyNode = parseTree->createNode(NodeType::EMPTY);
         return emptyNode;
     }
 
@@ -853,7 +856,7 @@ public:
         parseTreeNode* compoundStatement = parseCompoundStatement();
         if(compoundStatement)
         {
-            parseTreeNode* parseStructuredStatement = parseTree.createNode(NodeType::STRUCTURED_STATEMENT);
+            parseTreeNode* parseStructuredStatement = parseTree->createNode(NodeType::STRUCTURED_STATEMENT);
             parseStructuredStatement->adopt(compoundStatement);
             return parseStructuredStatement;
         }
@@ -861,23 +864,23 @@ public:
         parseTreeNode* conditionalStatement = parseConditionalStatement();
         if(conditionalStatement)
         {
-            parseTreeNode* parseStructuredStatement = parseTree.createNode(NodeType::STRUCTURED_STATEMENT);
+            parseTreeNode* parseStructuredStatement = parseTree->createNode(NodeType::STRUCTURED_STATEMENT);
             parseStructuredStatement->adopt(conditionalStatement);
             return parseStructuredStatement;
         }
 
-        parseTreeNode* repetitveStatement = parseRepetitveStatement();
-        if(repetitveStatement)
-        {
-            parseTreeNode* parseStructuredStatement = parseTree.createNode(NodeType::STRUCTURED_STATEMENT);
-            parseStructuredStatement->adopt(repetitveStatement);
-            return parseStructuredStatement;
-        }
+        // parseTreeNode* repetitveStatement = parseRepetitveStatement();
+        // if(repetitveStatement)
+        // {
+        //     parseTreeNode* parseStructuredStatement = parseTree->createNode(NodeType::STRUCTURED_STATEMENT);
+        //     parseStructuredStatement->adopt(repetitveStatement);
+        //     return parseStructuredStatement;
+        // }
 
         parseTreeNode* withStatement = parseWithStatement();
         if(withStatement)
         {
-            parseTreeNode* parseStructuredStatement = parseTree.createNode(NodeType::STRUCTURED_STATEMENT);
+            parseTreeNode* parseStructuredStatement = parseTree->createNode(NodeType::STRUCTURED_STATEMENT);
             parseStructuredStatement->adopt(withStatement);
             return parseStructuredStatement;
         }
@@ -890,7 +893,7 @@ public:
         parseTreeNode* ifStatement = parseIfStatement();
         if(ifStatement)
         {
-            parseTreeNode* conditionalStatementNode = parseTree.createNode(NodeType::CONDITIONAL_STATEMENT);
+            parseTreeNode* conditionalStatementNode = parseTree->createNode(NodeType::CONDITIONAL_STATEMENT);
             conditionalStatementNode->adopt(ifStatement);
             return conditionalStatementNode;
         }
@@ -898,7 +901,7 @@ public:
         parseTreeNode* caseStatement = parseCaseStatement();
         if(caseStatement)
         {
-            parseTreeNode* conditionalStatementNode = parseTree.createNode(NodeType::CONDITIONAL_STATEMENT);
+            parseTreeNode* conditionalStatementNode = parseTree->createNode(NodeType::CONDITIONAL_STATEMENT);
             conditionalStatementNode->adopt(caseStatement);
             return conditionalStatementNode;
         }
@@ -914,7 +917,7 @@ public:
             parseTreeNode* expression = parseExpression();
             if(expression)
             {
-                parseTreeNode* ifStatementNode = parseTree.createNode(NodeType::IF_STATEMENT);
+                parseTreeNode* ifStatementNode = parseTree->createNode(NodeType::IF_STATEMENT);
                 ifStatementNode->adopt(expression);
                 if(scn.getCurrToken() == "THEN")
                 {
@@ -958,7 +961,7 @@ public:
                 return NULL;
         }
         
-        parseTreeNode* caseStatementNode = parseTree.createNode(NodeType::COMPOUND_STATEMENT);
+        parseTreeNode* caseStatementNode = parseTree->createNode(NodeType::COMPOUND_STATEMENT);
         caseStatementNode->adopt(expression);
 
         if (scn.getCurrToken() != "OF")
@@ -1015,7 +1018,7 @@ public:
                 parseTreeNode* statement = parseStatement();
                 if(statement) 
                 {
-                    parseTreeNode* caseListElementNode = parseTree.createNode(NodeType::CASE_LIST_ELEMENT);
+                    parseTreeNode* caseListElementNode = parseTree->createNode(NodeType::CASE_LIST_ELEMENT);
                     caseListElementNode->adopt(caseLabelList);
                     caseListElementNode->adopt(statement);
                     return caseListElementNode;
@@ -1026,7 +1029,7 @@ public:
         parseTreeNode* empty = parseEmpty();
         if(empty)
         {
-            parseTreeNode* caseListElementNode = parseTree.createNode(NodeType::CASE_LIST_ELEMENT);
+            parseTreeNode* caseListElementNode = parseTree->createNode(NodeType::CASE_LIST_ELEMENT);
             caseListElementNode->adopt(empty);
             return caseListElementNode;
         }
@@ -1038,7 +1041,7 @@ public:
         parseTreeNode* caseLabel = parseCaseLabel();
         if(caseLabel)
         {   
-            parseTreeNode* caseLabelListNode = parseTree.createNode(NodeType::CASE_LABEL_LIST);
+            parseTreeNode* caseLabelListNode = parseTree->createNode(NodeType::CASE_LABEL_LIST);
             caseLabelListNode->adopt(caseLabel);
             while(true)
             {
@@ -1061,7 +1064,7 @@ public:
         parseTreeNode* constant = parseConstant();
         if(!constant)
             return NULL;
-        parseTreeNode* caseLabelNode = parseTree.createNode(NodeType::CASE_LABEL);
+        parseTreeNode* caseLabelNode = parseTree->createNode(NodeType::CASE_LABEL);
         caseLabelNode->adopt(constant);
         return caseLabelNode;
     }
@@ -1071,7 +1074,7 @@ public:
         parseTreeNode* unsignedNumber = parseUnsignedNumber();
         if(unsignedNumber)
         {
-            parseTreeNode* constantNode = parseTree.createNode(NodeType::CONSTANT);
+            parseTreeNode* constantNode = parseTree->createNode(NodeType::CONSTANT);
             constantNode->adopt(unsignedNumber);
             return constantNode;
         }
@@ -1082,7 +1085,7 @@ public:
             parseTreeNode* unsignedNumber = parseUnsignedNumber();
             if(unsignedNumber)
             {
-                parseTreeNode* constantNode = parseTree.createNode(NodeType::CONSTANT);
+                parseTreeNode* constantNode = parseTree->createNode(NodeType::CONSTANT);
                 constantNode->adopt(unsignedNumber);
                 return constantNode;
             } 
@@ -1091,30 +1094,30 @@ public:
         parseTreeNode* constantIdentifier = parseConstantIdentifier();
         if(constantIdentifier)
         {
-            parseTreeNode* constantNode = parseTree.createNode(NodeType::CONSTANT);
+            parseTreeNode* constantNode = parseTree->createNode(NodeType::CONSTANT);
             constantNode->adopt(constantIdentifier);
             return constantNode;
         }
 
-        parseTreeNode* sign = parseSign();
+        sign = parseSign();
         if(sign)
         {
             parseTreeNode* constantIdentifier = parseConstantIdentifier();
             if(constantIdentifier)
             {
-                parseTreeNode* constantNode = parseTree.createNode(NodeType::CONSTANT);
+                parseTreeNode* constantNode = parseTree->createNode(NodeType::CONSTANT);
                 constantNode->adopt(constantIdentifier);
                 return constantNode;
             } 
         }
 
-        parseTreeNode* string = parseString();
-        if(string)
-        {
-            parseTreeNode* constantNode = parseTree.createNode(NodeType::CONSTANT);
-            constantNode->adopt(string);
-            return constantNode;
-        }
+        // parseTreeNode* string = parseString();
+        // if(string)
+        // {
+        //     parseTreeNode* constantNode = parseTree->createNode(NodeType::CONSTANT);
+        //     constantNode->adopt(string);
+        //     return constantNode;
+        // }
 
         return NULL;
     }
@@ -1124,7 +1127,7 @@ public:
         parseTreeNode* unsignedInteger = parseUnsignedInteger();
         if(unsignedInteger)
         {
-            parseTreeNode* unsignedNumberNode = parseTree.createNode(NodeType::UNSIGNED_NUMBER);
+            parseTreeNode* unsignedNumberNode = parseTree->createNode(NodeType::UNSIGNED_NUMBER);
             unsignedNumberNode->adopt(unsignedInteger);
             return unsignedNumberNode;
         }
@@ -1132,7 +1135,7 @@ public:
         parseTreeNode* unsignedReal = parseUnsignedReal();
         if(unsignedReal)
         {
-            parseTreeNode* unsignedNumberNode = parseTree.createNode(NodeType::UNSIGNED_NUMBER);
+            parseTreeNode* unsignedNumberNode = parseTree->createNode(NodeType::UNSIGNED_NUMBER);
             unsignedNumberNode->adopt(unsignedReal);
             return unsignedNumberNode;
         }
@@ -1146,7 +1149,7 @@ public:
             if(scn.getCurrToken() == "PERIOD")
             {
                 scn.getNextToken();
-                parseTreeNode* unsignedRealNode = parseTree.createNode(NodeType::UNSIGNED_REAL);
+                parseTreeNode* unsignedRealNode = parseTree->createNode(NodeType::UNSIGNED_REAL);
                 unsignedRealNode->adopt(unsignedInteger);
                 unsignedInteger = parseUnsignedInteger();
                 if(unsignedInteger)
@@ -1171,7 +1174,8 @@ public:
             scn.nextToken();
         else
             return NULL;
-        parseTreeNode* signOperatorNode = parseTree.createNode(NodeType::SIGN);
+        
+        parseTreeNode* signOperatorNode = parseTree->createNode(NodeType::SIGN);
         signOperatorNode->setName(signOperator);
         return signOperatorNode;
     }
@@ -1183,7 +1187,7 @@ public:
         {
             return NULL;
         }
-        parseTreeNode* constantIdentifierNode = parseTree.createNode(NodeType::CONSTANT_IDENTIFIER);
+        parseTreeNode* constantIdentifierNode = parseTree->createNode(NodeType::CONSTANT_IDENTIFIER);
         constantIdentifierNode->adopt(identifier);
         return constantIdentifierNode;
     }
@@ -1195,7 +1199,7 @@ public:
         parseTreeNode* whileStatement = parseWhileStatement();
         if(whileStatement)
         {
-            parseTreeNode* repetitiveStatement = parseTree.createNode(NodeType::REPETITIVE_STATEMENT);
+            parseTreeNode* repetitiveStatement = parseTree->createNode(NodeType::REPETITIVE_STATEMENT);
             repetitiveStatement->adopt(whileStatement);
             return repetitiveStatement;
         }
@@ -1203,18 +1207,18 @@ public:
         parseTreeNode* repeatStatement = parseRepeatStatement();
         if(repeatStatement)
         {
-            parseTreeNode* repetitiveStatement = parseTree.createNode(NodeType::REPETITIVE_STATEMENT);
+            parseTreeNode* repetitiveStatement = parseTree->createNode(NodeType::REPETITIVE_STATEMENT);
             repetitiveStatement->adopt(repeatStatement);
             return repetitiveStatement;
         }
         
-        parseTreeNode* forStatement = parseForStatement();
-        if(forStatement)
-        {
-            parseTreeNode* repetitiveStatement = parseTree.createNode(NodeType::REPETITIVE_STATEMENT);
-            repetitiveStatement->adopt(repeatStatement);
-            return repetitiveStatement;
-        }
+        // parseTreeNode* forStatement = parseForStatement();
+        // if(forStatement)
+        // {
+        //     parseTreeNode* repetitiveStatement = parseTree->createNode(NodeType::REPETITIVE_STATEMENT);
+        //     repetitiveStatement->adopt(repeatStatement);
+        //     return repetitiveStatement;
+        // }
 
     return NULL;
     }
@@ -1227,7 +1231,7 @@ public:
             parseTreeNode* statement = parseStatement();
             if (statement)
             {
-                parseTreeNode* repeatStatementNode = parseTree.createNode(NodeType::REPEAT_STATEMENT);
+                parseTreeNode* repeatStatementNode = parseTree->createNode(NodeType::REPEAT_STATEMENT);
                 while(true)
                 {
                     repeatStatementNode->adopt(statement);
@@ -1256,35 +1260,35 @@ public:
         return NULL;
     }
 
-    parseTreeNode * parseForStatement()
-    {
-        if (scn.getCurrToken() == "FOR")
-        {
-            scn.nextToken();
-            parseTreeNode controlVariable = parseControlVariable();
-            if (controlVariable)
-            {
-                if (scn.getCurrToken() = "ASSIG")
-                {
-                    scn.nextToken();
-                    parseTreeNode forList = parseForList();
-                    if(forList)
-                        {
-                            if(scn.getCurrText == "DO")
-                            {
-                                parseTreeNode statement = parseStatement();
-                                parseTreeNode forStatementNode = parseTree.createNode(NodeType::FOR_STATEMENT);
-                                forStatementNode->adopt(controlVariable);
-                                forStatementNode->adopt(forList);
-                                forStatementNode->adopt(statement);
-                            }
-                        }
-                }
-            }
-        }
-        return NULL;
+    // parseTreeNode * parseForStatement()
+    // {
+    //     if (scn.getCurrToken() == "FOR")
+    //     {
+    //         scn.nextToken();
+    //         parseTreeNode* controlVariable = parseControlVariable();
+    //         if (controlVariable)
+    //         {
+    //             if (scn.getCurrToken() == "ASSIGN")
+    //             {
+    //                 scn.nextToken();
+    //                 parseTreeNode* forList = parseForList();
+    //                 if(forList)
+    //                     {
+    //                         if(scn.getCurrText() == "DO")
+    //                         {
+    //                             parseTreeNode statement = parseStatement();
+    //                             parseTreeNode forStatementNode = parseTree->createNode(NodeType::FOR_STATEMENT);
+    //                             forStatementNode->adopt(controlVariable);
+    //                             forStatementNode->adopt(forList);
+    //                             forStatementNode->adopt(statement);
+    //                         }
+    //                     }
+    //             }
+    //         }
+    //     }
+    //     return NULL;
             
-    }
+    // }
 
     parseTreeNode * parseControlVariable()
     {
@@ -1292,7 +1296,7 @@ public:
         if(!identifier)
             return NULL;
         
-        parseTreeNode* controlVariableNode = parseTree.createNode(NodeType::CONTROL_VARIABLE);
+        parseTreeNode* controlVariableNode = parseTree->createNode(NodeType::CONTROL_VARIABLE);
         controlVariableNode->adopt(identifier);
         return controlVariableNode;
     }
@@ -1309,7 +1313,7 @@ public:
                         parseTreeNode* statement = parseStatement();
                         if (statement)
                         {
-                            parseTreeNode* whileStatement = parseTree.createNode(NodeType::WHILE_STATEMENT);
+                            parseTreeNode* whileStatement = parseTree->createNode(NodeType::WHILE_STATEMENT);
                             whileStatement->adopt(expression);
                             whileStatement->adopt(statement);
                             return whileStatement;
@@ -1350,7 +1354,7 @@ public:
         if(!recordVariable)
             return NULL;
         
-        parseTreeNode* recordVariableListNode = parseTree.createNode(NodeType::RECORD_VARIABLE_TYPE);
+        parseTreeNode* recordVariableListNode = parseTree->createNode(NodeType::RECORD_VARIABLE_TYPE);
         
         while(true)
         {
@@ -1422,9 +1426,11 @@ public:
         if(!x)
             return NULL;
         
-        parseTreeNode* yNode = parseTree.createNode(NodeType::Y);
+        parseTreeNode* yNode = parseTree->createNode(NodeType::Y);
         yNode->adopt(xNode);
         return yNode;
     */
  
 };
+
+#endif // PARSER_H_

@@ -2,7 +2,7 @@ IDENTIFIER : apple
 PLUSOP : +
 INTEGER : 25
 DIVOP : /
-IDENTIFIER : banana
+STRING : 'banana'
 IMPLEMENTATION : implementation
 IDENTIFIER : pear
 SEMICOLON : ;
@@ -35,4 +35,5 @@ ERROR : :
 REAL : 4.0
 IDENTIFIER : blah
 DOTDOT : ..
+STRING : 'test string'
 EOF

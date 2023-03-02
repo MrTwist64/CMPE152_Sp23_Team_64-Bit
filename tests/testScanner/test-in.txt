@@ -1,4 +1,4 @@
-Apple + 25 / Banana 
+Apple + 25 / 'Banana' 
 iMpLeMeNtAtIoN
 Pear ; += for 
 (* orange := 55 *)
@@ -7,3 +7,4 @@ I:+=1
 test.
 CMPE152:= "HELLO"
 1 : 4.0 blah..
+'test string'
