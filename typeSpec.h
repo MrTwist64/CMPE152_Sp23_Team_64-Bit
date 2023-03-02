@@ -8,6 +8,11 @@
 
 using namespace std;
 
+
+class SymTab;
+class SymTabEntry;
+class TypeSpec;
+
 enum class Container
 {
     ARRAY, SUBRANGE, RECORD, SCALAR, ENUMERATION,

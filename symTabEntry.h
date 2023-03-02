@@ -10,7 +10,7 @@
 
 using namespace std;
 
-enum class Kind {PROGRAM, CONSTANT, VARIABLE,};
+enum class Kind {PROGRAM, CONSTANT, VARIABLE};
 
 class SymTab;
 
@@ -19,7 +19,7 @@ class SymTabEntry // each entry of symbol table created here
 private:
     string name;              // identifier name
     Kind kind;                // what kind of identifier
-    int *value;               // Assuming all identifiers are integers
+    int value;               // Assuming all identifiers are integers
     SymTab *symtab;           // parent symbol table
     TypeSpec *typeSpec;       // type spec
 
@@ -31,18 +31,18 @@ public:
     
     SymTabEntry(string name, Kind kind, SymTab *parentTab) : name(name), kind(kind), symtab(parentTab)
     {
-        switch(kind) {
-            case Kind::PROGRAM:
-                value = nullptr;
-            break;
-            case Kind::CONSTANT:
-                value = nullptr;
-            break;
-            case Kind::VARIABLE:
-                value = nullptr;
-            break;
+        // switch(kind) {
+        //     case Kind::PROGRAM:
+        //         value = NULL;
+        //     break;
+        //     case Kind::CONSTANT:
+        //         value = NULL;
+        //     break;
+        //     case Kind::VARIABLE:
+        //         value = NULL;
+        //     break;
             
-        }
+        // }
 
     }
 
@@ -66,12 +66,12 @@ public:
         return this->kind;
     }
 
-    void setValue(int *value)
+    void setValue(int value)
     {
         this->value = value;
     }
     
-    int *getValue(){
+    int getValue(){
         return this->value;
     }
 };

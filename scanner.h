@@ -8,7 +8,7 @@
 #include <cstdio>
 using namespace std;
 
-const int NS_TABLE_HEIGHT = 32;
+const int NS_TABLE_HEIGHT = 34;
 const int NS_TABLE_WIDTH = 26;
 
 class Scanner
@@ -54,7 +54,7 @@ class Scanner
         //     -1 = Return current state/token
         //     -2 = Return with error
         int nsTable[NS_TABLE_HEIGHT][NS_TABLE_WIDTH] = {
-            { 0,-1, 3, 1, 4, 5, 6, 7,30, 9,13,14,19,20,-2,21,22,23,24,25,26,27, 0, 0, 0,31}, // 0
+            { 0,-1, 3, 1, 4, 5, 6, 7,30, 9,13,14,19,20,31,21,22,23,24,25,26,27, 0, 0, 0,33}, // 0
             { 1, 1,-1, 1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 2,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, // 1
             { 1, 2,-1, 2,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, // 2
             { 1, 3, 3, 3,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, // 3
@@ -85,12 +85,19 @@ class Scanner
             { 1,28,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, // 28
             { 1,29,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, // 29
             { 0,-1,-2,-2,-2,-2,-2,-2,-2, 8,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2}, // 30
-            { 1, 0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}  // 32
+            { 1,30,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,32,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, // 31
+            { 1,31,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, // 32
+            { 1, 0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}  // 33
         };
 
-        string labelTable[30] = {"EOF", "INTEGER", "REAL", "IDENTIFIER", "PLUSOP", "MINUSOP", "MULTOP", "DIVOP", "ASSIGN", "EQUAL",
-            "NE", "LTEQ", "GTEQ", "LT", "GT", "PLUSEQUAL", "MINUSEQUAL", "MULTEQUAL", "DIVEQUAL", "CARAT",
-            "SEMICOLON", "COMMA", "LPAREN", "RPAREN", "LBRACKET", "RBRACKET", "LBRACE", "RBRACE", "LCOMMENT", "RCOMMENT"};
+        string labelTable[32] = {
+            /* 0-4 */ "EOF", "INTEGER", "REAL", "IDENTIFIER", "PLUSOP",
+            /* 5-9 */ "MINUSOP", "MULTOP", "DIVOP", "ASSIGN", "EQUAL",
+            /*10-14*/ "NE", "LTEQ", "GTEQ", "LT", "GT",
+            /*15-19*/ "PLUSEQUAL", "MINUSEQUAL", "MULTEQUAL", "DIVEQUAL", "CARAT",
+            /*20-24*/ "SEMICOLON", "COMMA", "LPAREN", "RPAREN", "LBRACKET",
+            /*25-29*/ "RBRACKET", "LBRACE", "RBRACE", "LCOMMENT", "RCOMMENT",
+            /*30-34*/ "PERIOD", "DOTDOT"};
         
         map <string, string> reservedWords; // map of reserved words
         void reservePopulator() {
@@ -220,7 +227,7 @@ class Scanner
                 }
 
                 // Possible Returns
-                if (CS == 31) // If end of file
+                if (CS == 33) // If end of file
                 {
                     this->nextTkn = "EOF";
                     return;
@@ -243,10 +250,10 @@ class Scanner
                         if (reservedWordsIterator != reservedWords.end()) // If token is reserved word
                             this->nextTkn = reservedWordsIterator->second;
                         else
-                            this->nextTkn = labelTable[CS];
+                            this->nextTkn = labelTable[nsTable[CS][1]];
                     }
                     else
-                        this->nextTkn = labelTable[CS];
+                        this->nextTkn = labelTable[nsTable[CS][1]];
                     
                     return;
                 }

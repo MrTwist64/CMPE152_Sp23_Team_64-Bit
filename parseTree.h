@@ -2,7 +2,7 @@
 
 using namespace std;
 
-class parseTree
+class ParseTree
 {
 private:
     parseTreeNode* root;
@@ -21,6 +21,38 @@ public:
         newNode->setParent(node->getParent());
         newNode->setValue(node->getValue());
         return newNode;
+    }
+
+    void printTreeWalker() {printTreeWalker(0, root);}
+
+    void printTreeWalker(parseTreeNode* node) {printTreeWalker(0, node);}
+
+    void printTreeWalker(int level, parseTreeNode* node)
+    {
+        for(int i = 0; i < level; i++)
+            cout << "    ";
+        cout << "<" << node->getTypeStr();
+        if(node->isNameSet())
+            cout << " name=\"" << node->getName() << "\"";
+        if(node->isValueSet())
+            cout << " value=\"" << node->getValue() << "\"";
+        
+        vector<parseTreeNode*> children = node->getChildren();
+        if(children.size() == 0)
+        {
+            cout << "/>" << endl;
+            return;
+        }
+        cout << ">" << endl;
+
+        for(auto & child : children)
+        {
+            printTreeWalker(level + 1, child);
+        }
+        
+        for(int i = 0; i < level; i++)
+            cout << "    ";
+        cout << "<" << node->getTypeStr() << "/>" << endl;
     }
 
     // Local Getters
