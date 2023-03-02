@@ -12,13 +12,13 @@ int main()
     ParseTree parseTree;
     parseTreeNode* node;
 
-    //node = parser.parseFactor();
-    node = parser.parseStatementPart();
+    node = parser.parseCompoundStatement();
 
-    cout << "Printing Tree:" << endl;
+    // node = parser.parseAssignmentStatement();
+    // node = parser.parseSimpleExpression();
 
     if(node)
         parseTree.printTreeWalker(node);
     else   
-        cout << "Node = " << node << endl;
+        cout << "Node = NULL" << endl;
 }

@@ -36,4 +36,10 @@ REAL : 4.0
 IDENTIFIER : blah
 DOTDOT : ..
 STRING : 'test string'
+BEGIN : begin
+IDENTIFIER : apple
+ASSIGN : :=
+INTEGER : 3
+END : end
+SEMICOLON : ;
 EOF

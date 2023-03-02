@@ -8,3 +8,6 @@ test.
 CMPE152:= "HELLO"
 1 : 4.0 blah..
 'test string'
+begin
+    apple := 3
+end;

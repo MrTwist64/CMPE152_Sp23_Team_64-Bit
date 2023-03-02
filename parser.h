@@ -179,6 +179,7 @@ public:
             
             compoundStatementNode->adopt(statement);
         }
+        scn.nextToken();
 
         if (scn.getCurrToken() != "SEMICOLON")
             return NULL;
@@ -560,6 +561,22 @@ public:
         parseTreeNode* term = parseTerm();
         if(term)
         {
+            parseTreeNode* addingOperator = parseAddingOperator();
+            if(addingOperator)
+            {
+                parseTreeNode* simpleExpression = parseSimpleExpression();
+                if(simpleExpression)
+                {
+                    parseTreeNode* simpleExpressionNode = parseTree->createNode(NodeType::SIMPLE_EXPRESSION);
+                    simpleExpressionNode->adopt(term);
+                    simpleExpressionNode->adopt(addingOperator);
+                    simpleExpressionNode->adopt(simpleExpression);
+                    return simpleExpressionNode;
+                }
+
+                return NULL;
+            }
+
             parseTreeNode* simpleExpressionNode = parseTree->createNode(NodeType::SIMPLE_EXPRESSION);
             simpleExpressionNode->adopt(term);
             return simpleExpressionNode;
@@ -575,24 +592,6 @@ public:
             {
                 simpleExpressionNode->adopt(term);
                 return simpleExpressionNode;
-            }
-        }
-
-        parseTreeNode* simpleExpression = parseSimpleExpression();
-        if(simpleExpression)
-        {
-            parseTreeNode* simpleExpressionNode = parseTree->createNode(NodeType::SIMPLE_EXPRESSION);
-            simpleExpressionNode->adopt(simpleExpression);
-            parseTreeNode* addingOperator = parseAddingOperator();
-            if(addingOperator)
-            {
-                simpleExpressionNode->adopt(addingOperator);
-                parseTreeNode* term = parseTerm();
-                if(term)
-                {
-                    simpleExpressionNode->adopt(term);
-                    return simpleExpressionNode;
-                }
             }
         }
 
@@ -1192,7 +1191,372 @@ public:
         return constantIdentifierNode;
     }
     
-    
+    parseTreeNode * parseType()
+    {
+        parseTreeNode* simpleType = parseSimpleType();
+        if(simpleType){
+            parseTreeNode* typeNode = parseTree->createNode(NodeType::TYPE);
+            typeNode->adopt(simpleType);
+            return typeNode;
+        }
+
+        parseTreeNode* structuredType = parseStructuredType();
+        if(structuredType){
+            parseTreeNode* typeNode = parseTree->createNode(NodeType::TYPE);
+            typeNode->adopt(structuredType);
+            return typeNode;
+        }
+
+        parseTreeNode* pointerType = parsePointerType();
+        if(pointerType){
+            parseTreeNode* typeNode = parseTree->createNode(NodeType::TYPE);
+            typeNode->adopt(pointerType);
+            return typeNode;
+        }
+
+        return NULL;
+    }
+
+    parseTreeNode * parseSimpleType()
+    {
+        parseTreeNode* scalarType = parseScalarType();
+        if(scalarType){
+            parseTreeNode* simpleTypeNode = parseTree->createNode(NodeType::SIMPLE_TYPE);
+            simpleTypeNode->adopt(scalarType);
+            return simpleTypeNode;
+        }
+
+        parseTreeNode* subrangeType = parseSubrangeType();
+        if(subrangeType){
+            parseTreeNode* simpleTypeNode = parseTree->createNode(NodeType::SIMPLE_TYPE);
+            simpleTypeNode->adopt(subrangeType);
+            return simpleTypeNode;
+        }
+
+        parseTreeNode* typeIdentifier = parseTypeIdentifier();
+        if(typeIdentifier){
+            parseTreeNode* simpleTypeNode = parseTree->createNode(NodeType::SIMPLE_TYPE);
+            simpleTypeNode->adopt(typeIdentifier);
+            return simpleTypeNode;
+        }
+
+        return NULL;
+    }
+
+    parseTreeNode * parseScalarType() 
+    {
+        if(scn.getCurrToken() == "LPAREN")
+        {
+            scn.getNextToken();
+            parseTreeNode* identifier = parseIdentifier();
+            if(identifier)
+            {   
+                parseTreeNode* scalarTypeNode = parseTree->createNode(NodeType::SCALAR_TYPE);
+                scalarTypeNode->adopt(identifier);
+                while(true)
+                {
+                    if(scn.getCurrToken() != "COMMA")
+                        break;
+                    scn.nextToken();
+
+                    identifier = parseIdentifier();
+                    if(!identifier)
+                        break;
+                    scalarTypeNode->adopt(identifier);
+                }
+
+                if(scn.getCurrToken() == "RPAREN")
+                {
+                    scn.getNextToken();
+                    return scalarTypeNode;
+                }
+            }
+        }
+        return NULL;
+    }
+
+    parseTreeNode * parseSubrangeType()
+    {
+        parseTreeNode* constant = parseConstant();
+        if(constant)
+        {
+            if(scn.getCurrToken() == "..")
+            {
+                scn.nextToken();
+                parseTreeNode* subrangeTypeNode = parseTree->createNode(NodeType::SUBRANGE_TYPE);
+                subrangeTypeNode->adopt(constant);
+                constant = parseConstant();
+                if(constant)
+                {
+                    subrangeTypeNode->adopt(constant);
+                    return subrangeTypeNode;
+                }
+            }
+        }
+
+        return NULL;
+    }
+
+    parseTreeNode * parseTypeIdentifier()
+    {
+        parseTreeNode* identifier = parseIdentifier();
+        if(!identifier)
+            return NULL;
+        
+        parseTreeNode* typeIdentifierNode = parseTree->createNode(NodeType::TYPE_IDENTIFIER);
+        typeIdentifierNode->adopt(identifier);
+        return typeIdentifierNode;
+    }
+
+    parseTreeNode * parseStructuredType()
+    {
+        parseTreeNode * arrayType = parseArrayType();
+        if(arrayType)
+        {
+            parseTreeNode* structuredTypeNode = parseTree->createNode(NodeType::STRUCTURED_TYPE);
+            structuredTypeNode->adopt(arrayType);
+            return structuredTypeNode;
+        }
+
+        parseTreeNode * recordType = parseRecordType();
+        if(recordType)
+        {
+            parseTreeNode* structuredTypeNode = parseTree->createNode(NodeType::STRUCTURED_TYPE);
+            structuredTypeNode->adopt(recordType);
+            return structuredTypeNode;
+        }
+
+        parseTreeNode * setType = parseSetType();
+        if(setType)
+        {
+            parseTreeNode* structuredTypeNode = parseTree->createNode(NodeType::STRUCTURED_TYPE);
+            structuredTypeNode->adopt(setType);
+            return structuredTypeNode;
+        }
+
+        parseTreeNode * fileType = parseFileType();
+        if(fileType)
+        {
+            parseTreeNode* structuredTypeNode = parseTree->createNode(NodeType::STRUCTURED_TYPE);
+            structuredTypeNode->adopt(fileType);
+            return structuredTypeNode;
+        }
+
+        return NULL;
+    }
+
+    parseTreeNode * parseIndexType()
+    {
+        parseTreeNode* simpleType = parseSimpleType();
+        if(simpleType)
+        {
+            parseTreeNode* indexTypeNode = parseTree->createNode(NodeType::INDEX_TYPE);
+            indexTypeNode->adopt(simpleType);
+            return indexTypeNode;
+        }
+        
+        return NULL;
+    }
+
+    parseTreeNode * parseComponentType()
+    {
+        parseTreeNode* type = parseType();
+        if(type)
+        {
+            parseTreeNode* componentTypeNode = parseTree->createNode(NodeType::COMPONENT_TYPE);
+            componentTypeNode->adopt(type);
+            return componentTypeNode;
+        }
+
+        return NULL;
+    }
+
+    parseTreeNode * parseRecordType()
+    {
+        if(scn.getCurrToken() == "RECORD")
+        {
+            scn.getNextToken();
+            parseTreeNode* fieldList = parseFieldList();
+            if(fieldList)
+            {
+                if(scn.getCurrToken() == "END")
+                {
+                    scn.getNextToken();
+                    parseTreeNode* recordTypeNode = parseTree->createNode(NodeType::RECORD_TYPE);
+                    recordTypeNode->adopt(fieldList);
+                    return recordTypeNode;
+                }
+            }
+        }
+
+        return NULL;
+    }
+
+    parseTreeNode * parseFieldList()
+    {
+        parseTreeNode* fixedPart = parseFixedPart();
+        if(fixedPart)
+        {
+            if(scn.getCurrToken() == "SEMICOLON")
+            {
+                scn.getNextToken();
+                parseTreeNode* variantType = parseVariantType();
+                if(variantType)
+                {
+                    parseTreeNode* fieldList = parseTree->createNode(NodeType::FIELD_LIST);
+                    fieldList->adopt(fixedPart);
+                    fieldList->adopt(variantType);
+                    return fieldList;
+                }
+            }
+            else 
+            {
+                parseTreeNode* fieldList = parseTree->createNode(NodeType::FIELD_LIST);
+                fieldList->adopt(fixedPart);
+                return fieldList;
+            }
+        }
+
+        parseTreeNode* variantType = parseVariantType();
+        if(variantType)
+        {
+            parseTreeNode* fieldList = parseTree->createNode(NodeType::FIELD_LIST);
+            fieldList->adopt(variantType);
+            return fieldList;
+        }
+
+        return NULL;
+    }
+
+    parseTreeNode * parseTagField()
+    {
+        parseTreeNode* fieldIdentifier = parseFieldIdentifier();
+        if(fieldIdentifier)
+        {
+            if(scn.getCurrToken() == "COLON") 
+            {
+                scn.getNextToken();
+                parseTreeNode* tagFieldNode = parseTree->createNode(NodeType::TAG_FIELD);
+                tagFieldNode->adopt(fieldIdentifier);
+                return tagFieldNode;
+            }
+            
+        }
+
+        parseTreeNode* empty = parseEmpty();
+        if(empty)
+        {
+            parseTreeNode* tagFieldNode = parseTree->createNode(NodeType::TAG_FIELD);
+            tagFieldNode->adopt(empty);
+            return tagFieldNode;
+        }
+
+        return NULL;
+    }
+
+    parseTreeNode * parseVariant() 
+    {
+        parseTreeNode* caseLabelList = parseCaseLabelList();
+        if(caseLabelList)
+        {
+            if(scn.getCurrToken() == "COLON") 
+            {
+                scn.getNextToken();
+                if(scn.getCurrToken() == "LPAREN")
+                {
+                    scn.getNextToken();
+                    parseTreeNode* fieldList = parseFieldList();
+                    if(fieldList)
+                    {
+                        if(scn.getCurrToken() == "RPAREN")
+                        {
+                            scn.getNextToken();
+                            parseTreeNode* variantNode = parseTree->createNode(NodeType::VARIANT);
+                            variantNode->adopt(caseLabelList);
+                            variantNode->adopt(fieldList);
+                            return variantNode;
+                        }
+                    }
+                }
+            }
+        }
+
+        parseTreeNode* empty = parseEmpty();
+        if(empty)
+        {
+            parseTreeNode* tagFieldNode = parseTree->createNode(NodeType::TAG_FIELD);
+            tagFieldNode->adopt(empty);
+            return tagFieldNode;
+        }
+
+        return NULL;
+    }
+
+    parseTreeNode * parseSetType()
+    {
+        if(scn.getCurrToken() == "SET")
+        {
+            scn.getNextToken();
+            if(scn.getCurrToken() == "OF")
+            {
+                parseTreeNode* baseType = parseBaseType();
+                if(baseType)
+                {
+                    parseTreeNode* setTypeNode = parseTree->createNode(NodeType::SET_TYPE);
+                    setTypeNode->adopt(baseType);
+                    return setTypeNode;
+                }
+            }
+        }
+        return NULL;
+    }
+
+    parseTreeNode * parseBaseType()
+    {
+        parseTreeNode* simpleType = parseSimpleType();
+        if(simpleType) 
+        {
+            parseTreeNode* baseTypeNode = parseTree->createNode(NodeType::BASE_TYPE);
+            baseTypeNode->adopt(simpleType);
+            return baseTypeNode;
+        }
+        
+        return NULL;
+    }
+
+    parseTreeNode * parseFileType()
+    {
+        if(scn.getCurrToken() == "FILE")
+        {
+            scn.getNextToken();
+            if(scn.getCurrToken() == "OF")
+            {
+                parseTreeNode* type = parseType();
+                if(type)
+                {
+                    parseTreeNode* fileTypeNode = parseTree->createNode(NodeType::FILE_TYPE);
+                    fileTypeNode->adopt(type);
+                    return fileTypeNode;
+                }
+            }
+        }
+        return NULL;
+    }
+
+    parseTreeNode * parsePointerType()
+    {
+        parseTreeNode* typeIdentifier = parseTypeIdentifier();
+        if(!typeIdentifier)
+        {
+            return NULL;
+        }
+
+        parseTreeNode* pointerTypeNode = parseTree->createNode(NodeType::POINTER_TYPE);
+        pointerTypeNode->adopt(typeIdentifier);
+        return pointerTypeNode;
+    }
+
+
 
     parseTreeNode * parseRepetitiveStatement()
     {

@@ -1,2 +1,42 @@
-Printing Tree:
-Node = 0
+<COMPOUND_STATEMENT>
+    <STATEMENT>
+        <UNLABELED_STATEMENT>
+            <SIMPLE_STATEMENT>
+                <ASSIGNMENT_STATEMENT>
+                    <VARIABLE>
+                        <ENTIRE_VARIABLE>
+                            <VARIABLE_IDENTIFIER>
+                                <IDENTIFIER name="apple"/>
+                            <VARIABLE_IDENTIFIER/>
+                        <ENTIRE_VARIABLE/>
+                    <VARIABLE/>
+                    <EXPRESSION>
+                        <SIMPLE_EXPRESSION>
+                            <TERM>
+                                <FACTOR>
+                                    <UNSIGNED_CONSTANT>
+                                        <UNSIGNED_NUMBER>
+                                            <UNSIGNED_INTEGER value="3"/>
+                                        <UNSIGNED_NUMBER/>
+                                    <UNSIGNED_CONSTANT/>
+                                <FACTOR/>
+                            <TERM/>
+                            <ADDING_OPERATOR name="PLUSOP"/>
+                            <SIMPLE_EXPRESSION>
+                                <TERM>
+                                    <FACTOR>
+                                        <UNSIGNED_CONSTANT>
+                                            <UNSIGNED_NUMBER>
+                                                <UNSIGNED_INTEGER value="5"/>
+                                            <UNSIGNED_NUMBER/>
+                                        <UNSIGNED_CONSTANT/>
+                                    <FACTOR/>
+                                <TERM/>
+                            <SIMPLE_EXPRESSION/>
+                        <SIMPLE_EXPRESSION/>
+                    <EXPRESSION/>
+                <ASSIGNMENT_STATEMENT/>
+            <SIMPLE_STATEMENT/>
+        <UNLABELED_STATEMENT/>
+    <STATEMENT/>
+<COMPOUND_STATEMENT/>
