@@ -47,7 +47,7 @@ public:
     {
         string temp = "";
         for (auto it=SymbolTable.begin(); it!=SymbolTable.end(); ++it){
-            temp += it->first + "\n";
+            temp += it->first + ": " + to_string(it->second->getValue()) + "\n";
         }
         return temp;
     }

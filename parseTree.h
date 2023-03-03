@@ -32,9 +32,9 @@ public:
         return newNode;
     }
 
-    void printTreeWalker(parseTreeNode* node) {printTreeWalker(0, node);}
+    void outputTree(parseTreeNode* node) {outputTree(0, node);}
 
-    void printTreeWalker(int level, parseTreeNode* node)
+    void outputTree(int level, parseTreeNode* node)
     {
         for(int i = 0; i < level; i++)
             cout << "    ";
@@ -59,7 +59,7 @@ public:
 
         for(auto & child : children)
         {
-            printTreeWalker(level + 1, child);
+            outputTree(level + 1, child);
         }
         
         for(int i = 0; i < level; i++)
