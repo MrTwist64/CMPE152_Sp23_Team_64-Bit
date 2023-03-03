@@ -2,11 +2,13 @@
 #define PARSER_H_
 
 #include "scanner.h"
-//#include "symTabEntry.h"
 #include "parseTreeNode.h"
 #include "parseTree.h"
+#include "symTab.h"
 
 using namespace std;
+
+class SymTab;
 
 class Parser
 {
@@ -14,6 +16,8 @@ private:
     ParseTree* parseTree;
     Scanner scn;
     string curr;
+    SymTab* symbolTable;
+    
 
 public:
     Parser()
@@ -22,6 +26,7 @@ public:
     }
 
     ParseTree* getParseTree() {return parseTree;}
+    SymTab* getSymbolTree() {return symbolTable;}
 
     parseTreeNode* parseProgram()
     {
@@ -48,7 +53,7 @@ public:
         parseTreeNode* programNode = parseTree->createNode(NodeType::PROGRAM);
         programNode->adopt(identifier);
         programNode->adopt(block);
-        parseTree->setRoot(programNode);
+        //parseTree->setRoot(programNode);
         return programNode;
     }
 
@@ -61,6 +66,7 @@ public:
 
         parseTreeNode * identifier = parseTree->createNode(NodeType::IDENTIFIER);
         parseTree->setName(identifier, IDName);
+        //symbolTable->newEntry(Kind::VARIABLE, IDName)->setValue(0);
         return identifier;
     }
 
@@ -143,7 +149,7 @@ public:
         parseTreeNode* statement = parseStatement();
         if(!statement)
         {
-            cout << "Error!" << endl;
+            cout << "Error1!" << scn.getCurrText() << " " << scn.getNextText() << endl;
             while (scn.getCurrToken() != "SEMICOLON" || scn.getCurrToken() != "EOF" || scn.getCurrToken() != "END")
                 scn.nextToken();
             if (scn.getCurrToken() != "EOF")
@@ -152,24 +158,17 @@ public:
         
         parseTreeNode* compoundStatementNode = parseTree->createNode(NodeType::COMPOUND_STATEMENT);
         compoundStatementNode->adopt(statement);
+
+
+        if (scn.getCurrToken() == "SEMICOLON")
+            scn.nextToken();
         
         while(scn.getCurrToken() != "END")
         {
-            if (scn.getCurrToken() != "SEMICOLON")
-            {
-                cout << "Error! Expected ';' not '" << scn.getCurrToken() << "'" << endl;
-                while (scn.getCurrToken() != "SEMICOLON" || scn.getCurrToken() != "EOF" || scn.getCurrToken() != "END")
-                    scn.nextToken();
-                if (scn.getCurrToken() != "EOF")
-                    return NULL;
-                continue;
-            }
-            scn.nextToken();
-
             parseTreeNode* statement = parseStatement();
             if(!statement)
             {
-                cout << "Error!" << endl;
+                cout << "Error3! " << scn.getCurrText() << " " << scn.getNextText() << endl;
                 while (scn.getCurrToken() != "SEMICOLON" || scn.getCurrToken() != "EOF" || scn.getCurrToken() != "END")
                     scn.nextToken();
                 if (scn.getCurrToken() != "EOF")
@@ -178,12 +177,14 @@ public:
             }
             
             compoundStatementNode->adopt(statement);
+
+            if (scn.getCurrToken() == "SEMICOLON")
+                scn.nextToken();
         }
         scn.nextToken();
 
-        if (scn.getCurrToken() != "SEMICOLON")
-            return NULL;
-        scn.nextToken();
+        // if (scn.getCurrToken() == "SEMICOLON")
+        //     scn.nextToken();
 
         return compoundStatementNode;
     }
@@ -270,6 +271,8 @@ public:
             simpleStatementNode->adopt(emptyStatement);
             return simpleStatementNode;
         }
+
+        return NULL;
     }
 
     parseTreeNode * parseAssignmentStatement()
@@ -277,6 +280,7 @@ public:
         parseTreeNode* variable = parseVariable();
         if(variable)
         {
+            
             if (scn.getCurrToken() != "ASSIGN")
                 return NULL;
             scn.nextToken();
@@ -529,9 +533,11 @@ public:
         parseTreeNode* relationalOperator = parseRelationalOperator();
         if(!relationalOperator)
             return expressionNode;
-        expressionNode->adopt(relationalOperator);
 
         simpleExpression = parseSimpleExpression();
+        if(!simpleExpression)
+            return NULL;
+        expressionNode->adopt(relationalOperator);
         expressionNode->adopt(simpleExpression);
         return expressionNode;
     }
@@ -616,29 +622,41 @@ public:
         if(factor)
         {
             parseTreeNode* termNode = parseTree->createNode(NodeType::TERM);
-            termNode->adopt(factor);
-            return termNode;
-        }
-        
-        parseTreeNode* term = parseTerm();
-        if(term)
-        {
-            parseTreeNode* termNode = parseTree->createNode(NodeType::TERM);
-            termNode->adopt(term);
             parseTreeNode* multiplyingOperator = parseMultiplyingOperator();
             if(multiplyingOperator)
             {
-                termNode->adopt(multiplyingOperator);
-                parseTreeNode* factor = parseFactor();
-                if(factor)
+                parseTreeNode* term = parseTerm();
+                if(term)
                 {
                     termNode->adopt(factor);
+                    termNode->adopt(multiplyingOperator);
+                    termNode->adopt(term);
                     return termNode;
                 }
             }
+            termNode->adopt(factor);
+            return termNode;
         }
-        
+
         return NULL;
+        
+        // parseTreeNode* term = parseTerm();
+        // if(term)
+        // {
+        //     parseTreeNode* termNode = parseTree->createNode(NodeType::TERM);
+        //     termNode->adopt(term);
+        //     parseTreeNode* multiplyingOperator = parseMultiplyingOperator();
+        //     if(multiplyingOperator)
+        //     {
+        //         termNode->adopt(multiplyingOperator);
+        //         parseTreeNode* factor = parseFactor();
+        //         if(factor)
+        //         {
+        //             termNode->adopt(factor);
+        //             return termNode;
+        //         }
+        //     }
+        // }
     }
 
     parseTreeNode * parseMultiplyingOperator() 
@@ -720,12 +738,12 @@ public:
             return unsignedConstantNode;
         }
         
-        // parseTreeNode* string = parseString();
-        // if(string){
-        //     parseTreeNode* unsignedConstantNode = parseTree->createNode(NodeType::UNSIGNED_CONSTANT);
-        //     unsignedConstantNode->adopt(string);
-        //     return unsignedConstantNode;
-        // }
+        parseTreeNode* string = parseString();
+        if(string){
+            parseTreeNode* unsignedConstantNode = parseTree->createNode(NodeType::UNSIGNED_CONSTANT);
+            unsignedConstantNode->adopt(string);
+            return unsignedConstantNode;
+        }
 
         parseTreeNode* constantIdentifier = parseConstantIdentifier();
         if(!constantIdentifier)
@@ -846,8 +864,9 @@ public:
 
     parseTreeNode * parseEmpty()
     {
-        parseTreeNode* emptyNode = parseTree->createNode(NodeType::EMPTY);
-        return emptyNode;
+        return NULL;
+        // parseTreeNode* emptyNode = parseTree->createNode(NodeType::EMPTY);
+        // return emptyNode;
     }
 
     parseTreeNode * parseStructuredStatement()
@@ -855,33 +874,33 @@ public:
         parseTreeNode* compoundStatement = parseCompoundStatement();
         if(compoundStatement)
         {
-            parseTreeNode* parseStructuredStatement = parseTree->createNode(NodeType::STRUCTURED_STATEMENT);
-            parseStructuredStatement->adopt(compoundStatement);
-            return parseStructuredStatement;
+            parseTreeNode* StructuredStatementNode = parseTree->createNode(NodeType::STRUCTURED_STATEMENT);
+            StructuredStatementNode->adopt(compoundStatement);
+            return StructuredStatementNode;
         }
-
+        
         parseTreeNode* conditionalStatement = parseConditionalStatement();
         if(conditionalStatement)
         {
-            parseTreeNode* parseStructuredStatement = parseTree->createNode(NodeType::STRUCTURED_STATEMENT);
-            parseStructuredStatement->adopt(conditionalStatement);
-            return parseStructuredStatement;
+            parseTreeNode* StructuredStatementNode = parseTree->createNode(NodeType::STRUCTURED_STATEMENT);
+            StructuredStatementNode->adopt(conditionalStatement);
+            return StructuredStatementNode;
         }
 
-        // parseTreeNode* repetitveStatement = parseRepetitveStatement();
-        // if(repetitveStatement)
-        // {
-        //     parseTreeNode* parseStructuredStatement = parseTree->createNode(NodeType::STRUCTURED_STATEMENT);
-        //     parseStructuredStatement->adopt(repetitveStatement);
-        //     return parseStructuredStatement;
-        // }
+        parseTreeNode* repetitveStatement = parseRepetitiveStatement();
+        if(repetitveStatement)
+        {
+            parseTreeNode* StructuredStatementNode = parseTree->createNode(NodeType::STRUCTURED_STATEMENT);
+            StructuredStatementNode->adopt(repetitveStatement);
+            return StructuredStatementNode;
+        }
 
         parseTreeNode* withStatement = parseWithStatement();
         if(withStatement)
         {
-            parseTreeNode* parseStructuredStatement = parseTree->createNode(NodeType::STRUCTURED_STATEMENT);
-            parseStructuredStatement->adopt(withStatement);
-            return parseStructuredStatement;
+            parseTreeNode* StructuredStatementNode = parseTree->createNode(NodeType::STRUCTURED_STATEMENT);
+            StructuredStatementNode->adopt(withStatement);
+            return StructuredStatementNode;
         }
 
         return NULL;
@@ -912,7 +931,7 @@ public:
     {
         if(scn.getCurrToken() == "IF")
         {
-            scn.getNextToken();
+            scn.nextToken();
             parseTreeNode* expression = parseExpression();
             if(expression)
             {
@@ -920,18 +939,18 @@ public:
                 ifStatementNode->adopt(expression);
                 if(scn.getCurrToken() == "THEN")
                 {
-                    scn.getNextToken();
-                    parseTreeNode* statement = parseStatement();
-                    if(statement)
+                    scn.nextToken();
+                    parseTreeNode* Statement = parseStatement();
+                    if(Statement)
                     {
-                        ifStatementNode->adopt(statement);
+                        ifStatementNode->adopt(Statement);
                         if(scn.getCurrToken() == "ELSE")
                         {
-                            scn.getNextToken();
-                            parseTreeNode* statement = parseStatement();
-                            if(statement)
+                            scn.nextToken();
+                            parseTreeNode* Statement = parseStatement();
+                            if(Statement)
                             {
-                                ifStatementNode->adopt(statement);
+                                ifStatementNode->adopt(Statement);
                                 return ifStatementNode;
                             }
                         }
@@ -946,64 +965,43 @@ public:
 
     parseTreeNode * parseCaseStatement()
     {
-        if (scn.getCurrToken() != "BEGIN")
+        if (scn.getCurrToken() != "CASE")
             return NULL;
         scn.nextToken();
 
         parseTreeNode* expression = parseExpression();
         if(!expression)
-        {
-            cout << "Error!" << endl;
-            while (scn.getCurrToken() != "SEMICOLON" || scn.getCurrToken() != "EOF" || scn.getCurrToken() != "END")
-                scn.nextToken();
-            if (scn.getCurrToken() != "EOF")
-                return NULL;
-        }
-        
-        parseTreeNode* caseStatementNode = parseTree->createNode(NodeType::COMPOUND_STATEMENT);
-        caseStatementNode->adopt(expression);
+            return NULL;
 
         if (scn.getCurrToken() != "OF")
             return NULL;
         scn.nextToken();
+
         parseTreeNode* caseListElement = parseCaseListElement();
         if(!caseListElement)
-        {
-            cout << "Error!" << endl;
-            while (scn.getCurrToken() != "SEMICOLON" || scn.getCurrToken() != "EOF" || scn.getCurrToken() != "END")
-                scn.nextToken();
-            if (scn.getCurrToken() != "EOF")
-                return NULL;
-        }
+            return NULL;
+
+        parseTreeNode* caseStatementNode = parseTree->createNode(NodeType::CASE_STATEMENT);
+        caseStatementNode->adopt(expression);
         caseStatementNode->adopt(caseListElement);
-        
-        while(scn.getCurrToken() != "END")
+
+        while(true)
         {
-            if (scn.getCurrToken() != "SEMICOLON")
-            {
-                cout << "Error! Expected ';' not '" << scn.getCurrToken() << "'" << endl;
-                while (scn.getCurrToken() != "SEMICOLON" || scn.getCurrToken() != "EOF" || scn.getCurrToken() != "END")
-                    scn.nextToken();
-                if (scn.getCurrToken() != "EOF")
-                    return NULL;
-                continue;
-            }
+            if(scn.getCurrToken() != "SEMICOLON")
+                break;
             scn.nextToken();
 
-            parseTreeNode* caseListElement = parseCaseListElement();
+            caseListElement = parseCaseListElement();
             if(!caseListElement)
-            {
-                cout << "Error!" << endl;
-                while (scn.getCurrToken() != "SEMICOLON" || scn.getCurrToken() != "EOF" || scn.getCurrToken() != "END")
-                    scn.nextToken();
-                if (scn.getCurrToken() != "EOF")
-                    return NULL;
-                continue;
-            }
-            
+                return NULL;
+              
             caseStatementNode->adopt(caseListElement);
         }
 
+        if(scn.getCurrToken() != "END")
+            return NULL;
+        scn.nextToken();
+        
         return caseStatementNode;
     }
 
@@ -1014,6 +1012,7 @@ public:
         {
             if(scn.getCurrToken() != "COLON")
             {
+                scn.nextToken();
                 parseTreeNode* statement = parseStatement();
                 if(statement) 
                 {
@@ -1110,13 +1109,13 @@ public:
             } 
         }
 
-        // parseTreeNode* string = parseString();
-        // if(string)
-        // {
-        //     parseTreeNode* constantNode = parseTree->createNode(NodeType::CONSTANT);
-        //     constantNode->adopt(string);
-        //     return constantNode;
-        // }
+        parseTreeNode* string = parseString();
+        if(string)
+        {
+            parseTreeNode* constantNode = parseTree->createNode(NodeType::CONSTANT);
+            constantNode->adopt(string);
+            return constantNode;
+        }
 
         return NULL;
     }
@@ -1147,7 +1146,7 @@ public:
         {
             if(scn.getCurrToken() == "PERIOD")
             {
-                scn.getNextToken();
+                scn.nextToken();
                 parseTreeNode* unsignedRealNode = parseTree->createNode(NodeType::UNSIGNED_REAL);
                 unsignedRealNode->adopt(unsignedInteger);
                 unsignedInteger = parseUnsignedInteger();
@@ -1157,10 +1156,6 @@ public:
                     return unsignedRealNode;
                 }
             }
-            // if(scn.getCurrToken() == "E")
-            // {
-                
-            // }
         }
 
         return NULL;
@@ -1247,7 +1242,7 @@ public:
     {
         if(scn.getCurrToken() == "LPAREN")
         {
-            scn.getNextToken();
+            scn.nextToken();
             parseTreeNode* identifier = parseIdentifier();
             if(identifier)
             {   
@@ -1267,7 +1262,7 @@ public:
 
                 if(scn.getCurrToken() == "RPAREN")
                 {
-                    scn.getNextToken();
+                    scn.nextToken();
                     return scalarTypeNode;
                 }
             }
@@ -1375,13 +1370,13 @@ public:
     {
         if(scn.getCurrToken() == "RECORD")
         {
-            scn.getNextToken();
+            scn.nextToken();
             parseTreeNode* fieldList = parseFieldList();
             if(fieldList)
             {
                 if(scn.getCurrToken() == "END")
                 {
-                    scn.getNextToken();
+                    scn.nextToken();
                     parseTreeNode* recordTypeNode = parseTree->createNode(NodeType::RECORD_TYPE);
                     recordTypeNode->adopt(fieldList);
                     return recordTypeNode;
@@ -1399,7 +1394,7 @@ public:
         {
             if(scn.getCurrToken() == "SEMICOLON")
             {
-                scn.getNextToken();
+                scn.nextToken();
                 parseTreeNode* variantType = parseVariantType();
                 if(variantType)
                 {
@@ -1428,6 +1423,163 @@ public:
         return NULL;
     }
 
+    parseTreeNode * parseVariantType()
+    {
+        if (scn.getCurrToken() != "CASE")
+            return NULL;
+        scn.nextToken();
+
+        parseTreeNode* tagField = parseTagField();
+        if(!tagField)
+            return NULL;
+
+        parseTreeNode* typeIdentifier = parseTypeIdentifier();
+        if(!typeIdentifier)
+            return NULL;
+        
+        if (scn.getCurrToken() != "OF")
+            return NULL;
+        scn.nextToken();
+
+        parseTreeNode* variant = parseVariant();
+        if(!variant)
+            return NULL;
+        
+        parseTreeNode* variantTypeNode = parseTree->createNode(NodeType::VARIANT_TYPE);
+        variantTypeNode->adopt(tagField);
+        variantTypeNode->adopt(typeIdentifier);
+        variantTypeNode->adopt(variant);
+        
+        while(true)
+        {
+            if (scn.getCurrToken() != "SEMICOLON")
+                break;
+            scn.nextToken();
+            
+            variant = parseVariant();
+            if(!variant)
+                return NULL;
+            
+            variantTypeNode->adopt(variant);
+        }
+        
+        return variantTypeNode;
+    }
+
+    parseTreeNode * parseFixedPart()
+    {
+        parseTreeNode* recordSection = parseRecordSection();
+        if(!recordSection)
+            return NULL;
+        
+        parseTreeNode* fixedPartNode = parseTree->createNode(NodeType::FIXED_PART);
+        fixedPartNode->adopt(recordSection);
+        
+        while(true)
+        {
+            if (scn.getCurrToken() != "SEMICOLON")
+                break;
+            scn.nextToken();
+            
+            recordSection = parseRecordSection();
+            if(!recordSection)
+                return NULL;
+            
+            fixedPartNode->adopt(recordSection);
+        }
+
+        return fixedPartNode;
+    }
+
+    parseTreeNode * parseRecordSection()
+    {
+        parseTreeNode* fieldIdentifier = parseFieldIdentifier();
+        if(!fieldIdentifier)
+        {
+            parseTreeNode* empty = parseEmpty();
+            if(!empty)
+                return NULL;
+            
+            parseTreeNode* recordSectionNode = parseTree->createNode(NodeType::RECORD_SECTION);
+            recordSectionNode->adopt(empty);
+            return recordSectionNode;
+        }
+        
+        parseTreeNode* recordSectionNode = parseTree->createNode(NodeType::RECORD_SECTION);
+        recordSectionNode->adopt(fieldIdentifier);
+
+        while(true)
+        {
+            if (scn.getCurrToken() != "SEMICOLON")
+                break;
+            scn.nextToken();
+            
+            fieldIdentifier = parseFieldIdentifier();
+            if(!fieldIdentifier)
+                return NULL;
+            
+            recordSectionNode->adopt(fieldIdentifier);
+        }
+
+        if (scn.getCurrToken() != "COLON")
+            return NULL;
+        scn.nextToken();
+
+        parseTreeNode* type = parseType();
+        if(!type)
+            return NULL;
+
+        recordSectionNode->adopt(type);
+
+        return recordSectionNode;
+    }
+
+    parseTreeNode * parseString()
+    {
+        if(scn.getCurrToken() != "STRING")
+        {
+            return NULL;
+        }
+
+        parseTreeNode* stringNode = parseTree->createNode(NodeType::STRING);
+        stringNode->setName(scn.getCurrText());
+        return stringNode;
+    }
+
+    parseTreeNode * parseArrayType() 
+    {
+        if(scn.getCurrToken() == "ARRAY")
+        {    
+            scn.nextToken();
+            if(scn.getCurrToken() == "LBRACKET")
+            {
+                scn.nextToken();
+                parseTreeNode* indexType = parseIndexType();
+                if(indexType)
+                {
+                    parseTreeNode* arrayTypeNode = parseTree->createNode(NodeType::ARRAY_TYPE);
+                    while(true)
+                    {
+                        arrayTypeNode->adopt(indexType);
+
+                        if(scn.getCurrToken() != "COMMA")
+                            break;
+                        scn.nextToken();
+                        
+                        indexType = parseIndexType();
+                        if(!indexType)
+                            return NULL;
+                    }
+
+                    if(scn.getCurrToken() == "RBRACKET")
+                        return arrayTypeNode;
+                }
+            }
+        }
+        
+        return NULL;
+    }
+
     parseTreeNode * parseTagField()
     {
         parseTreeNode* fieldIdentifier = parseFieldIdentifier();
@@ -1435,7 +1587,7 @@ public:
         {
             if(scn.getCurrToken() == "COLON") 
             {
-                scn.getNextToken();
+                scn.nextToken();
                 parseTreeNode* tagFieldNode = parseTree->createNode(NodeType::TAG_FIELD);
                 tagFieldNode->adopt(fieldIdentifier);
                 return tagFieldNode;
@@ -1461,16 +1613,16 @@ public:
         {
             if(scn.getCurrToken() == "COLON") 
             {
-                scn.getNextToken();
+                scn.nextToken();
                 if(scn.getCurrToken() == "LPAREN")
                 {
-                    scn.getNextToken();
+                    scn.nextToken();
                     parseTreeNode* fieldList = parseFieldList();
                     if(fieldList)
                     {
                         if(scn.getCurrToken() == "RPAREN")
                         {
-                            scn.getNextToken();
+                            scn.nextToken();
                             parseTreeNode* variantNode = parseTree->createNode(NodeType::VARIANT);
                             variantNode->adopt(caseLabelList);
                             variantNode->adopt(fieldList);
@@ -1496,7 +1648,7 @@ public:
     {
         if(scn.getCurrToken() == "SET")
         {
-            scn.getNextToken();
+            scn.nextToken();
             if(scn.getCurrToken() == "OF")
             {
                 parseTreeNode* baseType = parseBaseType();
@@ -1528,7 +1680,7 @@ public:
     {
         if(scn.getCurrToken() == "FILE")
         {
-            scn.getNextToken();
+            scn.nextToken();
             if(scn.getCurrToken() == "OF")
             {
                 parseTreeNode* type = parseType();
@@ -1587,15 +1739,15 @@ public:
             return repetitiveStatement;
         }
         
-        // parseTreeNode* forStatement = parseForStatement();
-        // if(forStatement)
-        // {
-        //     parseTreeNode* repetitiveStatement = parseTree->createNode(NodeType::REPETITIVE_STATEMENT);
-        //     repetitiveStatement->adopt(repeatStatement);
-        //     return repetitiveStatement;
-        // }
+        parseTreeNode* forStatement = parseForStatement();
+        if(forStatement)
+        {
+            parseTreeNode* repetitiveStatement = parseTree->createNode(NodeType::REPETITIVE_STATEMENT);
+            repetitiveStatement->adopt(forStatement);
+            return repetitiveStatement;
+        }
 
-    return NULL;
+        return NULL;
     }
 
     parseTreeNode * parseRepeatStatement()
@@ -1635,35 +1787,40 @@ public:
         return NULL;
     }
 
-    // parseTreeNode * parseForStatement()
-    // {
-    //     if (scn.getCurrToken() == "FOR")
-    //     {
-    //         scn.nextToken();
-    //         parseTreeNode* controlVariable = parseControlVariable();
-    //         if (controlVariable)
-    //         {
-    //             if (scn.getCurrToken() == "ASSIGN")
-    //             {
-    //                 scn.nextToken();
-    //                 parseTreeNode* forList = parseForList();
-    //                 if(forList)
-    //                     {
-    //                         if(scn.getCurrText() == "DO")
-    //                         {
-    //                             parseTreeNode statement = parseStatement();
-    //                             parseTreeNode forStatementNode = parseTree->createNode(NodeType::FOR_STATEMENT);
-    //                             forStatementNode->adopt(controlVariable);
-    //                             forStatementNode->adopt(forList);
-    //                             forStatementNode->adopt(statement);
-    //                         }
-    //                     }
-    //             }
-    //         }
-    //     }
-    //     return NULL;
+    parseTreeNode * parseForStatement()
+    {
+        if (scn.getCurrToken() == "FOR")
+        {
+            scn.nextToken();
+            parseTreeNode* controlVariable = parseControlVariable();
+            if (controlVariable)
+            {
+                if (scn.getCurrToken() == "ASSIGN")
+                {
+                    scn.nextToken();
+                    parseTreeNode* forList = parseForList();
+                    if(forList)
+                    {
+                        if(scn.getCurrToken() == "DO")
+                        {
+                            scn.nextToken();
+                            parseTreeNode* statement = parseStatement();
+                            if(statement)
+                            {
+                                parseTreeNode* forStatementNode = parseTree->createNode(NodeType::FOR_STATEMENT);
+                                forStatementNode->adopt(controlVariable);
+                                forStatementNode->adopt(forList);
+                                forStatementNode->adopt(statement);
+                                return forStatementNode;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return NULL;
             
-    // }
+    }
 
     parseTreeNode * parseControlVariable()
     {
@@ -1680,21 +1837,23 @@ public:
     {
         if (scn.getCurrToken() == "WHILE")
         {
+            scn.nextToken();
             parseTreeNode* expression = parseExpression();
             if (expression)
+            {
+                if (scn.getCurrToken() == "DO")
                 {
-                    if (scn.getCurrToken() == "DO")
+                    scn.nextToken();
+                    parseTreeNode* statement = parseStatement();
+                    if (statement)
                     {
-                        parseTreeNode* statement = parseStatement();
-                        if (statement)
-                        {
-                            parseTreeNode* whileStatement = parseTree->createNode(NodeType::WHILE_STATEMENT);
-                            whileStatement->adopt(expression);
-                            whileStatement->adopt(statement);
-                            return whileStatement;
-                        }
+                        parseTreeNode* whileStatement = parseTree->createNode(NodeType::WHILE_STATEMENT);
+                        whileStatement->adopt(expression);
+                        whileStatement->adopt(statement);
+                        return whileStatement;
                     }
                 }
+            }
         }
         return NULL;
     }
@@ -1754,12 +1913,14 @@ public:
         {
             if(scn.getCurrToken() == "TO")
             {
+                scn.nextToken();
                 parseTreeNode* finalValue = parseFinalValue();
                 if(finalValue)
                 {
                     parseTreeNode* forListNode = parseTree->createNode(NodeType::FOR_LIST);
                     forListNode->adopt(initialValue);
                     forListNode->adopt(finalValue);
+                    return forListNode;
                 }
             }
         }

@@ -2,15 +2,21 @@
 #define PARSETREE_H_
 
 #include "parseTreeNode.h"
+#include "symTab.h"
 
 using namespace std;
 
 class ParseTree
 {
 private:
-    parseTreeNode* root;
+    SymTab* symbolTable;
 
 public:
+    ParseTree(SymTab* symbolTable) 
+    {
+        this->symbolTable = symbolTable;
+    }
+
     parseTreeNode* createNode(NodeType type)
     {
         parseTreeNode *node = new parseTreeNode(type);
@@ -26,8 +32,6 @@ public:
         return newNode;
     }
 
-    void printTreeWalker() {printTreeWalker(0, root);}
-
     void printTreeWalker(parseTreeNode* node) {printTreeWalker(0, node);}
 
     void printTreeWalker(int level, parseTreeNode* node)
@@ -35,9 +39,14 @@ public:
         for(int i = 0; i < level; i++)
             cout << "    ";
         cout << "<" << node->getTypeStr();
+
         if(node->isNameSet())
+        {
             cout << " name=\"" << node->getName() << "\"";
-        if(node->isValueSet())
+            // Removed ability to look at symbolTable due to error
+            // cout << " value=\"" << symbolTable->lookup(node->getName())->getValue() << "\"";
+        }
+        else if(node->isValueSet())
             cout << " value=\"" << node->getValue() << "\"";
         
         vector<parseTreeNode*> children = node->getChildren();
@@ -55,14 +64,8 @@ public:
         
         for(int i = 0; i < level; i++)
             cout << "    ";
-        cout << "<" << node->getTypeStr() << "/>" << endl;
+        cout << "</" << node->getTypeStr() << ">" << endl;
     }
-
-    // Local Getters
-    parseTreeNode* getRoot() {return this->root;}
-
-    // Local Setters
-    void setRoot(parseTreeNode* newRoot) {this->root = newRoot;}
 
     // Pass Through Getters
     string getName(parseTreeNode *node) {return node->getName();}

@@ -9,9 +9,9 @@ testScanner: scanner.h tests\testScanner\testScanner.cpp
 testSymbolTable: symTab.h typeSpec.h symTabEntry.h tests\testSymbolTable\testSymbolTable.cpp
 	cd tests/testSymbolTable \
 	&& $(CC) -o testSymbolTable ../../symTab.h testSymbolTable.cpp \
-	&& ./testSymbolTable
+	&& ./testSymbolTable > test-out.txt
 
-testParser: parser.h tests\testParser\testParser.cpp
+testParser: parser.h parseTree.h parseTreeNode.h symTab.h symTabEntry.h typeSpec.h tests\testParser\testParser.cpp
 	cd tests/testParser \
-	&& $(CC) -o testParser ../../parser.h testParser.cpp \
+	&& $(CC) -o testParser testParser.cpp \
 	&& ./testParser < test-in.txt > test-out.txt

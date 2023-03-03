@@ -9,10 +9,12 @@
 
 using namespace std;
 
+class SymTabEntry;
+
 class SymTab
 {
 private:
-    map<string, SymTabEntry> SymbolTable;
+    map<string, SymTabEntry*> SymbolTable;
 
 public:
     SymTab() // Empty Constructor
@@ -20,22 +22,31 @@ public:
 
     }
 
-    SymTabEntry newEntry(Kind kind, string name) 
+    SymTabEntry *newEntry(const Kind kind, const string name) 
     {
-        SymTabEntry temp = SymTabEntry(name, kind, this);
-        SymbolTable[name] = temp;
-        return SymbolTable[name];
+        SymTabEntry* temp = new SymTabEntry(name, kind, this);
+        SymbolTable.emplace(name, temp);
+        return temp;
     }
 
-    SymTabEntry lookup(string name) 
+    SymTabEntry* lookup(string name) 
     {
-        return SymbolTable[name];
+        auto it = SymbolTable.find(name);
+        if (it != SymbolTable.end())
+        {
+            return it->second;
+        }
+        else
+        {
+            return nullptr;
+        }
+        
     }
 
     string toString()
     {
         string temp = "";
-        for (map<string, SymTabEntry>::iterator it=SymbolTable.begin(); it!=SymbolTable.end(); ++it){
+        for (auto it=SymbolTable.begin(); it!=SymbolTable.end(); ++it){
             temp += it->first + "\n";
         }
         return temp;

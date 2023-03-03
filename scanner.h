@@ -205,10 +205,17 @@ class Scanner
             this->input="";
             this->currCharIndex = 0;
 
+            int i = 0;
+
             while(getline(cin, temp))
             {
-                if (temp.empty()) // This may end the read if given a blank line.
-                    break;
+                if (temp.empty()) // This will end the read if given 500 blank lines in a row
+                {
+                    i++;
+                    if (i >= 500) // If this gets triggered, then we advise you rethink your career choice
+                        break; // no offense, but totally full offense
+                }
+                i = 0;
                 this->input += temp;
                 this->input += '\n';
             }

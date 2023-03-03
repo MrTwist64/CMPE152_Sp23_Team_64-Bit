@@ -1,3 +1,38 @@
-begin 
-    apple := 3 + 5
-end;
+program parserTestProgram;
+
+begin
+    alpha := 5;
+    beta := 4;
+    gamma := alpha + beta;
+    lambda := 0;
+
+    while alpha > 0 do 
+    begin
+        alpha := alpha - 1;
+        lambda1 := lambda + 1
+    end;
+
+    lambda2 := 10;
+    
+    if beta 
+    then 
+        beta := 3
+    else 
+        lambda3 := 2;
+
+    lambda4 := 10;
+
+    case beta of  
+        0 : alpha := 5;
+        1 : beta := 34;
+        2 : charlie := 777;
+        3 : delta := 19;
+        4 : echo := 999
+    end;
+
+    for alpha := 1 to 10 do
+    begin
+        robertIsTheGoat := 1; 
+        theTAIsPrettyCoolToo := 3;
+    end
+end.

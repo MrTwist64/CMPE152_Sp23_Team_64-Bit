@@ -8,6 +8,9 @@ test.
 CMPE152:= "HELLO"
 1 : 4.0 blah..
 'test string'
+program test;
+
 begin
-    apple := 3
-end;
+    alpha := 5;
+    beta := 4
+end.

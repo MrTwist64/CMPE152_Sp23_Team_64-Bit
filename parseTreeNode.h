@@ -4,7 +4,11 @@
 #include<iostream>
 #include<string>
 #include<vector>
+#include "symTab.h"
+#include "symTabEntry.h"
 
+class SymTab;
+class SymTabEntry;
 
 using namespace std;
 
@@ -21,7 +25,8 @@ enum class NodeType
     CASE_LABEL, CONSTANT, UNSIGNED_NUMBER, UNSIGNED_REAL, SIGN, CONSTANT_IDENTIFIER,
     FOR_STATEMENT, CONTROL_VARIABLE, FOR_LIST, INITIAL_VALUE, FINAL_VALUE, TYPE, SIMPLE_TYPE, SCALAR_TYPE,
     SUBRANGE_TYPE, TYPE_IDENTIFIER, STRUCTURED_TYPE, INDEX_TYPE, COMPONENT_TYPE, RECORD_TYPE, FIELD_LIST, 
-    TAG_FIELD, VARIANT, SET_TYPE, BASE_TYPE, FILE_TYPE, POINTER_TYPE, RESULT_TYPE, 
+    TAG_FIELD, VARIANT, SET_TYPE, BASE_TYPE, FILE_TYPE, POINTER_TYPE, RESULT_TYPE, STRING, 
+    VARIANT_TYPE, ARRAY_TYPE, FIXED_PART, RECORD_SECTION, CASE_STATEMENT
 };
 
 static const string KIND_STRINGS[] = {
@@ -36,7 +41,8 @@ static const string KIND_STRINGS[] = {
     "CASE_LABEL", "CONSTANT", "UNSIGNED_NUMBER", "UNSIGNED_REAL", "SIGN", "CONSTANT_IDENTIFIER",
     "FOR_STATEMENT", "CONTROL_VARIABLE", "FOR_LIST", "INITIAL_VALUE", "FINAL_VALUE", "TYPE", "SIMPLE_TYPE", "SCALAR_TYPE", 
     "SUBRANGE_TYPE", "TYPE_IDENTIFIER", "STRUCTURED_TYPE", "INDEX_TYPE", "COMPONENT_TYPE", "RECORD_TYPE", "FIELD_LIST", 
-    "TAG_FIELD", "VARIANT", "SET_TYPE", "BASE_TYPE", "FILE_TYPE", "POINTER_TYPE", "RESULT_TYPE", 
+    "TAG_FIELD", "VARIANT", "SET_TYPE", "BASE_TYPE", "FILE_TYPE", "POINTER_TYPE", "RESULT_TYPE", "STRING", 
+    "VARIANT_TYPE", "ARRAY_TYPE", "FIXED_PART", "RECORD_SECTION", "CASE_STATEMENT"
 };
 
 class parseTreeNode
@@ -73,6 +79,25 @@ public:
     void setType(NodeType type) {this->type = type;}
     void setParent(parseTreeNode* parent) {this->parent = parent;}
     void adopt(parseTreeNode *newChild) {this->children.push_back(newChild);}
+
+    SymTabEntry searchSymTable(string variableName)
+    {
+        SymTab SymbolTable;
+        
+        //found
+        SymTabEntry* findSymTabEntry = SymbolTable.lookup(variableName);
+        if(findSymTabEntry != nullptr)
+        {
+            return *findSymTabEntry;
+        }
+        else
+        {
+            //SymTabEntry* newEntry = &SymbolTable.newEntry(Kind::VARIABLE, variableName);
+            //return *newEntry;
+        }
+    }
+
+
 };
 
 /*
@@ -91,7 +116,7 @@ public:
         if(!x)
             return NULL;
         
-        parseTreeNode* yNode = parseTree.createNode(NodeType::Y);
+        parseTreeNode* yNode = parseTree->createNode(NodeType::Y);
         yNode->adopt(xNode);
         return yNode;
     */

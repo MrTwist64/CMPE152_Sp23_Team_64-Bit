@@ -9,16 +9,13 @@ using namespace std;
 int main()
 {
     Parser parser;
-    ParseTree parseTree;
     parseTreeNode* node;
+    
 
-    node = parser.parseCompoundStatement();
-
-    // node = parser.parseAssignmentStatement();
-    // node = parser.parseSimpleExpression();
+    node = parser.parseProgram();
 
     if(node)
-        parseTree.printTreeWalker(node);
+        parser.getParseTree()->printTreeWalker(node);
     else   
         cout << "Node = NULL" << endl;
 }

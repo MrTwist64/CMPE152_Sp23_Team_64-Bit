@@ -74,6 +74,16 @@ public:
     int getValue(){
         return this->value;
     }
+
+    void setParent(SymTab *symtab)
+    {
+        this->symtab = symtab;
+    }
+
+    SymTab* getParent()
+    {
+        return symtab;
+    }
 };
 
 #endif // SYMTABENTRY_H_
