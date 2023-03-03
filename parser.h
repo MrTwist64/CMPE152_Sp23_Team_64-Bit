@@ -1137,6 +1137,8 @@ public:
             unsignedNumberNode->adopt(unsignedReal);
             return unsignedNumberNode;
         }
+
+        return NULL;
     }
 
     parseTreeNode * parseUnsignedReal()
