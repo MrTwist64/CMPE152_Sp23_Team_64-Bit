@@ -1,0 +1,16 @@
+Apple + 25 / Banana 
+iMpLeMeNtAtIoN
+Pear ; += for 
+(* orange := 55 *)
+MORESTUFF(){}
+I+=1
+test
+CMPE152:= HELLO
+1 4.0 blah
+test string
+program test;
+
+begin
+    alpha := 5;
+    beta := 4
+end
