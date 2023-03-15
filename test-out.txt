@@ -43,5 +43,5 @@ SEMICOLON : ;
 IDENTIFIER : beta
 ASSIGN : :=
 INTEGER : 4
-IDENTIFIER : end
+END : end
 EOF : <EOF>
