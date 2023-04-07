@@ -12,20 +12,16 @@
 class  pascalLexer : public antlr4::Lexer {
 public:
   enum {
-    AND = 1, ARRAY = 2, ASM = 3, BEGIN = 4, BREAK = 5, CASE = 6, CONST = 7, 
-    CONSTRUCTOR = 8, CONTINUE = 9, DESTRUCTOR = 10, DIV = 11, DO = 12, DOWNTO = 13, 
-    ELSE = 14, END = 15, FALSE = 16, FILE = 17, FOR = 18, FUNCTION = 19, 
-    GOTO = 20, IF = 21, IMPLEMENTATION = 22, IN = 23, INLINE = 24, INTERFACE = 25, 
-    LABEL = 26, MOD = 27, NIL = 28, NOT = 29, OBJECT = 30, OF = 31, ON = 32, 
-    OPERATOR = 33, OR = 34, PACKED = 35, PROCEDURE = 36, PROGRAM = 37, RECORD = 38, 
-    REPEAT = 39, SET = 40, SHL = 41, SHR = 42, STRING = 43, THEN = 44, TO = 45, 
-    TRUE = 46, TYPE = 47, UNIT = 48, UNTIL = 49, USES = 50, VAR = 51, WHILE = 52, 
-    WITH = 53, XOR = 54, PLUSOP = 55, MINUSOP = 56, MULTOP = 57, DIVOP = 58, 
-    ASSIGN = 59, EQUAL = 60, NE = 61, LTEQ = 62, GTEQ = 63, LT = 64, GT = 65, 
-    PLUSEQUAL = 66, MINUSEQUAL = 67, MULTEQUAL = 68, DIVEQUAL = 69, CARAT = 70, 
-    SEMICOLON = 71, COMMA = 72, LPAREN = 73, RPAREN = 74, LBRACKET = 75, 
-    RBRACKET = 76, LBRACE = 77, RBRACE = 78, LCOMMENT = 79, RCOMMENT = 80, 
-    INTEGER = 81, REAL = 82, IDENTIFIER = 83, WS = 84
+    T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
+    T__7 = 8, T__8 = 9, T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, T__13 = 14, 
+    T__14 = 15, T__15 = 16, T__16 = 17, T__17 = 18, T__18 = 19, T__19 = 20, 
+    T__20 = 21, T__21 = 22, T__22 = 23, T__23 = 24, T__24 = 25, T__25 = 26, 
+    T__26 = 27, T__27 = 28, T__28 = 29, T__29 = 30, T__30 = 31, T__31 = 32, 
+    T__32 = 33, T__33 = 34, T__34 = 35, T__35 = 36, T__36 = 37, T__37 = 38, 
+    T__38 = 39, T__39 = 40, T__40 = 41, T__41 = 42, T__42 = 43, T__43 = 44, 
+    T__44 = 45, T__45 = 46, T__46 = 47, T__47 = 48, T__48 = 49, T__49 = 50, 
+    T__50 = 51, T__51 = 52, T__52 = 53, T__53 = 54, T__54 = 55, LETTER = 56, 
+    DIGIT = 57, STRING_LITERAL = 58
   };
 
   explicit pascalLexer(antlr4::CharStream *input);

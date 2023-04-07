@@ -1,16 +1,9 @@
-Apple + 25 / Banana 
-iMpLeMeNtAtIoN
-Pear ; += for 
-(* orange := 55 *)
-MORESTUFF(){}
-I+=1
-test
-CMPE152:= HELLO
-1 4.0 blah
-test string
-program test;
+Program Program1(output);
+
+var
+    count : integer;
 
 begin
-    alpha := 5;
-    beta := 4
-end
+    for count := 1 to 10 do
+        writeln('Go, Spartans!');
+end.

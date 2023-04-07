@@ -2,6 +2,7 @@
 
 #include "antlr4-runtime.h"
 #include "pascalLexer.h"
+#include "pascalParser.h"
 
 using namespace antlrcpp;
 using namespace antlr4;
@@ -26,6 +27,15 @@ int main(int argc, const char *args[])
         std::cout << token->getText();
 		std::cout << std::endl;
 	}
+
+	// Create a parser which parses the token stream
+	// to create a parse tree.
+	ExprParser parser(&token);
+	tree::ParseTree *tree = parse.program();
+
+	// Print the parse tree in Lisp format.
+	cout << endl << "Parse tree (Lisp format):" << endl;
+	std::cout << tree->toStringTree(&parser) << endl;
 	
 	return 0;
 }
