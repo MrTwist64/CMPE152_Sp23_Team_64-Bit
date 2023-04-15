@@ -1,4 +1,0 @@
-alpha: 17
-beta: 24
-foo: 19
-i: 0

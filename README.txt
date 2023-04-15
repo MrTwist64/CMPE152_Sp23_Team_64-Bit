@@ -1,13 +1,9 @@
 CMPE152_Sp23_Team_64-Bit
+Assignment 5
 
 ===== How To Run ===== 
-Run "make scanner" in a bash terminal.
+1. Run "make [PLACEHOLDER]" in a bash terminal.
 
 ===== Notes ===== 
-Antlr4 files based on pascal.g4 are already created, but if they need to be rebuilt then run "make antlr4".
-For some reason, our installation of Ubuntu seems to be buggy and won't run the above command.
-If it turns out that it's not just our system, you can run "antlr4 -Dlanguage=Cpp pascal.g4".
-
-===== Scanner Details ===== 
-We recieved Ron Mak's test file and modified it so that it only creates a lexer and not a parser.
-We also modified the output to print the token name and the text that generated it.
+- The grammar file used was provided by the professor as the supplied BNF features errors including left-recursive statements that antlr4.12 cannot generate code for.
+- If you would like to recreate the antlr4 files from our grammar file, you MUST change the path of the ANTLRCC macro to one for your machine.
