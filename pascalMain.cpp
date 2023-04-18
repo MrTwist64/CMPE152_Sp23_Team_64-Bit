@@ -3,10 +3,13 @@
 #include "antlr4-runtime.h"
 #include "pascalLexer.h"
 #include "pascalParser.h"
+#include "frontend/PassOne.h"
+#include "frontend/PassTwo.h"
 
 using namespace antlrcpp;
 using namespace antlr4;
 using namespace std;
+using namespace frontend;
 
 int main(int argc, const char *args[])
 {
@@ -36,6 +39,12 @@ int main(int argc, const char *args[])
 	// Print the parse tree in Lisp format.
 	cout << endl << "Parse tree (Lisp format):" << endl;
 	std::cout << tree->toStringTree(&parser) << endl;
+
+	PassOne* visitor = new PassOne;
+	visitor->visit(tree);
+
+	// PassTwo* visitor = new PassTwo;
+	// visitor->visit(tree);
 	
 	return 0;
 }

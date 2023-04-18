@@ -1,9 +1,9 @@
 Program Program1(output);
 
 var
-    count : integer;
+    notCount : integer;
 
 begin
-    for count := 1 to 10 do
-        writeln('Go, Spartans!');
+    notCount := 5 * (10 + 3.0);
+
 end.

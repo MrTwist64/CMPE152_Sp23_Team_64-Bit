@@ -1,323 +1,144 @@
-/**
- * <h1>Typespec</h1>
- *
- * <p>The type specification object for various datatypes.</p>
- *
- * <p>Copyright (c) 2020 by Ronald Mak</p>
- * <p>For instructional purposes only.  No warranties.</p>
- */
 #ifndef TYPESPEC_H_
 #define TYPESPEC_H_
 
-#include <string>
 #include <vector>
-
-#include "../../Object.h"
+#include <string>
 #include "../symtab/Symtab.h"
+#include "../symtab/SymtabEntry.h"
 
 namespace intermediate { namespace type {
 
 using namespace std;
-using namespace intermediate::symtab;
+using namespace symtab;
 
-/**
- * The form of the datatype.
- */
-enum class Form
+class Symtab;
+class SymtabEntry;
+class Typespec;
+
+enum class Container
 {
-    SCALAR, ENUMERATION, SUBRANGE, ARRAY, RECORD,
+    ARRAY, SUBRANGE, RECORD, SCALAR, ENUMERATION,
 };
 
-static const string FORM_STRINGS[] =
-{
-    "scalar", "enumeration", "subrange", "array", "record"
-};
+static const string ContStr[] = {"array", "subrange", "record", "scalar", "enumeration"};
 
-constexpr Form SCALAR      = Form::SCALAR;
-constexpr Form ENUMERATION = Form::ENUMERATION;
-constexpr Form SUBRANGE    = Form::SUBRANGE;
-constexpr Form ARRAY       = Form::ARRAY;
-constexpr Form RECORD      = Form::RECORD;
+constexpr Container ARRAY = Container::ARRAY;
+constexpr Container SUBRANGE = Container::SUBRANGE;
+constexpr Container RECORD = Container::RECORD;
+constexpr Container SCALAR = Container::SCALAR;
+constexpr Container ENUMERATION = Container::ENUMERATION;
 
-class Typespec;  // forward
-
-class Typespec
+class Typespec 
 {
 private:
-    /**
-     * Information for each type form.
-     */
-    union TypeInfo
+    union ContInfo 
     {
-        struct
+        struct 
         {
-            vector<SymtabEntry *> *constants;
-        } enumeration;
-
-        struct
-        {
-            Typespec *baseType;
-            int minValue;
-            int maxValue;
-        } subrange;
-
-        struct
-        {
+            int arrLength;
             Typespec *indexType;
             Typespec *elementType;
-            int elementCount;
-        } array;
+        } ARRAY;
 
-        struct
+        struct 
         {
-            string *typePath;
-            Symtab *symtab;
-        } record;
-    };
+            int subrMin;
+            int subrMax;
+            Typespec *baseType;
+        } SUBRANGE;
+        
+        struct 
+        {
+            string type;
+            Symtab *symTab;
+        } RECORD;
 
-    Form form;
-    SymtabEntry *identifier;  // type identifier
-    TypeInfo info;
+        struct 
+        {
+            vector <SymtabEntry*> *enums;
+        } ENUMERATION;
+        
+    };
+    Container CONT;
+    SymtabEntry *ID;
+    static ContInfo inf;
 
 public:
-    /**
-     * Constructor.
-     * @param form the type form.
-     */
-    Typespec() : form((Form) -1), identifier(nullptr) {}
+    Typespec() : CONT((Container) -1), ID(nullptr) {}
 
-    /**
-     * Constructor.
-     * @param form the type form.
-     */
-    Typespec(Form form) : form(form), identifier(nullptr)
+    Typespec(Container Cont) : CONT(Cont), ID(nullptr)
     {
-        switch (form)
+        switch(Cont)
         {
-            case Form::ENUMERATION:
-                info.enumeration.constants = new vector<SymtabEntry *>();
-                break;
+            case Container::ARRAY: 
+                inf.ARRAY.arrLength = 0;
+                inf.ARRAY.elementType = nullptr;
+                inf.ARRAY.indexType = nullptr;
+            break;
 
-            case Form::SUBRANGE:
-                info.subrange.minValue = 0;
-                info.subrange.maxValue = 0;
-                info.subrange.baseType = nullptr;
-                break;
+            case Container::SUBRANGE:
+                inf.SUBRANGE.baseType = nullptr;
+                inf.SUBRANGE.subrMax = 0;
+                inf.SUBRANGE.subrMin = 0;
+            break;
 
-            case Form::ARRAY:
-                info.array.indexType = nullptr;
-                info.array.elementType = nullptr;
-                info.array.elementCount = 0;
-                break;
+            case Container::RECORD:
+                inf.RECORD.type = nullptr;
+                inf.RECORD.symTab = nullptr;
+            break;
 
-            case Form::RECORD:
-                info.record.typePath = nullptr;
-                info.record.symtab = nullptr;
-                break;
-
-            default: break;
+            case Container::ENUMERATION:
+                inf.ENUMERATION.enums = nullptr;
+            break;
+            default:break;
         }
     }
 
-    /**
-     * Destructor.
-     */
-    virtual ~Typespec() {}
+    virtual ~Typespec(){}
 
-    /**
-     * Determine whether or not the type is structured (array or record).
-     * @return true if structured, false if not.
-     */
-    bool isStructured() const
-    {
-        return (form == ARRAY) || (form == RECORD);
-    }
+    //GETTERS
+    bool isArrRec() {return (CONT == Container::ARRAY)|| (CONT == Container::RECORD);}
 
-    /**
-     * Get the type form.
-     * @return the form.
-     */
-    Form getForm() const { return form; }
+    Container getCont() {return CONT;}
 
-    /**
-     * Get the type identifier's symbol table entry.
-     * @return the symbol table entry.
-     */
-    SymtabEntry *getIdentifier() const { return identifier; }
+    int getArrLength() {return inf.ARRAY.arrLength;}
 
-    /**
-     * Set the type identifier's symbol table entry.
-     * @param identifier the symbol table entry.
-     */
-    void setIdentifier(SymtabEntry *identifier) { this->identifier = identifier; }
+    Typespec *getArrElemType() {return inf.ARRAY.elementType;}
+    
+    Typespec *getArrIndexType() {return inf.ARRAY.indexType;}
 
-    /**
-     * Return the base type of this type.
-     * @return the base type.
-     */
-    Typespec *baseType()
-    {
-        return form == Form::SUBRANGE ? info.subrange.baseType : this;
-    }
+    Typespec *getSubrBaseType() {return inf.SUBRANGE.baseType;}
 
-    /**
-     * Get the subrange base type.
-     * @return the base type.
-     */
-    Typespec *getSubrangeBaseType()
-    {
-        return info.subrange.baseType;
-    }
+    int getSubrMax() {return inf.SUBRANGE.subrMax;}
 
-    /**
-     * Set the subrange base type.
-     * @param baseType the base type to set.
-     */
-    void setSubrangeBaseType(Typespec *baseType)
-    {
-        info.subrange.baseType = baseType;
-    }
+    int getSubrMin() {return inf.SUBRANGE.subrMin;}
 
-    /**
-     * Get the subrange minimum value.
-     * @return the value.
-     */
-    int getSubrangeMinValue() const { return info.subrange.minValue; }
+    string getRecType() {return inf.RECORD.type;}
 
-    /**
-     * Set the subrange minimum value.
-     * @param min_value the value to set.
-     */
-    void setSubrangeMinValue(const int min_value)
-    {
-        info.subrange.minValue = min_value;
-    }
+    Symtab *getRecSymtab() {return inf.RECORD.symTab;}
 
-    /**
-     * Get the subrange maximum value.
-     * @return the value.
-     */
-    int getSubrangeMaxValue() const { return info.subrange.maxValue; }
+    vector <SymtabEntry*> *getEnums() {return inf.ENUMERATION.enums;}
 
-    /**
-     * Set the subrange maximum value.
-     * @param max_value the value to set.
-     */
-    void setSubrangeMaxValue(const int max_value)
-    {
-        info.subrange.maxValue = max_value;
-    }
+    //SETTERS
+    void setArrLength(int x) {inf.ARRAY.arrLength = x;}
 
-    /**
-     * Get the vector of enumeration constants symbol table entries.
-     * @return the vector.
-     */
-    vector<SymtabEntry *> *getEnumerationConstants() const
-    {
-        return info.enumeration.constants;
-    }
+    void setArrElemType(Typespec *x) {inf.ARRAY.elementType = x;}
+    
+    void setArrIndexType(Typespec *x) {inf.ARRAY.indexType = x;}
 
-    /**
-     * Set the vector of enumeration constants symbol table entries.
-     * @parm constants the vector to set.
-     */
-    void setEnumerationConstants(vector<SymtabEntry *> *constants)
-    {
-        info.enumeration.constants = constants;
-    }
+    void setSubrBaseType(Typespec *x) {inf.SUBRANGE.baseType = x;}
 
-    /**
-     * Get the array index data type.
-     * @return the data type.
-     */
-    Typespec *getArrayIndexType() const { return info.array.indexType; }
+    void setSubrMax(int x) {inf.SUBRANGE.subrMax = x;}
 
-    /**
-     * Set the array index data type.
-     * @parm index_type the data type to set.
-     */
-    void setArrayIndexType(Typespec *index_type)
-    {
-        info.array.indexType = index_type;
-    }
+    void setSubrMin(int x) {inf.SUBRANGE.subrMin = x;}
 
-    /**
-     * Get the array element data type.
-     * @return the data type.
-     */
-    Typespec *getArrayElementType() const { return info.array.elementType; }
+    void setRecType(string x) {inf.RECORD.type = x;}
 
-    /**
-     * Set the array element data type.
-     * @return elmt_type the data type to set.
-     */
-    void setArrayElementType(Typespec *elmt_type)
-    {
-        info.array.elementType = elmt_type;
-    }
+    void setRecSymtab(Symtab *x) {inf.RECORD.symTab = x;}
 
-    /**
-     * Get the array element count.
-     * @return the count.
-     */
-    int getArrayElementCount() const { return info.array.elementCount; }
-
-    /**
-     * Set the array element count.
-     * @parm elmt_count the count to set.
-     */
-    void setArrayElementCount(const int elmt_count)
-    {
-        info.array.elementCount = elmt_count;
-    }
-
-    /**
-     * Get the base type of an array.
-     * @return the base type of its final dimension.
-     */
-    Typespec *getArrayBaseType()
-    {
-        Typespec*elmtType = this;
-
-        while (elmtType->form == ARRAY)
-        {
-            elmtType = elmtType->getArrayElementType();
-        }
-
-        return elmtType->baseType();
-    }
-
-    /**
-     * Get the record's symbol table.
-     * @return the symbol table.
-     */
-    Symtab *getRecordSymtab() const { return info.record.symtab; }
-
-    /**
-     * Set the record's symbol table.
-     * @parm symtab the symbol table to set.
-     */
-    void setRecordSymtab(Symtab *symtab)
-    {
-        info.record.symtab = symtab;
-    }
-
-    /**
-     * Get a record type's fully qualified type path.
-     * @return the path.
-     */
-    string getRecordTypePath() { return *(info.record.typePath); }
-
-    /**
-     * Set a record type's fully qualified type path.
-     * @param typePath the path to set.
-     */
-    void setRecordTypePath(string typePath)
-    {
-        info.record.typePath = new string(typePath);
-    }
+    void setEnums(vector <SymtabEntry*> *x) {inf.ENUMERATION.enums = x;}
 };
 
-}}  // namespace intermediate::type
+}}
 
-#endif /* TYPESPEC_H_ */
+#endif // TYPESPEC_H_

@@ -1,152 +1,89 @@
-/**
- * <h1>SymtabStack</h1>
- *
- * <p>The symbol table stack.</p>
- *
- * <p>Copyright (c) 2020 by Ronald Mak</p>
- * <p>For instructional purposes only.  No warranties.</p>
- */
 #ifndef SYMTABSTACK_H_
 #define SYMTABSTACK_H_
 
 #include <vector>
-
 #include "Symtab.h"
 #include "SymtabEntry.h"
 
 namespace intermediate { namespace symtab {
+    
+class SymtabEntry;
 
-using namespace std;
-using namespace intermediate;
+class Symtab;
 
-class SymtabStack
+class SymtabStack 
 {
 private:
-    int current_nesting_level;  // current scope nesting level
-    SymtabEntry *program_id;    // entry for the main program id
+    int nesting_level;
+    SymtabEntry *programID;
+    vector<Symtab*> stack;
 
-    vector<Symtab *> stack;
-
-public:
-    /**
-     * Constructor.
-     */
-    SymtabStack() : current_nesting_level(0), program_id(nullptr)
-    {
+ public:
+    SymtabStack(): nesting_level(0), programID(nullptr)
+    {   
         stack.push_back(new Symtab(0));
     }
 
-    /**
-     * Destructor.
-     */
-    virtual ~SymtabStack()
+    int getCurrNestingLevel() 
     {
-        for (Symtab *symtab : stack) if (symtab != nullptr) delete symtab;
+        return nesting_level;
     }
 
-    /**
-     * Getter.
-     * @return the current nesting level.
-     */
-    int getCurrentNestingLevel() const { return current_nesting_level; }
-
-    /**
-     * Getter.
-     * @return the symbol table entry for the main program identifier.
-     */
-    SymtabEntry *getProgramId() const { return program_id; }
-
-    /**
-     * Setter.
-     * @param entry the symbol table entry for the main program identifier.
-     */
-    void setProgramId(SymtabEntry *id) { program_id = id; }
-
-    /**
-     * Return the local symbol table which is at the top of the stack.
-     * @return the local symbol table.
-     */
-    Symtab *getLocalSymtab() const { return stack[current_nesting_level]; }
-
-    /**
-     * Push a new symbol table onto the stack.
-     * @return the pushed symbol table.
-     */
-    Symtab *push()
+    SymtabEntry *getProgID() 
     {
-        Symtab *symtab = new Symtab(++current_nesting_level);
+        return programID;
+    }
+    
+    void setProgID(SymtabEntry *ID) 
+    {
+        programID = ID;
+    }
+    
+    Symtab *getLocalSymtab() 
+    {
+        return stack[nesting_level];
+    }
+    
+    Symtab *push () 
+    {
+        Symtab *symtab = new Symtab(++nesting_level);
         stack.push_back(symtab);
-
         return symtab;
     }
-
-    /**
-     * Push a symbol table onto the stack.
-     * @param symtab the symbol table to push.
-     * @return the pushed symbol table.
-     */
-    Symtab *push(Symtab *symtab)
+    
+    Symtab *push(Symtab *symtab) 
     {
-        ++current_nesting_level;
+        nesting_level++;
         stack.push_back(symtab);
-
         return symtab;
     }
 
-    /**
-     * Pop a symbol table off the stack.
-     * @return the popped symbol table.
-     */
-    Symtab *pop()
-    {
-        Symtab *symtab = stack[current_nesting_level];
-        stack.erase(stack.begin() + current_nesting_level);
-        current_nesting_level--;
-
+    Symtab *pop() {
+        Symtab *symtab = stack[nesting_level];
+        stack.erase(stack.begin() + nesting_level);
+        nesting_level--;
         return symtab;
     }
 
-    /**
-     * Create and enter a new entry into the local symbol table.
-     * @param name the name of the entry.
-     * @param kind what kind of entry.
-     * @return the new entry.
-     */
-    SymtabEntry *enterLocal(const string name, const Kind kind)
-    {
-        return stack[current_nesting_level]->enter(name, kind);
+    SymtabEntry *enterLocal(const string name, const Kind kind) {
+        return stack[nesting_level]->newEntry(kind, name);
     }
 
-    /**
-     * Look up an existing symbol table entry in the local symbol table.
-     * @param name the name of the entry.
-     * @return the entry, or null if it does not exist.
-     */
-    SymtabEntry *lookupLocal(const string name) const
-    {
-        return stack[current_nesting_level]->lookup(name);
+    SymtabEntry *lookupLocal(const string name) const {
+        return stack[nesting_level]->lookup(name);
     }
 
-    /**
-     * Look up an existing symbol table entry throughout the stack.
-     * @param name the name of the entry.
-     * @return the entry, or null if it does not exist.
-     */
-    SymtabEntry *lookup(const string name) const
-    {
-        SymtabEntry *found_entry = nullptr;
+    SymtabEntry *lookup(const string name) const {
+        SymtabEntry *found = nullptr;
 
-        // Search the current and enclosing scopes.
-        for (int i = current_nesting_level;
-             (i >= 0) && (found_entry == nullptr); --i)
-        {
-            found_entry = stack[i]->lookup(name);
+        for (int i = nesting_level; i >=0 && found == nullptr; i--) {
+            found = stack[i]->lookup(name);
         }
 
-        return found_entry;
+        return found;
     }
 };
 
-}}  // namespace intermediate::symtab
+}}
 
-#endif /* SYMTABSTACK_H_ */
+#endif // SYMTABSTACK_H_

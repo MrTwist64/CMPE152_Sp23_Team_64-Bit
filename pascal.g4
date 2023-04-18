@@ -119,7 +119,7 @@ trueStatement  : statement ;
 falseStatement : statement ;
 
 caseStatement
-        locals [ map<int, PascalParser::StatementContext*> *jumpTable = nullptr ]
+        locals [ map<int, pascalParser::StatementContext*> *jumpTable = nullptr ]
     : CASE expression OF caseBranchList END ;
     
 caseBranchList   : caseBranch ( ';' caseBranch )* ;

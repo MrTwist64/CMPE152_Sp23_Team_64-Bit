@@ -6,21 +6,19 @@ IDENTIFIER : output
  : )
  : ;
 VAR : var
-IDENTIFIER : count
+IDENTIFIER : notCount
  : :
 IDENTIFIER : integer
  : ;
 BEGIN : begin
-FOR : for
-IDENTIFIER : count
+IDENTIFIER : notCount
  : :=
-INTEGER : 1
-TO : to
-INTEGER : 10
-DO : do
-WRITELN : writeln
+INTEGER : 5
+ : *
  : (
-STRING : 'Go, Spartans!'
+INTEGER : 10
+ : +
+REAL : 3.0
  : )
  : ;
 END : end
@@ -28,4 +26,4 @@ END : end
 EOF : <EOF>
 
 Parse tree (Lisp format):
-(program (programHeader Program (programIdentifier Program1) (programParameters ( output )) ;) (block (declarations (variablesPart var (variableDeclarationsList (variableDeclarations (variableIdentifierList (variableIdentifier count)) : (typeSpecification (simpleType (typeIdentifier integer)))))) ;) (compoundStatement begin (statementList (statement (forStatement for (variable (variableIdentifier count)) := (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 1))))))) to (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 10))))))) do (statement (writelnStatement writeln (writeArguments ( (writeArgument (expression (simpleExpression (term (factor (stringConstant 'Go, Spartans!')))))) )))))) ; (statement emptyStatement)) end)) .)
+(program (programHeader Program (programIdentifier Program1) (programParameters ( output )) ;) (block (declarations (variablesPart var (variableDeclarationsList (variableDeclarations (variableIdentifierList (variableIdentifier notCount)) : (typeSpecification (simpleType (typeIdentifier integer)))))) ;) (compoundStatement begin (statementList (statement (assignmentStatement (lhs (variable (variableIdentifier notCount))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 5)))) (mulOp *) (factor ( (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 10))))) (addOp +) (term (factor (number (unsignedNumber (realConstant 3.0))))))) )))))))) ; (statement emptyStatement)) end)) .)

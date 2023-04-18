@@ -1,5 +1,6 @@
 
     #include <map>
+    #include <iostream>
     #include "intermediate/symtab/Symtab.h"
     #include "intermediate/type/Typespec.h"
     using namespace intermediate::symtab;
