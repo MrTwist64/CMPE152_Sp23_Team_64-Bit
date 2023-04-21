@@ -8,6 +8,7 @@
 
 #include "Symtab.h"
 #include "../type/Typespec.h"
+#include "../../Object.h"
 
 namespace intermediate { namespace type {
     class Typespec;
@@ -48,15 +49,15 @@ class SymtabEntry // each entry of symbol table created here
 {
 private:
 
-    // union Info{
-    //     struct{
-    //         Object *val;
-    //     }data;
-    // }
-    //Info info;                // entry information
+    union Info{
+        struct{
+            Object *value;
+        }data;
+    };
+
+    Info info;                // entry information
     string name;              // identifier name
     Kind kind;                // what kind of identifier
-    int value;                // Assuming all identifiers are integers
     Symtab *symtab;           // parent symbol table
     Typespec *typeSpec;       // type spec
     vector<int> line_nums;    // vector of line numbers
@@ -68,17 +69,17 @@ public:
     
     SymtabEntry(string name, Kind kind, Symtab *parentTab) : name(name), kind(kind), symtab(parentTab)
     {
+        info.data.value = nullptr;
         // switch(kind) {
-        //     case Kind::PROGRAM:
-        //         value = NULL;
-        //     break;
-        //     case Kind::CONSTANT:
-        //         value = NULL;
-        //     break;
+        //     case Kind::CONSTANT: 
         //     case Kind::VARIABLE:
-        //         value = NULL;
-        //     break;
-            
+        //     case Kind::ENUMERATION_CONSTANT:
+        //     case Kind::RECORD_FIELD: 
+        //     case Kind::VALUE_PARAMETER:
+        //         info.data.value = nullptr;
+        //         break;
+
+        //     default: break;
         // }
 
     }
@@ -103,13 +104,13 @@ public:
         return this->kind;
     }
 
-    void setValue(int value)
+    void setValue(Object value)
     {
-        this->value = value;
+        info.data.value = new Object(value);
     }
     
-    int getValue(){
-        return this->value;
+    Object *getValue() {
+        return *(info.data.value);
     }
 
     void setParent(Symtab *symtab)

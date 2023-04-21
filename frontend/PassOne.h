@@ -23,15 +23,18 @@ public:
         return visitChildren(ctx);
     }
 
-    virtual std::any visitExpression(pascalParser::ExpressionContext *ctx) override {
+    virtual antlrcpp::Any visitExpression(pascalParser::ExpressionContext *ctx) override {
+        // visit lhs
+        // visit rhs
+        // check if lhs.type = rhs.type
         return visitChildren(ctx);
     }
 
-    virtual std::any visitSimpleExpression(pascalParser::SimpleExpressionContext *ctx) override {
+    virtual antlrcpp::Any visitSimpleExpression(pascalParser::SimpleExpressionContext *ctx) override {
         return visitChildren(ctx);
     }
 
-    virtual std::any visitTerm(pascalParser::TermContext *ctx) override {
+    virtual antlrcpp::Any visitTerm(pascalParser::TermContext *ctx) override {
         return visitChildren(ctx);
     }
 

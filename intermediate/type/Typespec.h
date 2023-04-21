@@ -5,14 +5,18 @@
 #include <string>
 #include "../symtab/Symtab.h"
 #include "../symtab/SymtabEntry.h"
+#include "../../Object.h"
+
+namespace intermediate { namespace symtab {
+class Symtab;
+class SymtabEntry;
+}}
 
 namespace intermediate { namespace type {
 
 using namespace std;
 using namespace symtab;
 
-class Symtab;
-class SymtabEntry;
 class Typespec;
 
 enum class Container
@@ -60,13 +64,13 @@ private:
         
     };
     Container CONT;
-    SymtabEntry *ID;
+    SymtabEntry *identifier;
     static ContInfo inf;
 
 public:
-    Typespec() : CONT((Container) -1), ID(nullptr) {}
+    Typespec() : CONT((Container) -1), identifier(nullptr) {}
 
-    Typespec(Container Cont) : CONT(Cont), ID(nullptr)
+    Typespec(Container Cont) : CONT(Cont), identifier(nullptr)
     {
         switch(Cont)
         {
@@ -97,9 +101,11 @@ public:
     virtual ~Typespec(){}
 
     //GETTERS
-    bool isArrRec() {return (CONT == Container::ARRAY)|| (CONT == Container::RECORD);}
+    Typespec *baseType(){return this->CONT == Container::SUBRANGE ? inf.SUBRANGE.baseType : this;}
 
-    Container getCont() {return CONT;}
+    bool isArrRec() {return (this->CONT == Container::ARRAY)|| (this->CONT == Container::RECORD);}
+
+    Container getCont() {return this->CONT;}
 
     int getArrLength() {return inf.ARRAY.arrLength;}
 
@@ -119,6 +125,8 @@ public:
 
     vector <SymtabEntry*> *getEnums() {return inf.ENUMERATION.enums;}
 
+    SymtabEntry *getIdentifier() const {return identifier; }
+
     //SETTERS
     void setArrLength(int x) {inf.ARRAY.arrLength = x;}
 
@@ -136,7 +144,9 @@ public:
 
     void setRecSymtab(Symtab *x) {inf.RECORD.symTab = x;}
 
-    void setEnums(vector <SymtabEntry*> *x) {inf.ENUMERATION.enums = x;}
+    void setEnumerationConstants(vector <SymtabEntry*> *x) {inf.ENUMERATION.enums = x;}
+
+    void setIdentifier(SymtabEntry *ID) {identifier = ID;}
 };
 
 }}

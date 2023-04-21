@@ -1,13 +1,12 @@
 
     #include <map>
-    #include <iostream>
     #include "intermediate/symtab/Symtab.h"
     #include "intermediate/type/Typespec.h"
     using namespace intermediate::symtab;
     using namespace intermediate::type;
 
 
-// Generated from pascal.g4 by ANTLR 4.12.0
+// Generated from pascal.g4 by ANTLR 4.7.2
 
 #pragma once
 
@@ -23,407 +22,407 @@
 class  pascalBaseVisitor : public pascalVisitor {
 public:
 
-  virtual std::any visitProgram(pascalParser::ProgramContext *ctx) override {
+  virtual antlrcpp::Any visitProgram(pascalParser::ProgramContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitProgramHeader(pascalParser::ProgramHeaderContext *ctx) override {
+  virtual antlrcpp::Any visitProgramHeader(pascalParser::ProgramHeaderContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitProgramParameters(pascalParser::ProgramParametersContext *ctx) override {
+  virtual antlrcpp::Any visitProgramParameters(pascalParser::ProgramParametersContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitProgramIdentifier(pascalParser::ProgramIdentifierContext *ctx) override {
+  virtual antlrcpp::Any visitProgramIdentifier(pascalParser::ProgramIdentifierContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitBlock(pascalParser::BlockContext *ctx) override {
+  virtual antlrcpp::Any visitBlock(pascalParser::BlockContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitDeclarations(pascalParser::DeclarationsContext *ctx) override {
+  virtual antlrcpp::Any visitDeclarations(pascalParser::DeclarationsContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitConstantsPart(pascalParser::ConstantsPartContext *ctx) override {
+  virtual antlrcpp::Any visitConstantsPart(pascalParser::ConstantsPartContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitConstantDefinitionsList(pascalParser::ConstantDefinitionsListContext *ctx) override {
+  virtual antlrcpp::Any visitConstantDefinitionsList(pascalParser::ConstantDefinitionsListContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitConstantDefinition(pascalParser::ConstantDefinitionContext *ctx) override {
+  virtual antlrcpp::Any visitConstantDefinition(pascalParser::ConstantDefinitionContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitConstantIdentifier(pascalParser::ConstantIdentifierContext *ctx) override {
+  virtual antlrcpp::Any visitConstantIdentifier(pascalParser::ConstantIdentifierContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitConstant(pascalParser::ConstantContext *ctx) override {
+  virtual antlrcpp::Any visitConstant(pascalParser::ConstantContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitSign(pascalParser::SignContext *ctx) override {
+  virtual antlrcpp::Any visitSign(pascalParser::SignContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitTypesPart(pascalParser::TypesPartContext *ctx) override {
+  virtual antlrcpp::Any visitTypesPart(pascalParser::TypesPartContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitTypeDefinitionsList(pascalParser::TypeDefinitionsListContext *ctx) override {
+  virtual antlrcpp::Any visitTypeDefinitionsList(pascalParser::TypeDefinitionsListContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitTypeDefinition(pascalParser::TypeDefinitionContext *ctx) override {
+  virtual antlrcpp::Any visitTypeDefinition(pascalParser::TypeDefinitionContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitTypeIdentifier(pascalParser::TypeIdentifierContext *ctx) override {
+  virtual antlrcpp::Any visitTypeIdentifier(pascalParser::TypeIdentifierContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitSimpleTypespec(pascalParser::SimpleTypespecContext *ctx) override {
+  virtual antlrcpp::Any visitSimpleTypespec(pascalParser::SimpleTypespecContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitArrayTypespec(pascalParser::ArrayTypespecContext *ctx) override {
+  virtual antlrcpp::Any visitArrayTypespec(pascalParser::ArrayTypespecContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitRecordTypespec(pascalParser::RecordTypespecContext *ctx) override {
+  virtual antlrcpp::Any visitRecordTypespec(pascalParser::RecordTypespecContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitTypeIdentifierTypespec(pascalParser::TypeIdentifierTypespecContext *ctx) override {
+  virtual antlrcpp::Any visitTypeIdentifierTypespec(pascalParser::TypeIdentifierTypespecContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitEnumerationTypespec(pascalParser::EnumerationTypespecContext *ctx) override {
+  virtual antlrcpp::Any visitEnumerationTypespec(pascalParser::EnumerationTypespecContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitSubrangeTypespec(pascalParser::SubrangeTypespecContext *ctx) override {
+  virtual antlrcpp::Any visitSubrangeTypespec(pascalParser::SubrangeTypespecContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitEnumerationType(pascalParser::EnumerationTypeContext *ctx) override {
+  virtual antlrcpp::Any visitEnumerationType(pascalParser::EnumerationTypeContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitEnumerationConstant(pascalParser::EnumerationConstantContext *ctx) override {
+  virtual antlrcpp::Any visitEnumerationConstant(pascalParser::EnumerationConstantContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitSubrangeType(pascalParser::SubrangeTypeContext *ctx) override {
+  virtual antlrcpp::Any visitSubrangeType(pascalParser::SubrangeTypeContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitArrayType(pascalParser::ArrayTypeContext *ctx) override {
+  virtual antlrcpp::Any visitArrayType(pascalParser::ArrayTypeContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitArrayDimensionList(pascalParser::ArrayDimensionListContext *ctx) override {
+  virtual antlrcpp::Any visitArrayDimensionList(pascalParser::ArrayDimensionListContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitRecordType(pascalParser::RecordTypeContext *ctx) override {
+  virtual antlrcpp::Any visitRecordType(pascalParser::RecordTypeContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitRecordFields(pascalParser::RecordFieldsContext *ctx) override {
+  virtual antlrcpp::Any visitRecordFields(pascalParser::RecordFieldsContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitVariablesPart(pascalParser::VariablesPartContext *ctx) override {
+  virtual antlrcpp::Any visitVariablesPart(pascalParser::VariablesPartContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitVariableDeclarationsList(pascalParser::VariableDeclarationsListContext *ctx) override {
+  virtual antlrcpp::Any visitVariableDeclarationsList(pascalParser::VariableDeclarationsListContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitVariableDeclarations(pascalParser::VariableDeclarationsContext *ctx) override {
+  virtual antlrcpp::Any visitVariableDeclarations(pascalParser::VariableDeclarationsContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitVariableIdentifierList(pascalParser::VariableIdentifierListContext *ctx) override {
+  virtual antlrcpp::Any visitVariableIdentifierList(pascalParser::VariableIdentifierListContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitVariableIdentifier(pascalParser::VariableIdentifierContext *ctx) override {
+  virtual antlrcpp::Any visitVariableIdentifier(pascalParser::VariableIdentifierContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitRoutinesPart(pascalParser::RoutinesPartContext *ctx) override {
+  virtual antlrcpp::Any visitRoutinesPart(pascalParser::RoutinesPartContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitRoutineDefinition(pascalParser::RoutineDefinitionContext *ctx) override {
+  virtual antlrcpp::Any visitRoutineDefinition(pascalParser::RoutineDefinitionContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitProcedureHead(pascalParser::ProcedureHeadContext *ctx) override {
+  virtual antlrcpp::Any visitProcedureHead(pascalParser::ProcedureHeadContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitFunctionHead(pascalParser::FunctionHeadContext *ctx) override {
+  virtual antlrcpp::Any visitFunctionHead(pascalParser::FunctionHeadContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitRoutineIdentifier(pascalParser::RoutineIdentifierContext *ctx) override {
+  virtual antlrcpp::Any visitRoutineIdentifier(pascalParser::RoutineIdentifierContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitParameters(pascalParser::ParametersContext *ctx) override {
+  virtual antlrcpp::Any visitParameters(pascalParser::ParametersContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitParameterDeclarationsList(pascalParser::ParameterDeclarationsListContext *ctx) override {
+  virtual antlrcpp::Any visitParameterDeclarationsList(pascalParser::ParameterDeclarationsListContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitParameterDeclarations(pascalParser::ParameterDeclarationsContext *ctx) override {
+  virtual antlrcpp::Any visitParameterDeclarations(pascalParser::ParameterDeclarationsContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitParameterIdentifierList(pascalParser::ParameterIdentifierListContext *ctx) override {
+  virtual antlrcpp::Any visitParameterIdentifierList(pascalParser::ParameterIdentifierListContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitParameterIdentifier(pascalParser::ParameterIdentifierContext *ctx) override {
+  virtual antlrcpp::Any visitParameterIdentifier(pascalParser::ParameterIdentifierContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitStatement(pascalParser::StatementContext *ctx) override {
+  virtual antlrcpp::Any visitStatement(pascalParser::StatementContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitCompoundStatement(pascalParser::CompoundStatementContext *ctx) override {
+  virtual antlrcpp::Any visitCompoundStatement(pascalParser::CompoundStatementContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitEmptyStatement(pascalParser::EmptyStatementContext *ctx) override {
+  virtual antlrcpp::Any visitEmptyStatement(pascalParser::EmptyStatementContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitStatementList(pascalParser::StatementListContext *ctx) override {
+  virtual antlrcpp::Any visitStatementList(pascalParser::StatementListContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitAssignmentStatement(pascalParser::AssignmentStatementContext *ctx) override {
+  virtual antlrcpp::Any visitAssignmentStatement(pascalParser::AssignmentStatementContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitLhs(pascalParser::LhsContext *ctx) override {
+  virtual antlrcpp::Any visitLhs(pascalParser::LhsContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitRhs(pascalParser::RhsContext *ctx) override {
+  virtual antlrcpp::Any visitRhs(pascalParser::RhsContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitIfStatement(pascalParser::IfStatementContext *ctx) override {
+  virtual antlrcpp::Any visitIfStatement(pascalParser::IfStatementContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitTrueStatement(pascalParser::TrueStatementContext *ctx) override {
+  virtual antlrcpp::Any visitTrueStatement(pascalParser::TrueStatementContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitFalseStatement(pascalParser::FalseStatementContext *ctx) override {
+  virtual antlrcpp::Any visitFalseStatement(pascalParser::FalseStatementContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitCaseStatement(pascalParser::CaseStatementContext *ctx) override {
+  virtual antlrcpp::Any visitCaseStatement(pascalParser::CaseStatementContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitCaseBranchList(pascalParser::CaseBranchListContext *ctx) override {
+  virtual antlrcpp::Any visitCaseBranchList(pascalParser::CaseBranchListContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitCaseBranch(pascalParser::CaseBranchContext *ctx) override {
+  virtual antlrcpp::Any visitCaseBranch(pascalParser::CaseBranchContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitCaseConstantList(pascalParser::CaseConstantListContext *ctx) override {
+  virtual antlrcpp::Any visitCaseConstantList(pascalParser::CaseConstantListContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitCaseConstant(pascalParser::CaseConstantContext *ctx) override {
+  virtual antlrcpp::Any visitCaseConstant(pascalParser::CaseConstantContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitRepeatStatement(pascalParser::RepeatStatementContext *ctx) override {
+  virtual antlrcpp::Any visitRepeatStatement(pascalParser::RepeatStatementContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitWhileStatement(pascalParser::WhileStatementContext *ctx) override {
+  virtual antlrcpp::Any visitWhileStatement(pascalParser::WhileStatementContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitForStatement(pascalParser::ForStatementContext *ctx) override {
+  virtual antlrcpp::Any visitForStatement(pascalParser::ForStatementContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitProcedureCallStatement(pascalParser::ProcedureCallStatementContext *ctx) override {
+  virtual antlrcpp::Any visitProcedureCallStatement(pascalParser::ProcedureCallStatementContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitProcedureName(pascalParser::ProcedureNameContext *ctx) override {
+  virtual antlrcpp::Any visitProcedureName(pascalParser::ProcedureNameContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitArgumentList(pascalParser::ArgumentListContext *ctx) override {
+  virtual antlrcpp::Any visitArgumentList(pascalParser::ArgumentListContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitArgument(pascalParser::ArgumentContext *ctx) override {
+  virtual antlrcpp::Any visitArgument(pascalParser::ArgumentContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitWriteStatement(pascalParser::WriteStatementContext *ctx) override {
+  virtual antlrcpp::Any visitWriteStatement(pascalParser::WriteStatementContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitWritelnStatement(pascalParser::WritelnStatementContext *ctx) override {
+  virtual antlrcpp::Any visitWritelnStatement(pascalParser::WritelnStatementContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitWriteArguments(pascalParser::WriteArgumentsContext *ctx) override {
+  virtual antlrcpp::Any visitWriteArguments(pascalParser::WriteArgumentsContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitWriteArgument(pascalParser::WriteArgumentContext *ctx) override {
+  virtual antlrcpp::Any visitWriteArgument(pascalParser::WriteArgumentContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitFieldWidth(pascalParser::FieldWidthContext *ctx) override {
+  virtual antlrcpp::Any visitFieldWidth(pascalParser::FieldWidthContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitDecimalPlaces(pascalParser::DecimalPlacesContext *ctx) override {
+  virtual antlrcpp::Any visitDecimalPlaces(pascalParser::DecimalPlacesContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitReadStatement(pascalParser::ReadStatementContext *ctx) override {
+  virtual antlrcpp::Any visitReadStatement(pascalParser::ReadStatementContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitReadlnStatement(pascalParser::ReadlnStatementContext *ctx) override {
+  virtual antlrcpp::Any visitReadlnStatement(pascalParser::ReadlnStatementContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitReadArguments(pascalParser::ReadArgumentsContext *ctx) override {
+  virtual antlrcpp::Any visitReadArguments(pascalParser::ReadArgumentsContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitExpression(pascalParser::ExpressionContext *ctx) override {
+  virtual antlrcpp::Any visitExpression(pascalParser::ExpressionContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitSimpleExpression(pascalParser::SimpleExpressionContext *ctx) override {
+  virtual antlrcpp::Any visitSimpleExpression(pascalParser::SimpleExpressionContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitTerm(pascalParser::TermContext *ctx) override {
+  virtual antlrcpp::Any visitTerm(pascalParser::TermContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitVariableFactor(pascalParser::VariableFactorContext *ctx) override {
+  virtual antlrcpp::Any visitVariableFactor(pascalParser::VariableFactorContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitNumberFactor(pascalParser::NumberFactorContext *ctx) override {
+  virtual antlrcpp::Any visitNumberFactor(pascalParser::NumberFactorContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitCharacterFactor(pascalParser::CharacterFactorContext *ctx) override {
+  virtual antlrcpp::Any visitCharacterFactor(pascalParser::CharacterFactorContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitStringFactor(pascalParser::StringFactorContext *ctx) override {
+  virtual antlrcpp::Any visitStringFactor(pascalParser::StringFactorContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitFunctionCallFactor(pascalParser::FunctionCallFactorContext *ctx) override {
+  virtual antlrcpp::Any visitFunctionCallFactor(pascalParser::FunctionCallFactorContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitNotFactor(pascalParser::NotFactorContext *ctx) override {
+  virtual antlrcpp::Any visitNotFactor(pascalParser::NotFactorContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitParenthesizedFactor(pascalParser::ParenthesizedFactorContext *ctx) override {
+  virtual antlrcpp::Any visitParenthesizedFactor(pascalParser::ParenthesizedFactorContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitVariable(pascalParser::VariableContext *ctx) override {
+  virtual antlrcpp::Any visitVariable(pascalParser::VariableContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitModifier(pascalParser::ModifierContext *ctx) override {
+  virtual antlrcpp::Any visitModifier(pascalParser::ModifierContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitIndexList(pascalParser::IndexListContext *ctx) override {
+  virtual antlrcpp::Any visitIndexList(pascalParser::IndexListContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitIndex(pascalParser::IndexContext *ctx) override {
+  virtual antlrcpp::Any visitIndex(pascalParser::IndexContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitField(pascalParser::FieldContext *ctx) override {
+  virtual antlrcpp::Any visitField(pascalParser::FieldContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitFunctionCall(pascalParser::FunctionCallContext *ctx) override {
+  virtual antlrcpp::Any visitFunctionCall(pascalParser::FunctionCallContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitFunctionName(pascalParser::FunctionNameContext *ctx) override {
+  virtual antlrcpp::Any visitFunctionName(pascalParser::FunctionNameContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitNumber(pascalParser::NumberContext *ctx) override {
+  virtual antlrcpp::Any visitNumber(pascalParser::NumberContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitUnsignedNumber(pascalParser::UnsignedNumberContext *ctx) override {
+  virtual antlrcpp::Any visitUnsignedNumber(pascalParser::UnsignedNumberContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitIntegerConstant(pascalParser::IntegerConstantContext *ctx) override {
+  virtual antlrcpp::Any visitIntegerConstant(pascalParser::IntegerConstantContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitRealConstant(pascalParser::RealConstantContext *ctx) override {
+  virtual antlrcpp::Any visitRealConstant(pascalParser::RealConstantContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitCharacterConstant(pascalParser::CharacterConstantContext *ctx) override {
+  virtual antlrcpp::Any visitCharacterConstant(pascalParser::CharacterConstantContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitStringConstant(pascalParser::StringConstantContext *ctx) override {
+  virtual antlrcpp::Any visitStringConstant(pascalParser::StringConstantContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitRelOp(pascalParser::RelOpContext *ctx) override {
+  virtual antlrcpp::Any visitRelOp(pascalParser::RelOpContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitAddOp(pascalParser::AddOpContext *ctx) override {
+  virtual antlrcpp::Any visitAddOp(pascalParser::AddOpContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitMulOp(pascalParser::MulOpContext *ctx) override {
+  virtual antlrcpp::Any visitMulOp(pascalParser::MulOpContext *ctx) override {
     return visitChildren(ctx);
   }
 

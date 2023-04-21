@@ -24,6 +24,8 @@ REAL : 3.0
 END : end
  : .
 EOF : <EOF>
+--- Level 1
 
-Parse tree (Lisp format):
-(program (programHeader Program (programIdentifier Program1) (programParameters ( output )) ;) (block (declarations (variablesPart var (variableDeclarationsList (variableDeclarations (variableIdentifierList (variableIdentifier notCount)) : (typeSpecification (simpleType (typeIdentifier integer)))))) ;) (compoundStatement begin (statementList (statement (assignmentStatement (lhs (variable (variableIdentifier notCount))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 5)))) (mulOp *) (factor ( (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 10))))) (addOp +) (term (factor (number (unsignedNumber (realConstant 3.0))))))) )))))))) ; (statement emptyStatement)) end)) .)
+--- Level 0
+Program1
+

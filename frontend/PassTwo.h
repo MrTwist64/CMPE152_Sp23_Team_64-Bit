@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "../intermediate/symtab/SymtabStack.h"
+//#include "antlr4-runtime/antlr4-runtime.h"
 #include "antlr4-runtime.h"
 #include "../PascalBaseVisitor.h"
 
@@ -29,9 +30,7 @@ public:
     virtual antlrcpp::Any visitProgram(pascalParser::ProgramContext *ctx) override 
     {
         visitProgramHeader(ctx->programHeader());
-        //visit(ctx->block());
         cout << "Test1" << endl;
-        // Other stuff
         return 0;
     }
 

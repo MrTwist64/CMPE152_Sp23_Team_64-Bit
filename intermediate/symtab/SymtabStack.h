@@ -8,7 +8,6 @@
 namespace intermediate { namespace symtab {
     
 class SymtabEntry;
-
 class Symtab;
 
 class SymtabStack 

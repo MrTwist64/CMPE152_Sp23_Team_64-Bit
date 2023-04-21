@@ -9,6 +9,7 @@
 using namespace antlrcpp;
 using namespace antlr4;
 using namespace std;
+using namespace intermediate;
 using namespace frontend;
 
 int main(int argc, const char *args[])
@@ -36,12 +37,18 @@ int main(int argc, const char *args[])
 	pascalParser parser(&tokens);
 	tree::ParseTree *tree = parser.program();
 
-	// Print the parse tree in Lisp format.
-	cout << endl << "Parse tree (Lisp format):" << endl;
-	std::cout << tree->toStringTree(&parser) << endl;
+    cout << "--- Level " << parser.stack->getCurrNestingLevel() << "---" << endl;
+    cout << parser.stack->getLocalSymtab()->toString() << endl;
+    parser.stack->pop();
+    cout << "--- Level " << parser.stack->getCurrNestingLevel() << "---" << endl;
+    cout << parser.stack->getLocalSymtab()->toString() << endl;
 
-	PassOne* visitor = new PassOne;
-	visitor->visit(tree);
+	// Print the parse tree in Lisp format.
+	// cout << endl << "Parse tree (Lisp format):" << endl;
+	// std::cout << tree->toStringTree(&parser) << endl;
+
+	// PassOne* visitor = new PassOne;
+	// visitor->visit(tree);
 
 	// PassTwo* visitor = new PassTwo;
 	// visitor->visit(tree);

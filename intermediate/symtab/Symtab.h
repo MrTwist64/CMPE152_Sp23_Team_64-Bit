@@ -66,18 +66,20 @@ public:
     {
         string temp = "";
         for (auto it=SymbolTable.begin(); it!=SymbolTable.end(); ++it){
-            temp += it->first + ": " + to_string(it->second->getValue()) + "\n";
+            temp += it->first; + ": ";
+            //to_string((int)it->second->getValue())
+            temp += "\n";
         }
         return temp;
     }
 
-    /* Not needed?
-    SymtabEntry update(Kind kindNew, string nameOld, string nameNew)
-    {
-        SymtabEntry temp = SymtabEntry(nameNew, kindNew, this);
-        SymbolTable[nameOld] = temp;
-    }
-    */
+    // SymtabEntry update(Kind kindNew, string nameOld, string nameNew)
+    // {
+    //     SymtabEntry temp = SymtabEntry(nameNew, kindNew, this);
+    //     SymbolTable[nameOld] = &temp;
+
+    //     return temp;
+    // }
 
     virtual ~Symtab() {}
 
