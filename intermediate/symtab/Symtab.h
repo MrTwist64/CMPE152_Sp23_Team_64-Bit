@@ -67,11 +67,11 @@ public:
         Kind kind;
         string temp = "";
         for (auto it=SymbolTable.begin(); it!=SymbolTable.end(); ++it){
-            temp += indent;
             kind = it->second->getKind();
-            temp += KIND_STRINGS[int(kind)];
-            temp += ":";
-            temp += it->first;
+            temp += indent + KIND_STRINGS[int(kind)];
+            if (kind == Kind::VARIABLE)
+                temp += "(" + it->second->getType()->getIdentifier()->getName() + ")";
+            temp += ":" + it->first;
             //to_string((int)it->second->getValue())
             temp += "\n";
         }

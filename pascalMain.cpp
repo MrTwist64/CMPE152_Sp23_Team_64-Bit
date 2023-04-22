@@ -39,7 +39,7 @@ int main(int argc, const char *args[])
 
 	// Print the parse tree in Lisp format.
 	cout << endl << "Parse tree (Lisp format):" << endl;
-	std::cout << tree->toStringTree(&parser) << endl;
+	cout << tree->toStringTree(&parser) << endl << endl;
 
 	// cout << endl;
 	// cout << "Symbol Table (cool format)" << endl;
@@ -47,7 +47,10 @@ int main(int argc, const char *args[])
 	Predefined* predefined = new Predefined();
 	PassTwo* visitor = new PassTwo(predefined);
 	visitor->visit(tree);
-	cout << visitor->getStack()->toString() << endl;
+	cout << endl << visitor->getStack()->toString() << endl;
+
+	cout << "Program1's symbol table:" << endl;
+	cout << visitor->getStack()->lookup("Program1")->getChild()->toString("  ") << endl;
 
 	/*
 	Token* identToken = match(pascalParser::IDENTIFIER);

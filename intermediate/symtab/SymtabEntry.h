@@ -61,6 +61,7 @@ private:
     Symtab *symtab;           // parent symbol table
     Typespec *typeSpec;       // type spec
     vector<int> line_nums;    // vector of line numbers
+    Symtab *childSymtab;      // child symbol table for programs/functions/procedures
 public:
     SymtabEntry()
     {
@@ -69,18 +70,18 @@ public:
     
     SymtabEntry(string name, Kind kind, Symtab *parentTab) : name(name), kind(kind), symtab(parentTab)
     {
-        info.data.value = nullptr;
-        // switch(kind) {
-        //     case Kind::CONSTANT: 
-        //     case Kind::VARIABLE:
-        //     case Kind::ENUMERATION_CONSTANT:
-        //     case Kind::RECORD_FIELD: 
-        //     case Kind::VALUE_PARAMETER:
-        //         info.data.value = nullptr;
-        //         break;
+        //info.data.value = nullptr;
+        switch(kind) {
+            case Kind::CONSTANT: 
+            case Kind::VARIABLE:
+            case Kind::ENUMERATION_CONSTANT:
+            case Kind::RECORD_FIELD: 
+            case Kind::VALUE_PARAMETER:
+                info.data.value = nullptr;
+                break;
 
-        //     default: break;
-        // }
+            default: break;
+        }
     }
 
     void setName(string name)
@@ -140,6 +141,16 @@ public:
     void setType(Typespec *typespec) 
     { 
         typeSpec = typespec; 
+    }
+
+    void setChild(Symtab *child)
+    {
+        childSymtab = child;
+    }
+
+    Symtab* getChild()
+    {
+        return childSymtab;
     }
 };
 

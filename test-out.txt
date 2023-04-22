@@ -10,20 +10,39 @@ IDENTIFIER : alpha
  : :
 IDENTIFIER : integer
  : ;
+IDENTIFIER : beta
+ : :
+IDENTIFIER : real
+ : ;
 BEGIN : begin
 IDENTIFIER : alpha
  : :=
-INTEGER : 5
+INTEGER : 1
+ : ;
+IDENTIFIER : alpha
+ : :=
+REAL : 2.2
+ : ;
+IDENTIFIER : beta
+ : :=
+INTEGER : 3
+ : ;
+IDENTIFIER : beta
+ : :=
+REAL : 4.4
  : ;
 END : end
  : .
 EOF : <EOF>
 
 Parse tree (Lisp format):
-(program (programHeader Program (programIdentifier Program1) (programParameters ( output )) ;) (block (declarations (variablesPart var (variableDeclarationsList (variableDeclarations (variableIdentifierList (variableIdentifier alpha)) : (typeSpecification (simpleType (typeIdentifier integer)))))) ;) (compoundStatement begin (statementList (statement (assignmentStatement (lhs (variable (variableIdentifier alpha))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 5)))))))))) ; (statement emptyStatement)) end)) .)
-NO ERROR: Compatible assignment between integer and integer
+(program (programHeader Program (programIdentifier Program1) (programParameters ( output )) ;) (block (declarations (variablesPart var (variableDeclarationsList (variableDeclarations (variableIdentifierList (variableIdentifier alpha)) : (typeSpecification (simpleType (typeIdentifier integer)))) ; (variableDeclarations (variableIdentifierList (variableIdentifier beta)) : (typeSpecification (simpleType (typeIdentifier real)))))) ;) (compoundStatement begin (statementList (statement (assignmentStatement (lhs (variable (variableIdentifier alpha))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 1)))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier alpha))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (realConstant 2.2)))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier beta))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 3)))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier beta))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (realConstant 4.4)))))))))) ; (statement emptyStatement)) end)) .)
+
+Error [9]: Incompatible assignment between integer and real
+
 Level 1, Owner Program1
-  VARIABLE:alpha
+  VARIABLE(integer):alpha
+  VARIABLE(real):beta
 Level 0
   PROGRAM:Program1
   TYPE:boolean
@@ -33,4 +52,9 @@ Level 0
   TYPE:real
   TYPE:string
   ENUMERATION_CONSTANT:true
+
+
+Program1's symbol table:
+  VARIABLE(integer):alpha
+  VARIABLE(real):beta
 
