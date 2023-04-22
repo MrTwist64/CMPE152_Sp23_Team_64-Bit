@@ -11,11 +11,19 @@ using namespace symtab;
 
 class TypeChecker
 {
+private:
+    Predefined *pred;
+
 public:
+    TypeChecker(Predefined *pred) 
+    {
+        this->pred = pred;
+    }
+
     bool isInteger(Typespec *typespec) 
     {
         return (typespec != nullptr) 
-            && (typespec->baseType() == Predefined::integerType);
+            && (typespec->baseType() == pred->integerType);
     }
 
     bool areBothInteger(Typespec *typespec1, Typespec *typespec2) 
@@ -31,7 +39,7 @@ public:
 
     bool isReal(Typespec *typespec) 
     {
-        return (typespec != nullptr) && (typespec->baseType() == Predefined::realType);
+        return (typespec != nullptr) && (typespec->baseType() == pred->realType);
     }
 
     bool isIntegerOrReal(Typespec *typespec) 
@@ -49,7 +57,7 @@ public:
     bool isBoolean(Typespec *typespec) 
     {
         return (typespec != nullptr)
-            && (typespec->baseType() == Predefined::booleanType);
+            && (typespec->baseType() == pred->booleanType);
     }
 
     bool areBothBoolean(Typespec *typespec1, Typespec *typespec2) 
@@ -60,19 +68,26 @@ public:
     bool isChar(Typespec *typespec) 
     {
         return (typespec != nullptr)
-            && (typespec->baseType() == Predefined::charType);
+            && (typespec->baseType() == pred->charType);
     }
 
     bool isString(Typespec *typespec) 
     {
         return (typespec != nullptr)
-            && (typespec->baseType() == Predefined::stringType);
+            && (typespec->baseType() == pred->stringType);
     }
 
     bool areAssignmentCompatible(Typespec *targetType, Typespec *valueType) 
     {
-        if ((targetType == nullptr) || (valueType == nullptr)) 
-            return false;
+        if ((targetType == nullptr) || (valueType == nullptr))
+        {
+            if (targetType == nullptr)
+                cout << "lhs is null" << endl;
+            if (valueType == nullptr)
+                cout << "rhs is null" << endl;
+            return false; 
+        } 
+            
 
         targetType = targetType->baseType();
         valueType  = valueType->baseType();
@@ -94,11 +109,11 @@ public:
 
         type1 = type1->baseType();
         type2 = type2->baseType();
-        Container cont = type1->getCont();
+        Form form = type1->getForm();
 
         bool compatible = false;
 
-        if ((type1 == type2) && ((cont == SCALAR) || (cont == ENUMERATION)))
+        if ((type1 == type2) && ((form == SCALAR) || (form == ENUMERATION)))
             compatible = true;
         else if (isAtLeastOneReal(type1, type2)) 
             compatible = true;

@@ -4,9 +4,9 @@
 #include <vector>
 
 #include "../../Object.h"
-#include "intermediate/symtab/SymtabStack.h"
-#include "intermediate/symtab/SymtabEntry.h"
-#include "intermediate/type/Typespec.h"
+#include "SymtabStack.h"
+#include "SymtabEntry.h"
+#include "../type/Typespec.h"
 
 namespace intermediate { namespace symtab {
 
@@ -17,28 +17,28 @@ using namespace intermediate::type;
 class Predefined
 {
 public:
-    static Typespec *integerType;
-    static Typespec *realType;
-    static Typespec *booleanType;
-    static Typespec *charType;
-    static Typespec *stringType;
-    static Typespec *undefinedType;
+    Typespec *integerType;
+    Typespec *realType;
+    Typespec *booleanType;
+    Typespec *charType;
+    Typespec *stringType;
+    Typespec *undefinedType;
 
-    static SymtabEntry *integerID;
-    static SymtabEntry *realID;
-    static SymtabEntry *booleanID;
-    static SymtabEntry *charID;
-    static SymtabEntry *stringID;
-    static SymtabEntry *falseID;
-    static SymtabEntry *trueID;
+    SymtabEntry *integerID;
+    SymtabEntry *realID;
+    SymtabEntry *booleanID;
+    SymtabEntry *charID;
+    SymtabEntry *stringID;
+    SymtabEntry *falseID;
+    SymtabEntry *trueID;
 
-    static void Predefined::initialize(SymtabStack *symtabStack) {
-        initializeConstants(symtabStack);
+    void initialize(SymtabStack *symtabStack) {
         initializeTypes(symtabStack);
+        initializeConstants(symtabStack);
     }
 
 private:
-    static void initializeConstants(SymtabStack *symtabStack) {
+    void initializeConstants(SymtabStack *symtabStack) {
         trueID = symtabStack->enterLocal("true", ENUMERATION_CONSTANT);
         trueID->setValue(1);
         trueID->setType(booleanType);
@@ -53,8 +53,8 @@ private:
         booleanType->setEnumerationConstants(constants);
     }
 
-    static void initializeTypes(SymtabStack *symtabStack) {
-        integerID = symtabStack->enterLocal("integer", TYPE);
+    void initializeTypes(SymtabStack *symtabStack) {
+        integerID = symtabStack->enterLocal("integer", Kind::TYPE);
         integerType = new Typespec(SCALAR);
         integerType->setIdentifier(integerID);
         integerID->setType(integerType);

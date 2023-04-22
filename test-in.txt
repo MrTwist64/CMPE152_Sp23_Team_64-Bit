@@ -1,9 +1,9 @@
 Program Program1(output);
 
 var
-    notCount : integer;
+    alpha : integer;
 
 begin
-    notCount := 5 * (10 + 3.0);
+    alpha := 5;
 
 end.

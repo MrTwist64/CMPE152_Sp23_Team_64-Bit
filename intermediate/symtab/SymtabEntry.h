@@ -27,7 +27,7 @@ enum class Kind {
 };
 
 static const string KIND_STRINGS[] = {
-    "constant", "enumeration constant", "type", "variable", "record field", "value parameter", "reference parameter", "program parameter", "PROGRAM", "PROCEDURE", "FUNCTION", "undefined"
+    "CONSTANT", "ENUMERATION_CONSTANT", "TYPE", "VARIABLE", "RECORD_FIELD", "VALUE_PARAMETER", "REFERENCE_PARAMETER", "PROGRAM_PARAMETER", "PROGRAM", "PROCEDURE", "FUNCTION", "UNDEFINED"
 };
 
 constexpr Kind CONSTANT             = Kind::CONSTANT;
@@ -81,7 +81,6 @@ public:
 
         //     default: break;
         // }
-
     }
 
     void setName(string name)

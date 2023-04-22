@@ -267,13 +267,14 @@ pascalParser::ProgramIdentifierContext* pascalParser::programIdentifier() {
   try {
     enterOuterAlt(_localctx, 1);
     setState(204);
+    match(pascalParser::IDENTIFIER);
 
-    Token* identToken = match(pascalParser::IDENTIFIER);
-    _localctx->entry = stack->enterLocal(identToken->getText(), Kind::PROGRAM);
+    // Token* identToken = match(pascalParser::IDENTIFIER);
+    // _localctx->entry = stack->enterLocal(identToken->getText(), Kind::PROGRAM);
     
-    Symtab* newTable = new Symtab(stack->getCurrNestingLevel() + 1);
-    stack->push(newTable);
-    newTable->setOwner(_localctx->entry);
+    // Symtab* newTable = new Symtab(stack->getCurrNestingLevel() + 1);
+    // stack->push(newTable);
+    // newTable->setOwner(_localctx->entry);
   }
   catch (RecognitionException &e) {
     _errHandler->reportError(this, e);

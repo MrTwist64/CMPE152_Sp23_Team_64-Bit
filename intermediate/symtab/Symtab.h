@@ -62,11 +62,16 @@ public:
         
     }
 
-    string toString()
+    string toString(string indent = "")
     {
+        Kind kind;
         string temp = "";
         for (auto it=SymbolTable.begin(); it!=SymbolTable.end(); ++it){
-            temp += it->first; + ": ";
+            temp += indent;
+            kind = it->second->getKind();
+            temp += KIND_STRINGS[int(kind)];
+            temp += ":";
+            temp += it->first;
             //to_string((int)it->second->getValue())
             temp += "\n";
         }

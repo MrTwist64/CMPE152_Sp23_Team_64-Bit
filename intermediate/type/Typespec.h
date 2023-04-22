@@ -5,7 +5,7 @@
 #include <string>
 #include "../symtab/Symtab.h"
 #include "../symtab/SymtabEntry.h"
-#include "../../Object.h"
+#include "../../Object.h" 
 
 namespace intermediate { namespace symtab {
 class Symtab;
@@ -19,23 +19,23 @@ using namespace symtab;
 
 class Typespec;
 
-enum class Container
+enum class Form
 {
     ARRAY, SUBRANGE, RECORD, SCALAR, ENUMERATION,
 };
 
-static const string ContStr[] = {"array", "subrange", "record", "scalar", "enumeration"};
+static const string FORM_STRINGS[] = {"array", "subrange", "record", "scalar", "enumeration"};
 
-constexpr Container ARRAY = Container::ARRAY;
-constexpr Container SUBRANGE = Container::SUBRANGE;
-constexpr Container RECORD = Container::RECORD;
-constexpr Container SCALAR = Container::SCALAR;
-constexpr Container ENUMERATION = Container::ENUMERATION;
+constexpr Form ARRAY = Form::ARRAY;
+constexpr Form SUBRANGE = Form::SUBRANGE;
+constexpr Form RECORD = Form::RECORD;
+constexpr Form SCALAR = Form::SCALAR;
+constexpr Form ENUMERATION = Form::ENUMERATION;
 
 class Typespec 
 {
 private:
-    union ContInfo 
+    union TypeInfo 
     {
         struct 
         {
@@ -53,7 +53,7 @@ private:
         
         struct 
         {
-            string type;
+            string *type;
             Symtab *symTab;
         } RECORD;
 
@@ -63,88 +63,88 @@ private:
         } ENUMERATION;
         
     };
-    Container CONT;
+    Form form;
     SymtabEntry *identifier;
-    static ContInfo inf;
+    TypeInfo info; 
 
 public:
-    Typespec() : CONT((Container) -1), identifier(nullptr) {}
+    Typespec() : form((Form) -1), identifier(nullptr) {}
 
-    Typespec(Container Cont) : CONT(Cont), identifier(nullptr)
+    Typespec(Form form) : form(form), identifier(nullptr)
     {
-        switch(Cont)
+        switch(form)
         {
-            case Container::ARRAY: 
-                inf.ARRAY.arrLength = 0;
-                inf.ARRAY.elementType = nullptr;
-                inf.ARRAY.indexType = nullptr;
+            case Form::ARRAY: 
+                info.ARRAY.arrLength = 0;
+                info.ARRAY.elementType = nullptr;
+                info.ARRAY.indexType = nullptr;
             break;
 
-            case Container::SUBRANGE:
-                inf.SUBRANGE.baseType = nullptr;
-                inf.SUBRANGE.subrMax = 0;
-                inf.SUBRANGE.subrMin = 0;
+            case Form::SUBRANGE:
+                info.SUBRANGE.baseType = nullptr;
+                info.SUBRANGE.subrMax = 0;
+                info.SUBRANGE.subrMin = 0;
             break;
 
-            case Container::RECORD:
-                inf.RECORD.type = nullptr;
-                inf.RECORD.symTab = nullptr;
+            case Form::RECORD:
+                info.RECORD.type = nullptr;
+                info.RECORD.symTab = nullptr;
             break;
 
-            case Container::ENUMERATION:
-                inf.ENUMERATION.enums = nullptr;
+            case Form::ENUMERATION:
+                info.ENUMERATION.enums = new vector<SymtabEntry *>();
             break;
             default:break;
         }
     }
 
-    virtual ~Typespec(){}
+    virtual ~Typespec() {}
 
     //GETTERS
-    Typespec *baseType(){return this->CONT == Container::SUBRANGE ? inf.SUBRANGE.baseType : this;}
+    Typespec *baseType(){return this->form == Form::SUBRANGE ? info.SUBRANGE.baseType : this;}
 
-    bool isArrRec() {return (this->CONT == Container::ARRAY)|| (this->CONT == Container::RECORD);}
+    bool isArrRec() {return (this->form == Form::ARRAY) || (this->form == Form::RECORD);}
 
-    Container getCont() {return this->CONT;}
+    Form getForm() {return form;}
 
-    int getArrLength() {return inf.ARRAY.arrLength;}
+    int getArrLength() {return info.ARRAY.arrLength;}
 
-    Typespec *getArrElemType() {return inf.ARRAY.elementType;}
+    Typespec *getArrElemType() {return info.ARRAY.elementType;}
     
-    Typespec *getArrIndexType() {return inf.ARRAY.indexType;}
+    Typespec *getArrIndexType() {return info.ARRAY.indexType;}
 
-    Typespec *getSubrBaseType() {return inf.SUBRANGE.baseType;}
+    Typespec *getSubrBaseType() {return info.SUBRANGE.baseType;}
 
-    int getSubrMax() {return inf.SUBRANGE.subrMax;}
+    int getSubrMax() {return info.SUBRANGE.subrMax;}
 
-    int getSubrMin() {return inf.SUBRANGE.subrMin;}
+    int getSubrMin() {return info.SUBRANGE.subrMin;}
 
-    string getRecType() {return inf.RECORD.type;}
+    string *getRecType() {return info.RECORD.type;}
 
-    Symtab *getRecSymtab() {return inf.RECORD.symTab;}
+    Symtab *getRecSymtab() {return info.RECORD.symTab;}
 
-    vector <SymtabEntry*> *getEnums() {return inf.ENUMERATION.enums;}
+    vector <SymtabEntry*> *getEnums() {return info.ENUMERATION.enums;}
 
     SymtabEntry *getIdentifier() const {return identifier; }
 
     //SETTERS
-    void setArrLength(int x) {inf.ARRAY.arrLength = x;}
+    void setArrLength(int x) {info.ARRAY.arrLength = x;}
 
-    void setArrElemType(Typespec *x) {inf.ARRAY.elementType = x;}
+    void setArrElemType(Typespec *x) {info.ARRAY.elementType = x;}
     
-    void setArrIndexType(Typespec *x) {inf.ARRAY.indexType = x;}
+    void setArrIndexType(Typespec *x) {info.ARRAY.indexType = x;}
 
-    void setSubrBaseType(Typespec *x) {inf.SUBRANGE.baseType = x;}
+    void setSubrBaseType(Typespec *x) {info.SUBRANGE.baseType = x;}
 
-    void setSubrMax(int x) {inf.SUBRANGE.subrMax = x;}
+    void setSubrMax(int x) {info.SUBRANGE.subrMax = x;}
 
-    void setSubrMin(int x) {inf.SUBRANGE.subrMin = x;}
+    void setSubrMin(int x) {info.SUBRANGE.subrMin = x;}
 
-    void setRecType(string x) {inf.RECORD.type = x;}
+    void setRecType(string *x) {info.RECORD.type = x;}
 
-    void setRecSymtab(Symtab *x) {inf.RECORD.symTab = x;}
+    void setRecSymtab(Symtab *x) {info.RECORD.symTab = x;}
 
-    void setEnumerationConstants(vector <SymtabEntry*> *x) {inf.ENUMERATION.enums = x;}
+    void setEnumerationConstants(vector <SymtabEntry*> *x) {info.ENUMERATION.enums = x;}
 
     void setIdentifier(SymtabEntry *ID) {identifier = ID;}
 };

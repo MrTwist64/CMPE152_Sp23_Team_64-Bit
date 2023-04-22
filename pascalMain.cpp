@@ -37,20 +37,28 @@ int main(int argc, const char *args[])
 	pascalParser parser(&tokens);
 	tree::ParseTree *tree = parser.program();
 
-    cout << "--- Level " << parser.stack->getCurrNestingLevel() << "---" << endl;
-    cout << parser.stack->getLocalSymtab()->toString() << endl;
-    parser.stack->pop();
-    cout << "--- Level " << parser.stack->getCurrNestingLevel() << "---" << endl;
-    cout << parser.stack->getLocalSymtab()->toString() << endl;
-
 	// Print the parse tree in Lisp format.
-	// cout << endl << "Parse tree (Lisp format):" << endl;
-	// std::cout << tree->toStringTree(&parser) << endl;
+	cout << endl << "Parse tree (Lisp format):" << endl;
+	std::cout << tree->toStringTree(&parser) << endl;
+
+	// cout << endl;
+	// cout << "Symbol Table (cool format)" << endl;
+
+	Predefined* predefined = new Predefined();
+	PassTwo* visitor = new PassTwo(predefined);
+	visitor->visit(tree);
+	cout << visitor->getStack()->toString() << endl;
+
+	/*
+	Token* identToken = match(pascalParser::IDENTIFIER);
+    _localctx->entry = stack->enterLocal(identToken->getText(), Kind::PROGRAM);
+    
+    Symtab* newTable = new Symtab(stack->getCurrNestingLevel() + 1);
+    stack->push(newTable);
+    newTable->setOwner(_localctx->entry);
+	*/
 
 	// PassOne* visitor = new PassOne;
-	// visitor->visit(tree);
-
-	// PassTwo* visitor = new PassTwo;
 	// visitor->visit(tree);
 	
 	return 0;
