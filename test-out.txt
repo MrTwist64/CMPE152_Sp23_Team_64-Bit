@@ -5,6 +5,13 @@ IDENTIFIER : Program1
 IDENTIFIER : output
  : )
  : ;
+TYPE : type
+IDENTIFIER : mySubRangeType
+ : =
+INTEGER : 10
+ : ..
+INTEGER : 20
+ : ;
 VAR : var
 IDENTIFIER : alpha
  : :
@@ -13,6 +20,21 @@ IDENTIFIER : integer
 IDENTIFIER : beta
  : :
 IDENTIFIER : real
+ : ;
+IDENTIFIER : delta
+ : :
+IDENTIFIER : boolean
+ : ;
+IDENTIFIER : gamma
+ : :
+ARRAY : array
+ : [
+INTEGER : 0
+ : ..
+INTEGER : 2
+ : ]
+OF : of
+IDENTIFIER : integer
  : ;
 BEGIN : begin
 IDENTIFIER : alpha
@@ -31,30 +53,271 @@ IDENTIFIER : beta
  : :=
 REAL : 4.4
  : ;
+IDENTIFIER : charlie
+ : :=
+INTEGER : 5
+ : ;
+IDENTIFIER : delta
+ : :=
+IDENTIFIER : true
+OR : or
+IDENTIFIER : false
+ : ;
+IDENTIFIER : delta
+ : :=
+IDENTIFIER : true
+OR : or
+IDENTIFIER : false
+OR : or
+IDENTIFIER : true
+ : ;
+IDENTIFIER : delta
+ : :=
+IDENTIFIER : true
+OR : or
+INTEGER : 1
+ : ;
+IDENTIFIER : alpha
+ : :=
+INTEGER : 3
+ : +
+INTEGER : 3
+ : -
+INTEGER : 4
+ : +
+INTEGER : 10
+ : ;
+IDENTIFIER : alpha
+ : :=
+REAL : 3.0
+ : +
+INTEGER : 3
+ : -
+INTEGER : 4
+ : +
+INTEGER : 10
+ : ;
+IDENTIFIER : beta
+ : :=
+INTEGER : 5
+ : *
+INTEGER : 3
+ : ;
+IDENTIFIER : beta
+ : :=
+IDENTIFIER : alpha
+ : *
+IDENTIFIER : beta
+ : ;
+IDENTIFIER : beta
+ : :=
+INTEGER : 5
+ : *
+IDENTIFIER : delta
+ : ;
+IDENTIFIER : alpha
+ : :=
+INTEGER : 5
+ : /
+INTEGER : 3
+ : ;
+IDENTIFIER : beta
+ : :=
+IDENTIFIER : alpha
+ : /
+IDENTIFIER : beta
+ : ;
+IDENTIFIER : beta
+ : :=
+INTEGER : 5
+ : /
+IDENTIFIER : delta
+ : ;
+IDENTIFIER : alpha
+ : :=
+INTEGER : 5
+MOD : mod
+INTEGER : 3
+ : ;
+IDENTIFIER : beta
+ : :=
+IDENTIFIER : alpha
+DIV : div
+IDENTIFIER : beta
+ : ;
+IDENTIFIER : beta
+ : :=
+INTEGER : 5
+DIV : div
+IDENTIFIER : delta
+ : ;
+IDENTIFIER : delta
+ : :=
+IDENTIFIER : true
+AND : and
+IDENTIFIER : false
+ : ;
+IDENTIFIER : delta
+ : :=
+IDENTIFIER : true
+AND : and
+IDENTIFIER : false
+OR : or
+IDENTIFIER : true
+ : ;
+IDENTIFIER : delta
+ : :=
+IDENTIFIER : true
+AND : and
+INTEGER : 1
+ : ;
+IDENTIFIER : delta
+ : :=
+NOT : not
+IDENTIFIER : alpha
+ : ;
+IDENTIFIER : delta
+ : :=
+NOT : not
+IDENTIFIER : delta
+ : ;
+IDENTIFIER : alpha
+ : :=
+INTEGER : 5
+ : /
+ : (
+INTEGER : 16
+ : +
+INTEGER : 9
+ : )
+ : ;
+IDENTIFIER : beta
+ : :=
+ : (
+INTEGER : 55
+ : -
+ : (
+INTEGER : 20
+ : )
+ : )
+ : /
+ : (
+INTEGER : 16
+ : +
+INTEGER : 9
+ : )
+ : ;
+IF : if
+ : (
+IDENTIFIER : delta
+ : )
+THEN : then
+BEGIN : begin
+IDENTIFIER : enteredIfStatement1
+ : :=
+INTEGER : 0
+ : ;
+END : end
+ELSE : else
+BEGIN : begin
+IDENTIFIER : enteredElseStatement1
+ : :=
+INTEGER : 0
+ : ;
+END : end
+ : ;
+IF : if
+ : (
+IDENTIFIER : alpha
+ : =
+INTEGER : 0
+ : )
+THEN : then
+ : ;
+IF : if
+ : (
+IDENTIFIER : alpha
+ : )
+THEN : then
+ : ;
+FOR : for
+IDENTIFIER : alpha
+ : :=
+INTEGER : 1
+TO : to
+INTEGER : 3
+DO : do
+BEGIN : begin
+IDENTIFIER : enteredForStatement1
+ : :=
+INTEGER : 0
+ : ;
+END : end
+ : ;
+CASE : case
+ : (
+IDENTIFIER : alpha
+ : )
+OF : of
+INTEGER : 0
+ : :
+IDENTIFIER : case0
+ : :=
+INTEGER : 0
+ : ;
+INTEGER : 1
+ : :
+IDENTIFIER : beta
+ : :=
+INTEGER : 0
+ : ;
+INTEGER : 2
+ : :
+IDENTIFIER : alpha
+ : :=
+INTEGER : 0
+ : ;
+END : end
+ : ;
 END : end
  : .
 EOF : <EOF>
 
 Parse tree (Lisp format):
-(program (programHeader Program (programIdentifier Program1) (programParameters ( output )) ;) (block (declarations (variablesPart var (variableDeclarationsList (variableDeclarations (variableIdentifierList (variableIdentifier alpha)) : (typeSpecification (simpleType (typeIdentifier integer)))) ; (variableDeclarations (variableIdentifierList (variableIdentifier beta)) : (typeSpecification (simpleType (typeIdentifier real)))))) ;) (compoundStatement begin (statementList (statement (assignmentStatement (lhs (variable (variableIdentifier alpha))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 1)))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier alpha))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (realConstant 2.2)))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier beta))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 3)))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier beta))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (realConstant 4.4)))))))))) ; (statement emptyStatement)) end)) .)
+(program (programHeader Program (programIdentifier Program1) (programParameters ( output )) ;) (block (declarations (typesPart type (typeDefinitionsList (typeDefinition (typeIdentifier mySubRangeType) = (typeSpecification (simpleType (subrangeType (constant (unsignedNumber (integerConstant 10))) .. (constant (unsignedNumber (integerConstant 20))))))))) ; (variablesPart var (variableDeclarationsList (variableDeclarations (variableIdentifierList (variableIdentifier alpha)) : (typeSpecification (simpleType (typeIdentifier integer)))) ; (variableDeclarations (variableIdentifierList (variableIdentifier beta)) : (typeSpecification (simpleType (typeIdentifier real)))) ; (variableDeclarations (variableIdentifierList (variableIdentifier delta)) : (typeSpecification (simpleType (typeIdentifier boolean)))) ; (variableDeclarations (variableIdentifierList (variableIdentifier gamma)) : (typeSpecification (arrayType array [ (arrayDimensionList (simpleType (subrangeType (constant (unsignedNumber (integerConstant 0))) .. (constant (unsignedNumber (integerConstant 2)))))) ] of (typeSpecification (simpleType (typeIdentifier integer)))))))) ;) (compoundStatement begin (statementList (statement (assignmentStatement (lhs (variable (variableIdentifier alpha))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 1)))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier alpha))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (realConstant 2.2)))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier beta))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 3)))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier beta))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (realConstant 4.4)))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier charlie))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 5)))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier delta))) := (rhs (expression (simpleExpression (term (factor (variable (variableIdentifier true)))) (addOp or) (term (factor (variable (variableIdentifier false))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier delta))) := (rhs (expression (simpleExpression (term (factor (variable (variableIdentifier true)))) (addOp or) (term (factor (variable (variableIdentifier false)))) (addOp or) (term (factor (variable (variableIdentifier true))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier delta))) := (rhs (expression (simpleExpression (term (factor (variable (variableIdentifier true)))) (addOp or) (term (factor (number (unsignedNumber (integerConstant 1)))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier alpha))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 3))))) (addOp +) (term (factor (number (unsignedNumber (integerConstant 3))))) (addOp -) (term (factor (number (unsignedNumber (integerConstant 4))))) (addOp +) (term (factor (number (unsignedNumber (integerConstant 10)))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier alpha))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (realConstant 3.0))))) (addOp +) (term (factor (number (unsignedNumber (integerConstant 3))))) (addOp -) (term (factor (number (unsignedNumber (integerConstant 4))))) (addOp +) (term (factor (number (unsignedNumber (integerConstant 10)))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier beta))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 5)))) (mulOp *) (factor (number (unsignedNumber (integerConstant 3)))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier beta))) := (rhs (expression (simpleExpression (term (factor (variable (variableIdentifier alpha))) (mulOp *) (factor (variable (variableIdentifier beta))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier beta))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 5)))) (mulOp *) (factor (variable (variableIdentifier delta))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier alpha))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 5)))) (mulOp /) (factor (number (unsignedNumber (integerConstant 3)))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier beta))) := (rhs (expression (simpleExpression (term (factor (variable (variableIdentifier alpha))) (mulOp /) (factor (variable (variableIdentifier beta))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier beta))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 5)))) (mulOp /) (factor (variable (variableIdentifier delta))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier alpha))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 5)))) (mulOp mod) (factor (number (unsignedNumber (integerConstant 3)))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier beta))) := (rhs (expression (simpleExpression (term (factor (variable (variableIdentifier alpha))) (mulOp div) (factor (variable (variableIdentifier beta))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier beta))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 5)))) (mulOp div) (factor (variable (variableIdentifier delta))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier delta))) := (rhs (expression (simpleExpression (term (factor (variable (variableIdentifier true))) (mulOp and) (factor (variable (variableIdentifier false))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier delta))) := (rhs (expression (simpleExpression (term (factor (variable (variableIdentifier true))) (mulOp and) (factor (variable (variableIdentifier false)))) (addOp or) (term (factor (variable (variableIdentifier true))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier delta))) := (rhs (expression (simpleExpression (term (factor (variable (variableIdentifier true))) (mulOp and) (factor (number (unsignedNumber (integerConstant 1)))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier delta))) := (rhs (expression (simpleExpression (term (factor not (factor (variable (variableIdentifier alpha)))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier delta))) := (rhs (expression (simpleExpression (term (factor not (factor (variable (variableIdentifier delta)))))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier alpha))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 5)))) (mulOp /) (factor ( (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 16))))) (addOp +) (term (factor (number (unsignedNumber (integerConstant 9))))))) )))))))) ; (statement (assignmentStatement (lhs (variable (variableIdentifier beta))) := (rhs (expression (simpleExpression (term (factor ( (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 55))))) (addOp -) (term (factor ( (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 20))))))) ))))) )) (mulOp /) (factor ( (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 16))))) (addOp +) (term (factor (number (unsignedNumber (integerConstant 9))))))) )))))))) ; (statement (ifStatement if (expression (simpleExpression (term (factor ( (expression (simpleExpression (term (factor (variable (variableIdentifier delta)))))) ))))) then (trueStatement (statement (compoundStatement begin (statementList (statement (assignmentStatement (lhs (variable (variableIdentifier enteredIfStatement1))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 0)))))))))) ; (statement emptyStatement)) end))) else (falseStatement (statement (compoundStatement begin (statementList (statement (assignmentStatement (lhs (variable (variableIdentifier enteredElseStatement1))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 0)))))))))) ; (statement emptyStatement)) end))))) ; (statement (ifStatement if (expression (simpleExpression (term (factor ( (expression (simpleExpression (term (factor (variable (variableIdentifier alpha))))) (relOp =) (simpleExpression (term (factor (number (unsignedNumber (integerConstant 0))))))) ))))) then (trueStatement (statement emptyStatement)))) ; (statement (ifStatement if (expression (simpleExpression (term (factor ( (expression (simpleExpression (term (factor (variable (variableIdentifier alpha)))))) ))))) then (trueStatement (statement emptyStatement)))) ; (statement (forStatement for (variable (variableIdentifier alpha)) := (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 1))))))) to (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 3))))))) do (statement (compoundStatement begin (statementList (statement (assignmentStatement (lhs (variable (variableIdentifier enteredForStatement1))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 0)))))))))) ; (statement emptyStatement)) end)))) ; (statement (caseStatement case (expression (simpleExpression (term (factor ( (expression (simpleExpression (term (factor (variable (variableIdentifier alpha)))))) ))))) of (caseBranchList (caseBranch (caseConstantList (caseConstant (constant (unsignedNumber (integerConstant 0))))) : (statement (assignmentStatement (lhs (variable (variableIdentifier case0))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 0))))))))))) ; (caseBranch (caseConstantList (caseConstant (constant (unsignedNumber (integerConstant 1))))) : (statement (assignmentStatement (lhs (variable (variableIdentifier beta))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 0))))))))))) ; (caseBranch (caseConstantList (caseConstant (constant (unsignedNumber (integerConstant 2))))) : (statement (assignmentStatement (lhs (variable (variableIdentifier alpha))) := (rhs (expression (simpleExpression (term (factor (number (unsignedNumber (integerConstant 0))))))))))) ; caseBranch) end)) ; (statement emptyStatement)) end)) .)
 
-Error [9]: Incompatible assignment between integer and real
+Error [15]: Incompatible assignment between integer and real.
+Error [18]: Variable charlie not found.
+Error [23]: Type must be boolean, not integer.
+Error [25]: Incompatible assignment between integer and real.
+Error [30]: Type must be integer or real, not boolean.
+Error [31]: Incompatible assignment between integer and real.
+Error [33]: Type must be integer or real, not boolean.
+Error [36]: Type must be integer or real, not boolean.
+Error [39]: Type must be boolean, not integer.
+Error [42]: Type must be boolean, not integer.
+Error [43]: Type must be boolean, not boolean.
+Error [46]: Incompatible assignment between integer and real.
+Error [52]: Variable enteredIfStatement1 not found.
+Error [55]: Variable enteredElseStatement1 not found.
+Error [58]: Type must be boolean, not integer.
+Error [63]: Variable enteredForStatement1 not found.
+Error [68]: Variable case0 not found.
 
-Level 1, Owner Program1
-  VARIABLE(integer):alpha
-  VARIABLE(real):beta
 Level 0
-  PROGRAM:Program1
-  TYPE:boolean
-  TYPE:char
+  TYPE(enumeration):boolean
+  TYPE(scalar):char
   ENUMERATION_CONSTANT:false
-  TYPE:integer
-  TYPE:real
-  TYPE:string
+  TYPE(scalar):integer
+  PROGRAM:program1
+  TYPE(scalar):real
+  TYPE(scalar):string
   ENUMERATION_CONSTANT:true
 
-
-Program1's symbol table:
+program1's symbol table:
   VARIABLE(integer):alpha
   VARIABLE(real):beta
+  VARIABLE(boolean):delta
+  VARIABLE(array):gamma
+  TYPE(subrange):mysubrangetype
 

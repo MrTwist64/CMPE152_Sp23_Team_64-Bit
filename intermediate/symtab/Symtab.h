@@ -6,11 +6,13 @@
 #include <iostream>
 
 #include "SymtabEntry.h"
+#include "../type/Typespec.h"
 
 namespace intermediate { namespace symtab {
 
 using namespace std;
 using namespace intermediate;
+using namespace intermediate::type;
 
 class SymtabEntry;
 
@@ -65,15 +67,29 @@ public:
     string toString(string indent = "")
     {
         Kind kind;
+        Form form;
         string temp = "";
+
         for (auto it=SymbolTable.begin(); it!=SymbolTable.end(); ++it){
             kind = it->second->getKind();
+
             temp += indent + KIND_STRINGS[int(kind)];
+
             if (kind == Kind::VARIABLE)
-                temp += "(" + it->second->getType()->getIdentifier()->getName() + ")";
-            temp += ":" + it->first;
-            //to_string((int)it->second->getValue())
-            temp += "\n";
+            {   
+                form = it->second->getType()->getForm();
+                if (form == Form::SCALAR || form == Form::ENUMERATION)
+                    temp += "(" + it->second->getType()->getIdentifier()->getName() + ")";
+                if (form == Form::ARRAY)
+                    temp += "(array)";
+            } 
+            else if (kind == Kind::TYPE)
+            {
+                form = it->second->getType()->getForm();
+                temp += "(" + FORM_STRINGS[int(it->second->getType()->getForm())] + ")";
+            }
+
+            temp += ":" + it->first + "\n";
         }
         return temp;
     }

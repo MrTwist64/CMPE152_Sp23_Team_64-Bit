@@ -49,8 +49,8 @@ int main(int argc, const char *args[])
 	visitor->visit(tree);
 	cout << endl << visitor->getStack()->toString() << endl;
 
-	cout << "Program1's symbol table:" << endl;
-	cout << visitor->getStack()->lookup("Program1")->getChild()->toString("  ") << endl;
+	cout << "program1's symbol table:" << endl;
+	cout << visitor->getStack()->lookup("program1")->getChild()->toString("  ") << endl;
 
 	/*
 	Token* identToken = match(pascalParser::IDENTIFIER);

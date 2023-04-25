@@ -39,11 +39,11 @@ public:
 
 private:
     void initializeConstants(SymtabStack *symtabStack) {
-        trueID = symtabStack->enterLocal("true", ENUMERATION_CONSTANT);
+        trueID = symtabStack->enterLocal("true", Kind::ENUMERATION_CONSTANT);
         trueID->setValue(1);
         trueID->setType(booleanType);
 
-        falseID = symtabStack->enterLocal("false", ENUMERATION_CONSTANT);
+        falseID = symtabStack->enterLocal("false", Kind::ENUMERATION_CONSTANT);
         falseID->setValue(0);
         falseID->setType(booleanType);
 
@@ -59,22 +59,22 @@ private:
         integerType->setIdentifier(integerID);
         integerID->setType(integerType);
 
-        realID = symtabStack->enterLocal("real", TYPE);
+        realID = symtabStack->enterLocal("real", Kind::TYPE);
         realType = new Typespec(SCALAR);
         realType->setIdentifier(realID);
         realID->setType(realType);
 
-        booleanID = symtabStack->enterLocal("boolean", TYPE);
+        booleanID = symtabStack->enterLocal("boolean", Kind::TYPE);
         booleanType = new Typespec(ENUMERATION);
         booleanType->setIdentifier(booleanID);
         booleanID->setType(booleanType);
 
-        charID = symtabStack->enterLocal("char", TYPE);
+        charID = symtabStack->enterLocal("char", Kind::TYPE);
         charType = new Typespec(SCALAR);
         charType->setIdentifier(charID);
         charID->setType(charType);
 
-        stringID = symtabStack->enterLocal("string", TYPE);
+        stringID = symtabStack->enterLocal("string", Kind::TYPE);
         stringType = new Typespec(SCALAR);
         stringType->setIdentifier(stringID);
         stringID->setType(stringType);
