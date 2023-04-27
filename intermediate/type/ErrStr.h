@@ -132,6 +132,34 @@ public:
         return temp;
     }
 
+    string redeclaredIdentifier(int lineNum) {
+        string temp = "";
+        temp += errorStart(lineNum);
+        temp += "Redeclared Identifier.";
+        return temp;
+    }
+
+    string undeclaredIdentifier(int lineNum) {
+        string temp = "";
+        temp += errorStart(lineNum);
+        temp += "Undeclared Identifier.";
+        return temp;
+    }
+
+    string nameMustBeFunction(int lineNum) {
+        string temp = "";
+        temp += errorStart(lineNum);
+        temp += "Name Must Be Function.";
+        return temp;
+    }
+
+    string invalidReturnType(int lineNum) {
+        string temp = "";
+        temp += errorStart(lineNum);
+        temp += "Invalid Return Type.";
+        return temp;
+    }
+
 };
 
 }}

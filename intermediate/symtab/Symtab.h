@@ -94,6 +94,20 @@ public:
         return temp;
     }
 
+    vector<SymtabEntry *> getRoutineParameters()
+    {
+        vector<SymtabEntry *> list;
+        map<string, SymtabEntry *>::iterator it;
+
+        // Iterate over the sorted entries and append them to the list.
+        for (it = SymbolTable.begin(); it != SymbolTable.end(); it++)
+        {
+            list.push_back(it->second);
+        }
+
+        return list;  // sorted list of entries
+    }
+
     // SymtabEntry update(Kind kindNew, string nameOld, string nameNew)
     // {
     //     SymtabEntry temp = SymtabEntry(nameNew, kindNew, this);
