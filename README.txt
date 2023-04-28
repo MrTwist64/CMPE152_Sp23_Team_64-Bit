@@ -14,6 +14,7 @@ Assignment 5
 - After having many issues with Antlr4.12, the professor gave our group an extension to work on the project and turn it in after the due date.
 - Our code is partially based off of the code from Ron Mak.
 - If you would like to recreate the antlr4 files from our grammar file, you MUST change the path of the ANTLRCC macro to one for your machine.
+- The type definitions noted in the output for this assignment have been combined into the symbol table output.
 
 ===== IntermediatePass.h ===== 
 - IntermediatePass is a class that extends pascalBaseVisitor, and contains modified visit functions that construct the Pascal symbol table as it traverses the ANTLR4-generated parse tree.
