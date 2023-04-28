@@ -50,12 +50,9 @@ public:
         string temp = "";
         temp += errorStart(lineNum);
         temp += "Type ";
-        cout << "errStr1" << endl;
         temp += wrongType->getIdentifier()->getName();
-        cout << "errStr2" << endl;
         temp += " cannot be compared with type ";
         temp += correctType->getIdentifier()->getName();
-        cout << "errStr3" << endl;
         temp += ".";
         return temp;
     }
@@ -75,6 +72,14 @@ public:
         string temp = "";
         temp += errorStart(lineNum);
         temp += "Type definition " + name + " already exists.";
+        return temp;
+    }
+
+    string duplicateDefinition(string name, int lineNum)
+    {
+        string temp = "";
+        temp += errorStart(lineNum);
+        temp += "Definition " + name + " already exists.";
         return temp;
     }
 
@@ -157,6 +162,13 @@ public:
         string temp = "";
         temp += errorStart(lineNum);
         temp += "Invalid Return Type.";
+        return temp;
+    }
+
+    string subscriptOverflow(int lineNum) {
+        string temp = "";
+        temp += errorStart(lineNum);
+        temp += "Too Many Subscripts.";
         return temp;
     }
 

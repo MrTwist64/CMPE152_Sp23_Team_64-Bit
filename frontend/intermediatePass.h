@@ -18,7 +18,7 @@ using namespace std;
 using namespace intermediate::symtab;
 using namespace intermediate::type;
 
-class PassTwo : public pascalBaseVisitor
+class IntermediatePass : public pascalBaseVisitor
 {
 private:
     Predefined* pred;
@@ -33,7 +33,7 @@ private:
     }
  
 public:
-    PassTwo(Predefined *pred)
+    IntermediatePass(Predefined *pred)
     {
         this->pred = pred;
         stack = new SymtabStack;
@@ -50,7 +50,7 @@ public:
         visit(ctx->programHeader());
         visit(ctx->block());
 
-        stack->pop();
+        stack->pop(); 
 
         return nullptr;
     }
@@ -252,6 +252,8 @@ public:
     {
         ctx->entry = stack->lookup(lower(ctx->IDENTIFIER()->getText()));
         ctx->type = ctx->entry->getType();
+        
+        ctx->type->setIdentifier(ctx->entry); // Added for testing. REMOVE
         
         return nullptr;
     }
@@ -500,88 +502,56 @@ public:
     // #36
     virtual antlrcpp::Any visitRoutineDefinition(pascalParser::RoutineDefinitionContext *ctx) override
     {
-        pascalParser::FunctionHeadContext  *funcHeadCtx = ctx->functionHead();
-        pascalParser::ProcedureHeadContext *procHeadCtx = ctx->procedureHead();
-        pascalParser::RoutineIdentifierContext *RoutIDCtx = nullptr;
-        pascalParser::ParametersContext *paramCtx = nullptr;
-        bool functionDef = funcHeadCtx != nullptr;
-        Typespec *retType = nullptr;
-        string routName;
+        pascalParser::FunctionHeadContext *funcHeadCtx = ctx->functionHead();
+        pascalParser::ProcedureHeadContext *proHeadCtx = ctx->procedureHead();
+        bool inFunc = funcHeadCtx != nullptr; // True if function definition, false if procedure definition
 
-        if(functionDef) {
-            RoutIDCtx = funcHeadCtx->routineIdentifier();
-            paramCtx = funcHeadCtx->parameters();
-        }
-        else {
-            RoutIDCtx = procHeadCtx->routineIdentifier();
-            paramCtx = procHeadCtx->parameters();
-        }
-        
-        routName = toLowerCase(RoutIDCtx->IDENTIFIER()->getText());
-        SymtabEntry *routID = stack->lookupLocal(routName);
-
-        if (routID != nullptr)
+        // Get routine Identifier Context and set return type
+        pascalParser::RoutineIdentifierContext *routIdCtx;
+        pascalParser::ParametersContext *paramCtx;
+        Kind routKind;
+        if(inFunc) // Function Definition
         {
-            cout << err->redeclaredIdentifier(ctx->getStart()->getLine());
+            visit(funcHeadCtx->routineIdentifier());
+            visit(funcHeadCtx->typeIdentifier());
+            paramCtx = funcHeadCtx->parameters();
+            routIdCtx = funcHeadCtx->routineIdentifier();
+            routKind = Kind::FUNCTION;
+            routIdCtx->type = funcHeadCtx->typeIdentifier()->type;
+        }
+        else // Procedure Definition
+        {
+            visit(proHeadCtx->routineIdentifier());
+            paramCtx = proHeadCtx->parameters();
+            routIdCtx = proHeadCtx->routineIdentifier();
+            routKind = Kind::PROCEDURE;
+            routIdCtx->type = nullptr;
+        }
+
+        // Add routine to symbol table
+        string routName = lower(routIdCtx->IDENTIFIER()->getText());
+        if (stack->lookupLocal(routName)) // Test if ID already exists in symbol table
+        {
+            cout << err->duplicateDefinition(routName, ctx->getStart()->getLine()) << endl;
             return nullptr;
         }
+        routIdCtx->entry = stack->enterLocal(routName, routKind);
+        routIdCtx->entry->setType(routIdCtx->type);
 
-        routID = stack->enterLocal(routName, functionDef ? FUNCTION : PROCEDURE);
-        routID->setRoutineCode(DECLARED);
-        RoutIDCtx->entry = routID;
+        // Add new symbol table to stack
+        Symtab* routTable = stack->push();
+        routTable->setOwner(routIdCtx->entry);
+        routIdCtx->entry->setChild(routTable);
 
-        // Append to the parent routine's list of subroutines.
-        SymtabEntry *parentID = stack->getLocalSymtab()->getOwner();
-        parentID->appendSubroutine(routID);
+        // Set Parameters
+        vector<SymtabEntry *> *params = visit(paramCtx);
+        routIdCtx->entry->setChildParams(params);
 
-        routID->setRoutineSymtab(stack->push());
-        RoutIDCtx->entry = routID;
+        // Set return variable in new symbol table
+        if(inFunc)
+            stack->enterLocal(routName, Kind::VARIABLE)->setType(routIdCtx->type);
 
-        Symtab *symtab = stack->getLocalSymtab();
-        symtab->setOwner(routID);
-
-        if (paramCtx != nullptr)
-        {
-            vector<SymtabEntry *> *parameterIDs = visit(paramCtx->parameterDeclarationsList()).as<vector<SymtabEntry *>*>();
-            routID->setRoutineParameters(parameterIDs);
-
-            for (SymtabEntry *parmID : *parameterIDs)
-            {
-                parmID->setSlotNumber(symtab->nextSlotNumber());
-            }
-        }
-
-        if (functionDef)
-        {
-            pascalParser::TypeIdentifierContext *typeIdCtx = funcHeadCtx->typeIdentifier();
-            visit(typeIdCtx);
-            retType = typeIdCtx->type;
-
-            if (retType->getForm() != SCALAR)
-            {
-                cout << err->invalidReturnType(typeIdCtx->getStart()->getLine());
-                retType = pred->integerType;
-            }
-
-            routID->setType(retType);
-            RoutIDCtx->type = retType;
-        }
-        else
-        {
-            RoutIDCtx->type = nullptr;
-        }
-        visit(ctx->block()->declarations());
-
-        // Enter the function's associated variable into its symbol table.
-        if (functionDef)
-        {
-            SymtabEntry *assocVarId = stack->enterLocal(routName, VARIABLE);
-            assocVarId->setSlotNumber(symtab->nextSlotNumber());
-            assocVarId->setType(retType);
-        }
-
-        visit(ctx->block()->compoundStatement());
-        routID->setExecutable(ctx->block()->compoundStatement());
+        visit(ctx->block());
 
         stack->pop();
 
@@ -606,10 +576,11 @@ public:
     // }
     
     // #40
-    // virtual antlrcpp::Any visitParameters(pascalParser::ParametersContext *ctx) override
-    // {
-    //     return visitChildren(ctx);
-    // }
+    virtual antlrcpp::Any visitParameters(pascalParser::ParametersContext *ctx) override
+    {
+        vector<SymtabEntry *> *paramList = visit(ctx->parameterDeclarationsList());
+        return paramList;
+    }
     
     // #41
     virtual antlrcpp::Any visitParameterDeclarationsList(pascalParser::ParameterDeclarationsListContext *ctx) override
@@ -621,6 +592,7 @@ public:
                 paramList->push_back(id);
             }
         }
+
         return paramList;
     }
     
@@ -641,7 +613,7 @@ public:
             string name = toLowerCase(idCtx->IDENTIFIER()->getText());
             SymtabEntry *ID = stack->lookup(name);
 
-            if(ID = nullptr) {
+            if(ID == nullptr) {
                 ID = stack->enterLocal(name, kind);
                 ID->setType(type);
             }
@@ -655,6 +627,7 @@ public:
             paramSubList.push_back(ID);
             ID->appendLineNumbers(linenum);
         }
+
         return paramSubList;
     }
     
@@ -904,32 +877,31 @@ public:
         }
 
         // Good Name
-        // Commented to allow for tests -Aaron
-        // Changed parms to non-pointer -Jovel
         else
         {
-            vector<SymtabEntry *> params = stack->getLocalSymtab()->getRoutineParameters();
-            checkCallArguments(listCtx, &params);
+            vector<SymtabEntry *> *params = procedureID->getChildParams();
+            checkCallArguments(listCtx, params);
         }
 
         nameCtx->entry = procedureID;
         return nullptr;
     }
     
-    // #64
+    // #64 NOT NEEDED
     // virtual antlrcpp::Any visitProcedureName(pascalParser::ProcedureNameContext *ctx) override
     // {
+        
     //     return visitChildren(ctx);
     // }
     
-    // // #65
+    // // #65 NOT NEEDED
     // virtual antlrcpp::Any visitArgumentList(pascalParser::ArgumentListContext *ctx) override
     // {
         
     //     return visitChildren(ctx);
     // }
     
-    // // #66
+    // // #66 NOT NEEDED
     // virtual antlrcpp::Any visitArgument(pascalParser::ArgumentContext *ctx) override
     // {
     //     return visitChildren(ctx);
@@ -1204,7 +1176,7 @@ public:
         bool badName = false;
 
         ctx->type = pred->integerType;
-
+        
         if (functionId == nullptr)
         {
             cout << err->undeclaredIdentifier(FuncNameCtx->getStart()->getLine());
@@ -1225,8 +1197,8 @@ public:
         }
         else
         {
-            vector<SymtabEntry *> params = stack->getLocalSymtab()->getRoutineParameters();
-            checkCallArguments(ArgListCtx, &params);
+            vector<SymtabEntry *> *params = functionId->getChildParams();
+            checkCallArguments(ArgListCtx, params);
             ctx->type = functionId->getType();
         }
         FuncNameCtx->entry = functionId;
@@ -1239,9 +1211,9 @@ public:
     virtual antlrcpp::Any visitNotFactor(pascalParser::NotFactorContext *ctx) override
     {
         visitChildren(ctx);
+        ctx->type = pred->booleanType;
         if (ctx->factor()->type != ctx->type)
             cout << err->typeNotCorrect(ctx->factor()->type, "boolean", ctx->getStart()->getLine()) << endl;
-        ctx->type = pred->booleanType;
         return nullptr;
     }
     
@@ -1260,16 +1232,16 @@ public:
         pascalParser::VariableIdentifierContext *varIdCtx = ctx->variableIdentifier();
         visit(varIdCtx);
         ctx->entry = varIdCtx->entry;
-        ctx->type = varIdCtx->type; // TODO: Check for modifier
+        ctx->type = variableDataType(ctx, varIdCtx->type); // TODO: Check for modifier
 
         return nullptr;
     }
     
-    // #87
-    // virtual antlrcpp::Any visitModifier(pascalParser::ModifierContext *ctx) override
-    // {
-    //     return visitChildren(ctx);
-    // }
+    //#87
+    virtual antlrcpp::Any visitModifier(pascalParser::ModifierContext *ctx) override
+    {
+        return visitChildren(ctx);
+    }
     
     // #88
     // virtual antlrcpp::Any visitIndexList(pascalParser::IndexListContext *ctx) override
@@ -1394,10 +1366,8 @@ public:
             }
 
         }
-        
 
-
-        return ;
+        return;
     }
 
     // #103
@@ -1418,8 +1388,38 @@ public:
             }
         }
         return false;
+    
     }
 
+    // #104
+    Typespec *variableDataType(pascalParser::VariableContext *varCtx, Typespec *varType){
+        Typespec *type = varType;
+
+        for (pascalParser::ModifierContext *modCtx : varCtx->modifier()) {
+            if(modCtx->indexList() != nullptr) {
+                pascalParser::IndexListContext *indexListCtx = modCtx->indexList();
+                for(pascalParser::IndexContext *indexCtx : indexListCtx->index()) {
+                    if(type->getForm() == ARRAY) {
+                        Typespec *indexType = type->getArrIndexType();
+                        pascalParser::ExpressionContext *exprCtx = indexCtx->expression();
+                        visit(exprCtx);
+                        if (indexType->baseType() != exprCtx->type->baseType())
+                        {
+                            cout << err->typeNotCorrect(indexType->baseType(), exprCtx->type->baseType()->getIdentifier()->getName(), exprCtx->getStart()->getLine());
+                        }
+                            type = type->getArrElemType();
+                    }
+
+                    else
+                    {
+                        cout << err->subscriptOverflow(varCtx->getStart()->getLine()) << endl;
+                    }
+                }
+            }
+        }   
+        
+        return type;
+    }
 
 };
 

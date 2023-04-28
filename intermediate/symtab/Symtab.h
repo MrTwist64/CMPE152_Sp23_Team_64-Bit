@@ -64,33 +64,66 @@ public:
         
     }
 
-    string toString(string indent = "")
+    string toString(int scope, string indent = "")
     {
         Kind kind;
         Form form;
         string temp = "";
+        vector<SymtabEntry*> hasChild;
+        Typespec *type;
+
+        temp += "Scope " + to_string(scope);
+        if (scope != 0)
+            temp += ", Owner " + ownerID->getName();
+        temp += "\n";
 
         for (auto it=SymbolTable.begin(); it!=SymbolTable.end(); ++it){
             kind = it->second->getKind();
 
             temp += indent + KIND_STRINGS[int(kind)];
 
-            if (kind == Kind::VARIABLE)
+            if (kind == Kind::VARIABLE || kind == Kind::REFERENCE_PARAMETER
+                || kind == Kind::VALUE_PARAMETER || kind == Kind::FUNCTION
+                || kind == Kind::CONSTANT)
             {   
                 form = it->second->getType()->getForm();
                 if (form == Form::SCALAR || form == Form::ENUMERATION)
                     temp += "(" + it->second->getType()->getIdentifier()->getName() + ")";
+                
                 if (form == Form::ARRAY)
-                    temp += "(array)";
+                {
+                    type = it->second->getType();
+                    form = type->getArrElemType()->getForm();
+                    temp += "(array[" + to_string(type->getArrLength()) + ", ";
+                    temp += type->getArrIndexType()->baseType()->getIdentifier()->getName() + "] ";
+                    type = type->getArrElemType();
+                    while (form == Form::ARRAY)
+                    {
+                        temp += "of array[" + to_string(type->getArrLength()) + ", ";
+                        temp += type->getArrIndexType()->baseType()->getIdentifier()->getName() + "] ";
+                        type = type->getArrElemType();
+                        form = type->getForm();
+                    }
+                    temp += "of " + type->getIdentifier()->getName() + ")";
+                }
             } 
             else if (kind == Kind::TYPE)
             {
-                form = it->second->getType()->getForm();
                 temp += "(" + FORM_STRINGS[int(it->second->getType()->getForm())] + ")";
             }
 
-            temp += ":" + it->first + "\n";
+            temp += ":" + it->first;
+
+            temp += "\n";
+
+            if (kind == Kind::FUNCTION || kind == Kind::PROCEDURE || kind == Kind::PROGRAM)
+                hasChild.push_back(it->second);
         }
+
+        // For child symbol tables
+        for (SymtabEntry* entry : hasChild)
+            temp += entry->getChild()->toString(scope + 1, indent);
+
         return temp;
     }
 

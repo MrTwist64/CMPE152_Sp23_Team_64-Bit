@@ -62,6 +62,7 @@ private:
     Typespec *typeSpec;       // type spec
     vector<int> line_nums;    // vector of line numbers
     Symtab *childSymtab;      // child symbol table for programs/functions/procedures
+    vector<SymtabEntry *> *childParams;
 public:
     SymtabEntry()
     {
@@ -151,6 +152,16 @@ public:
     Symtab* getChild()
     {
         return childSymtab;
+    }
+
+    void setChildParams(vector<SymtabEntry *> *params)
+    {
+        childParams = params;
+    }
+
+    vector<SymtabEntry *>* getChildParams()
+    {
+        return childParams;
     }
 };
 

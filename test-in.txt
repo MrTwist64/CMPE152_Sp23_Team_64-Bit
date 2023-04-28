@@ -1,13 +1,33 @@
 Program Program1(output);
+const
+    espilon = 7;
+    eta = 'Why Not!';
 
 type
-    mySubRangeType = 10 .. 20;
+    tau = 10 .. 20;
 
 var
     alpha : integer;
     beta : real;
     delta : boolean;
     gamma : array[0 .. 2] of integer;
+    zeta : string;
+    omega : char;
+    omicron : array[1 .. 2] of array[0 .. 5] of integer;
+
+function testFunc(var funcvar1, funcvar2 : string; funcvar3 : integer) : real;
+var
+    alpha : real;
+    beta : integer;
+begin
+end;
+
+procedure testPro(var provar1, provar2 : string; provar3 : integer);
+var
+    alpha : real;
+    beta : integer;
+begin
+end;
 
 begin
     {Tests simple assign statements}
@@ -69,4 +89,21 @@ begin
         1: beta := 0;
         2: alpha := 0;
     end;
+
+    {Tests function & procedure calls}
+    alpha := testFunc(zeta, zeta, alpha);
+    beta := testFunc(zeta, zeta, alpha); {cannot assign real expression to integer}
+    testPro(zeta, zeta, alpha);
+
+    {Tests arrays}
+    alpha := gamma[1];
+    delta := gamma[1]; {cannot assign integer to boolean}
+    {omicron[1][0] := 1;
+    omicron[2][1] := 2.2; cannot assign real to integer}
+
+    {Tests constants}
+    alpha := espilon;
+    delta := espilon; {cannot assign integer to boolean}
+    zeta := eta;
+    alpha := eta; {cannot assign string to integer}
 end.

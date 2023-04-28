@@ -83,16 +83,7 @@ private:
     }
 
     string toString() {
-        string temp = "";
-        for (int i = nesting_level; i >= 0; i--)
-        {
-            temp += "Level " + to_string(i);
-            if (i != 0)
-                temp += ", Owner " + stack[i]->getOwner()->getName();
-            temp += "\n";
-            temp += stack[i]->toString("  ");
-        }
-        return temp;
+        return stack[0]->toString(0, "  ");
     }
 };
 
