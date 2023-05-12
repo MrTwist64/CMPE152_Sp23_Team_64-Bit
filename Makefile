@@ -7,6 +7,6 @@ ANTLRCC = java -jar /home/aaron/ANTLR-4.7.2/antlr-4.7.2-complete.jar
 #antlr4: pascal.g4
 #	$(ANTLRCC) -Dlanguage=Cpp pascal.g4 -visitor -no-listener
 
-parser: pascal*.cpp pascal*.h
+compiler: pascal*.cpp pascal*.h
 	$(CC) $(CFLAGS) -o pascal pascal*.cpp $(CPPFLAGS) \
 	&& ./pascal < test-in.txt > test-out.txt

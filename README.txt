@@ -1,47 +1,56 @@
 CMPE152_Sp23_Team_64-Bit
-Assignment 5
-
-===== README =====
-- We request that you read this entire README.
+Assignment 6
 
 ===== How To Run ===== 
 1. Enter a test pascal program into the test-in.txt file.
-2. Run "make parser" in a bash terminal.
-3. View the parser output in test-out.txt.
+2. Run "make compiler" in a bash terminal.
+3. View the output in test-out.txt.
 
 ===== Notes ===== 
-- The grammar file used was provided by the professor as the supplied BNF features errors including left-recursive statements that antlr4.12 cannot generate code for.
-- After having many issues with Antlr4.12, the professor gave our group an extension to work on the project and turn it in after the due date.
-- Our code is partially based off of the code from Ron Mak.
-- If you would like to recreate the antlr4 files from our grammar file, you MUST change the path of the ANTLRCC macro to one for your machine.
-- The type definitions noted in the output for this assignment have been combined into the symbol table output.
+- As noted below, we were not able to complete this assignment.
+- Throughout the previous assignments, especially since #3, we ran into many problems with antlr4 and our IDE's setup.
+- While we were able to complete those assignments fully, we had to hyper-focus our time and energy on working around these bugs and issues.
+- After finishing #5, we took a much needed break and focused our effort on other projects for other classes.
+- While we tried our best to get started on this assignment, we have to admit that we've hit a stage of burnout with the project. 
+- We added as much as we could, but given the approaching deadline of not only this assignment, but other projects, we had to step back from this project.
+- The main structure of this assignment was planned out, as is explained below, but we had a lot of trouble with the implementation of the SICXE code, especially with the runtime stack.
+- We are proud of what we were able to accomplish with our previous assignments, espcially our final submission for #5 which fulfilled all of the requirements specified. While we weren't able to complete the entire compiler, we feel that our previous work feels complete.
 
-===== IntermediatePass.h ===== 
-- IntermediatePass is a class that extends pascalBaseVisitor, and contains modified visit functions that construct the Pascal symbol table as it traverses the ANTLR4-generated parse tree.
-- IntermediatePass also contains error handling and convenience functions that assist in symbol table construction.
-- To use the class, create an instance and use the visit() function which takes in a parse tree.
-- IntermediatePass does not visit enumerated types and records, as it was not required for this assignment.
+===== compiler.h ===== 
+- The compiler class takes in a symbol table which represents the global stack.
+- We also used a frameStack to manage frames within the program, keeping crcack of variables and scopes.
+- The class contains functions that would eventually generate assembly code to intiialize a stack frame and its neccessary memory management.
+- The visit functions were supposed to generate executable assembly code accordingly.
 
-===== ErrStr.h ===== 
-- Here we have created an error class within the intermediate namespace which contains several convenience functions to display different error types.
-- These functions are called when the parser encounters an error within the visit functions. 
+===== frameStack.h =====
+- FrameStack is a class that creates a stack object to contain our frames. 
+- The stack has functions such as push, pop, top, createline, and createlinelabel to manipulate the stack for traversal of functions
+- We create a frameStack when we call the compiler constructor.
+- We fill the stack with new frames when we encounter a function and remove a frame when we exit a function. 
 
-===== TypeChecker.h ===== 
-- Here we have created a TypeChecker class within the intermediate namespace which contains convenience functions to check the compatibility between different argument types.
-- These functions are called to determine if two variables are of the same type.
+===== frame.h =====
+- Frame is a class that implements a frame for each function or procedure call.
+- Frames are created in the frame.h class, containing all parameters, local variables, and other related items.
+- In the constructor function, the frame get the beginning of the symtab object and iterate through each symtabEntry
+- At each symtabEntry, we calculate the scopeOffset for each variable and also the return address 
+- There also setters and getter functions for the scope and scopeOffset
+- We were able to get this class functioning and hoped to use it with the other classes for this assignment
 
-===== Object.h ===== 
-- Object creates three convenience functions to convert strings between upper case, lower case, and to prepare an input string for storage. 
+===== Thank You!!! =====
+- We would like to thank both the TA and Professor Nicholson for a great semester. We appreciate the hard work you've both put in to help us with our problems. 
+- We have had a lot of fun in this course and learned a lot. :) Thank you again and have a great summer! 
+- Team 64-Bit
 
-===== Symbol Table, Typespec, and Predefined Files =====
-- Our symbol table stack includes a base nesting level which is populated at the start of pass 2. It also includes a nesting level counter, a vector of symbol tables acting as our stack, and a program ID pointing to the top level program.
-- Our symbol tables also includes nesting levels, an ID for the table's owner, and a map of symbol table entries acting as the symbol table.
-- The symbol table entries include a host of information regarding each symbol and line numbers to help find and report errors. 
-- The type specification links with the symbol table entries to provide extra information regarding types of scalars, arrays, subranges, records, and enumerations.
-- Predefined.h fills the base level of the symbol table stack with the predefined constants and types included in pascal. 
-- All together, these four files create a symbol table stack with proper symbol table's and their entries with linked type specifications where needed.
+╭━━━━╮╱╱╱╱╱╱╱╱╭━━━┳╮╱╭╮╱╱╭╮╱╱╭╮
+┃╭╮╭╮┃╱╱╱╱╱╱╱╱┃╭━━┫┃╱┃┃╱╱┃┃╱╭╯╰╮
+╰╯┃┃┣┻━┳━━┳╮╭╮┃╰━━┫╰━╯┃╱╱┃╰━╋╮╭╯
+╱╱┃┃┃┃━┫╭╮┃╰╯┃┃╭━╮┣━━╮┣━━┫╭╮┣┫┃
+╱╱┃┃┃┃━┫╭╮┃┃┃┃┃╰━╯┃╱╱┃┣━━┫╰╯┃┃╰╮
+╱╱╰╯╰━━┻╯╰┻┻┻╯╰━━━╯╱╱╰╯╱╱╰━━┻┻━╯
 
-===== test-in.txt =====
-- We provided an extensive test program to verify our parser.
-- We test many different assignment statements within the main block of the program.
-- Many of these statements are purposely incorrect, which are noted by a comment in curly braces with the expected error.
+████████╗███████╗░█████╗░███╗░░░███╗  ░█████╗░░░██╗██╗░░░░░░██████╗░██╗████████╗
+╚══██╔══╝██╔════╝██╔══██╗████╗░████║  ██╔═══╝░░██╔╝██║░░░░░░██╔══██╗██║╚══██╔══╝
+░░░██║░░░█████╗░░███████║██╔████╔██║  ██████╗░██╔╝░██║█████╗██████╦╝██║░░░██║░░░
+░░░██║░░░██╔══╝░░██╔══██║██║╚██╔╝██║  ██╔══██╗███████║╚════╝██╔══██╗██║░░░██║░░░
+░░░██║░░░███████╗██║░░██║██║░╚═╝░██║  ╚█████╔╝╚════██║░░░░░░██████╦╝██║░░░██║░░░
+░░░╚═╝░░░╚══════╝╚═╝░░╚═╝╚═╝░░░░░╚═╝  ░╚════╝░░░░░░╚═╝░░░░░░╚═════╝░╚═╝░░░╚═╝░░░

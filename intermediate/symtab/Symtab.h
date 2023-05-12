@@ -38,6 +38,10 @@ public:
         ownerID = ID;
     }
 
+    map<string, SymtabEntry*>* getSymtab() {
+        return &SymbolTable;
+    }
+
     int getCurrNestingLevel() 
     {
         return nesting_level;
@@ -64,7 +68,7 @@ public:
         
     }
 
-    string toString(int scope, string indent = "")
+    string toString(int scope = -1, string indent = "")
     {
         Kind kind;
         Form form;

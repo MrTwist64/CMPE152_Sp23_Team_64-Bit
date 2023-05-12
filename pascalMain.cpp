@@ -4,6 +4,8 @@
 #include "pascalLexer.h"
 #include "pascalParser.h"
 #include "frontend/intermediatePass.h"
+#include "backend/frameStack.h"
+#include "backend/compiler.h"
 
 using namespace antlrcpp;
 using namespace antlr4;
@@ -42,11 +44,26 @@ int main(int argc, const char *args[])
 
 	// Create the intermediate symbol table and perform type checking
 	Predefined* predefined = new Predefined();
-	IntermediatePass* visitor = new IntermediatePass(predefined);
-	visitor->visit(tree);
+	IntermediatePass* visitors = new IntermediatePass(predefined);
+	visitors->visit(tree);
 
 	// Print all symbol tables
-	cout << endl << visitor->getStack()->toString() << endl;
+	cout << endl << visitors->getStack()->toString() << endl;
+
+	Symtab* testSymtab = visitors->getStack()->lookupLocal("program1")->getChild();
+	cout << testSymtab->toString() << endl;
 	
+	// string tempStr = "";
+	FrameStack* frameStack = new FrameStack();
+	Frame* frame = frameStack->push(testSymtab, 1);
+	cout << "Size = " << frame->getSize() << endl;
+	cout << "Offset of scopeOffset = " << frame->getScopeOffset() << endl;
+	cout << "Offset of alpha = " << frame->getOffset("alpha") << endl;
+	cout << "Offset of beta = " << frame->getOffset("beta") << endl;
+
+	Compiler* comp = new Compiler(testSymtab);
+	cout << endl << "----- SICXE CODE FOLLOWS -----" << endl;
+	cout << comp->getOutput();
+	cout << "----- SICXE CODE ENDS -----" << endl <<endl;
 	return 0;
 }

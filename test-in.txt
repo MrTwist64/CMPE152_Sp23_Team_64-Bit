@@ -1,109 +1,12 @@
-Program Program1(output);
-const
-    espilon = 7;
-    eta = 'Why Not!';
-
-type
-    tau = 10 .. 20;
+Program program1(output);
 
 var
     alpha : integer;
     beta : real;
-    delta : boolean;
-    gamma : array[0 .. 2] of integer;
-    zeta : string;
-    omega : char;
-    omicron : array[1 .. 2] of array[0 .. 5] of integer;
-
-function testFunc(var funcvar1, funcvar2 : string; funcvar3 : integer) : real;
-var
-    alpha : real;
-    beta : integer;
-begin
-end;
-
-procedure testPro(var provar1, provar2 : string; provar3 : integer);
-var
-    alpha : real;
-    beta : integer;
-begin
-end;
 
 begin
     {Tests simple assign statements}
     alpha := 1; 
-    alpha := 2.2; {cannot assign real to integer}
     beta := 3;
-    beta := 4.4;
-    charlie := 5; {charlie is not declared}
-
-    {Tests add op expressions}
-    delta := true or false;
-    delta := true or false or true;
-    delta := true or 1; {cannot or with integer}
-    alpha := 3 + 3 - 4 + 10;
-    alpha := 3.0 + 3 - 4 + 10; {cannot assign real to integer}
-
-    {Tests mult op expressions}
-    beta := 5 * 3;
-    beta := alpha * beta;
-    beta := 5 * delta; {cannot * with boolean}
-    alpha := 5 / 3; {cannot assign real to integer}
-    beta := alpha / beta;
-    beta := 5 / delta; {cannot / with boolean}
-    alpha := 5 mod 3;
-    beta := alpha div beta;
-    beta := 5 div delta; {cannot div with boolean}
-    delta := true and false;
-    delta := true and false or true;
-    delta := true and 1; {cannot and with integer}
-
-    {Tests negations}
-    delta := not alpha; {cannot negate integer}
-    delta := not delta;
-
-    {Tests parentheses}
-    alpha := 5 / (16 + 9); {cannot assign real expression to integer}
-    beta := (55 - (20)) / (16 + 9);
-
-    {Tests if statements}
-    if(delta) then
-    begin
-        enteredIfStatement1 := 0; {variable not declared}
-    end else
-    begin
-        enteredElseStatement1 := 0; {variable not declared}
-    end;
-    if (alpha = 0) then;
-    if (alpha) then; {expression must be boolean, not integer}
-
-    {Tests for statement}
-    for alpha := 1 to 3 do 
-    begin
-        enteredForStatement1 := 0; {variable not declared}
-    end;
-
-    {Tests case statement}
-    case (alpha) of
-        0: case0 := 0; {variable not declared}
-        1: beta := 0;
-        2: alpha := 0;
-    end;
-
-    {Tests function & procedure calls}
-    alpha := testFunc(zeta, zeta, alpha);
-    beta := testFunc(zeta, zeta, alpha); {cannot assign real expression to integer}
-    testPro(zeta, zeta, alpha);
-
-    {Tests arrays}
-    alpha := gamma[1];
-    delta := gamma[1]; {cannot assign integer to boolean}
-    {omicron[1][0] := 1;
-    omicron[2][1] := 2.2; cannot assign real to integer}
-
-    {Tests constants}
-    alpha := espilon;
-    delta := espilon; {cannot assign integer to boolean}
-    zeta := eta;
-    alpha := eta; {cannot assign string to integer}
+    
 end.
